@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Trampatom</string>
+    <string name="main_activity_start">START</string>
+    <string name="game_score">Score:</string>
+    <string name="game_time">60</string>
+</resources>
