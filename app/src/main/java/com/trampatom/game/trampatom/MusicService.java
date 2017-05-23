@@ -1,12 +1,10 @@
-package com.trampatom.game.trampatom.utils;
+package com.trampatom.game.trampatom;
 
 
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-
-import com.trampatom.game.trampatom.R;
 
 public class MusicService extends Service {
     private static final String TAG = null;

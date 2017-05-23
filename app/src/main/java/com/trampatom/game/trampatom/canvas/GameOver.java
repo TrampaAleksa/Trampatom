@@ -25,7 +25,7 @@ public class GameOver {
      * Method for drawing a blank screen that says Game Over and displays the final score
      * @param score we have to pass the score for it to be displayed
      */
-    public void gameOver(int score){
+    public void gameOver(int score, boolean newHighScore){
 
         ourCanvas = ourHolder.lockCanvas();
         xPos = (ourCanvas.getWidth() / 2);
@@ -34,6 +34,8 @@ public class GameOver {
         // canvas.drawBitmap(background,0,0,null);
         ourCanvas.drawText("GAME OVER", xPos, yPos, paint);
         ourCanvas.drawText("FINAL SCORE: "+ score,xPos, yPos+50, paint);
+        if(newHighScore)
+            ourCanvas.drawText("CONGRATULATIONS,NEW HIGH SCORE",xPos, yPos+100, paint);
         ourHolder.unlockCanvasAndPost(ourCanvas);
 
     }

@@ -1,15 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/atompocetna"
     tools:context="com.trampatom.game.trampatom.activity.MainActivity">
 
     <Button
         android:id="@+id/bStart"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="190dp"
+        />
+
+    <TextView
+        android:id="@+id/tvHighScore1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main_activity_start"/>
+        android:layout_below="@+id/bNext"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="24sp" />
 
-</android.support.constraint.ConstraintLayout>
+    <ImageButton
+        android:id="@+id/bNext"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="50dp"
+        android:layout_height="56dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/bStart"
+        android:layout_marginEnd="38dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/nextbutton"
+        android:text="NEXT" />
+
+    <ImageButton
+        android:id="@+id/bPrev"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/bStart"
+        android:layout_marginTop="36dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginStart="38dp"
+        android:src="@drawable/previousbutton"
+        android:text="PREVIOUS" />
+
+    <ImageButton
+        android:id="@+id/bSound"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="56dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/mutebuttonunmuted" />
+
+    <TextView
+        android:id="@+id/tvGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bStart"
+        android:layout_marginTop="36dp"
+        android:layout_marginRight="30dp"
+        android:layout_toLeftOf="@+id/bNext"
+        android:text="1"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="30sp" />
+</RelativeLayout>

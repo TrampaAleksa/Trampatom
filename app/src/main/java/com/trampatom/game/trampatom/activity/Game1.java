@@ -22,6 +22,7 @@ import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.canvas.Canvas1;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
+import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.RandomCoordinate;
 
 import java.util.Random;
@@ -36,6 +37,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         GameTimeAndScore gameTimeAndScore;
         RandomCoordinate randomCoordinate;
         Canvas1 canvas;
+        HighScore highScore;
     //For the SurfaceView to work
         SurfaceHolder ourHolder;
         SurfaceView mSurfaceView;
@@ -51,7 +53,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     //Used for scoring
         int ballType=4;
         int previous=4;
-        int score;
+        int score, previousHighScore;
     //coordinates of the currently drawn ball, coordinates where we clicked
         int x, clickedX;
         int y, clickedY;
@@ -59,8 +61,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         boolean initialDraw;
     //used for drawing a new ball whenever we scored
         boolean scored;
-    //used for ending the game when the time ends
-        boolean gameover;
+    //used for ending the game when the time ends, congratulations if new high score
+        boolean gameover, newHighScore;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,44 +101,59 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //Bitmaps
             possitiveBall= BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
             negativeBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
-            //background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
-            //background = Bitmap.createScaledBitmap(background, deviceWidth, deviceHeight, true);
+            background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
+            background = Bitmap.createScaledBitmap(background, deviceWidth, surfaceViewHeight, true);
         //ball Height and Width
             ballHeight=possitiveBall.getHeight();
             ballWidth=possitiveBall.getWidth();
         //Initial coordinates for the ball
-            randomCoordinate = new RandomCoordinate();
-            x=randomCoordinate.randomX(ballWidth);
-            y=randomCoordinate.randomY(ballHeight, surfaceViewHeight);
 
+        //Obtaining the highScore
+            highScore = new HighScore(this);
+            previousHighScore=highScore.getHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY);
+            newHighScore=false;
         initialDraw=true;
         scored=false;
     }
 
+    void startTimer(){
+
+    }
+
+
     @Override
     public void run() {
-        canvas = new Canvas1(ourHolder,mCanvas);
+        canvas = new Canvas1(ourHolder,mCanvas, background);
         while (isRunning) {
             //Do until you get the surface
             if (!ourHolder.getSurface().isValid())
                 continue;
 
+
+
             //The initial draw
             if(initialDraw) {
-            initialDraw= canvas.firstDraw(possitiveBall,x,y);
+                mCanvas = ourHolder.lockCanvas();
+                surfaceViewHeight = mCanvas.getHeight();
+                ourHolder.unlockCanvasAndPost(mCanvas);
+                randomCoordinate = new RandomCoordinate(deviceWidth, surfaceViewHeight, ballWidth, ballHeight);
+                x=randomCoordinate.randomX();
+                y=randomCoordinate.randomY();
+                initialDraw= canvas.draw(possitiveBall,x,y);
             }
             //draw a ball after the score changes
             if(scored && !gameover){
                 if(ballType >2)
-                    scored= canvas.redraw(possitiveBall, x, y);
+                    scored= canvas.draw(possitiveBall, x, y);
                 else {
-                    scored = canvas.redraw(negativeBall, x, y);
+                    scored = canvas.draw(negativeBall, x, y);
                 }
             }
             //after the timer runs out finish the game
             if (gameover) {
                 GameOver gameover = new GameOver(ourHolder,mCanvas);
-                gameover.gameOver(score);
+                newHighScore=highScore.isHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY, score);
+                gameover.gameOver(score, newHighScore);
                 try {
                     sleep(3000);
                 } catch (InterruptedException e) {
@@ -173,8 +190,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
      */
     private void ballclick() {
         //sets new coordinates
-        x = randomCoordinate.randomX(ballWidth);
-        y = randomCoordinate.randomY(ballHeight, surfaceViewHeight);
+        x = randomCoordinate.randomX();
+        y = randomCoordinate.randomY();
 
         //determines if the ball will be positive or negative
         Random number3= new Random();
@@ -234,7 +251,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
 
 
-
     public void pause()
     {
         isRunning=false;
@@ -265,3 +281,4 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         pause();
     }
 }
+
