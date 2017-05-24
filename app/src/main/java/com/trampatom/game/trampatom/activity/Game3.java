@@ -163,6 +163,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             }
         }
     }
+    //TODO try and make static method for clicked a ball
     private boolean clickedABall(int x, int y, int clickedX, int clickedY){
         if(clickedX>x && clickedX<(x+ballWidth) && clickedY>y && clickedY<(y+ballHeight))
             return true;

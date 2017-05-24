@@ -4,12 +4,10 @@ package com.trampatom.game.trampatom.activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -31,8 +29,14 @@ import static java.lang.Thread.sleep;
 
 public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchListener{
     //Duration of the game
-    private static final long GAME_TIME = 10000;
+    private static final long GAME_TIME = 25000;
     private static final int BALL_SPEED= 8;
+
+    private static final int BALL_RED = 1;
+    private static final int BALL_BLUE = 2;
+    private static final int BALL_GREEN = 3;
+    private static final int BALL_YELLOW = 4;
+    private static final int BALL_PURPLE = 5;
 
     //Classes
         GameTimeAndScore gameTimeAndScore;
@@ -46,13 +50,13 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         Thread ourThread = null;
         boolean isRunning=true;
     //Balls and Background Bitmaps
-        Bitmap possitiveBall, negativeBall, background;
+        Bitmap blueBall, redBall, greenBall, yellowBall, purpleBall, background;
     //Other variables
         TextView tvScore, tvTime;
         int width, height;
         static int ballWidth, ballHeight;
     //Used for scoring
-        int ballType=4;
+        int ballType=4, currentBall;
         int previous=4;
         int score, previousHighScore;
     //coordinates of the currently drawn ball, coordinates where we clicked
@@ -104,19 +108,23 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();
         //Bitmaps
-            possitiveBall= BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
-            negativeBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
+            blueBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
+            redBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
+            greenBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomnarandzasta);
+            yellowBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzuta);
+            purpleBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
             background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
             background = Bitmap.createScaledBitmap(background, width, height, true);
         //ball Height and Width
-            ballHeight=possitiveBall.getHeight();
-            ballWidth=possitiveBall.getWidth();
+            ballHeight= blueBall.getHeight();
+            ballWidth= blueBall.getWidth();
         //Initial coordinates for the ball
 
         //Obtaining the highScore
             highScore = new HighScore(this);
             previousHighScore=highScore.getHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY);
             newHighScore=false;
+        currentBall= BALL_BLUE;
         initialDraw=true;
         scored=false;
     }
@@ -143,18 +151,33 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 angle=randomCoordinate.randomAngle();
                 x=randomCoordinate.randomX();
                 y=randomCoordinate.randomY();
-                initialDraw= canvas.draw(possitiveBall,x,y);
+                initialDraw= canvas.draw(blueBall,x,y);
             }
-            //draw a ball after the score changes
-                moveBall();
-                if(ballType >2)
-                    scored= canvas.draw(possitiveBall, x, y);
-                else {
-                    scored = canvas.draw(negativeBall, x, y);
-                }
+
+            moveBall();
+            //draw a ball after the score changes depending on the type
+            switch(currentBall)
+            {
+                case BALL_BLUE:
+                    canvas.draw(blueBall, x, y);
+                    break;
+                case BALL_RED:
+                    canvas.draw(redBall, x, y);
+                    break;
+                case BALL_GREEN:
+                    canvas.draw(blueBall, x, y);
+                    break;
+                case BALL_YELLOW:
+                    canvas.draw(blueBall, x, y);
+                    break;
+                case BALL_PURPLE:
+                    canvas.draw(blueBall, x, y);
+                    break;
+            }
             //after the timer runs out finish the game
             if (gameover) {
                 GameOver gameover = new GameOver(ourHolder,mCanvas);
+                //set the high score if there is a new one
                 newHighScore=highScore.isHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY, score);
                 gameover.gameOver(score, newHighScore);
                 try {
@@ -198,25 +221,30 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             //get coordinates where we touched
-            clickedX =(int) event.getX();
-            clickedY =(int) event.getY();
-            //if we click on the ball
-            if( clickedX>x && clickedX<(x+ballWidth) && clickedY>y && clickedY<(y+ballHeight)){
-                ballclick();
-                score();
-            }
-            //if we click anywhere else
-            else{
-                outsideClick();
-            }
+            clickedX = (int) event.getX();
+            clickedY = (int) event.getY();
+            //if we click on the ball do something depending on the ball type
+                if(ballType<=2){
+                    redBall();
+                }
+                if(ballType>2 && ballType<=10){
+                    blueBall();
+                }
+                if(ballType>10 && ballType<=13){
+
+                }
+                if(ballType>13 && ballType<=15){
+
+                }
+                if(ballType>15 && ballType<=18){
+
+                }
         }
         return false;
     }
 
-    /**
-     * Draw a new ball after a click
-     */
-    private void ballclick() {
+// TODO Create a class for working with balls/part of ball logic
+    private void getNewBall() {
         //sets new coordinates
         angle=randomCoordinate.randomAngle();
         x = randomCoordinate.randomX();
@@ -226,55 +254,71 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         Random number3= new Random();
         ballType= number3.nextInt(10);
     }
+
     /**
-     * Add or substract score depending on the ballType
+     * used to set the ball color to be drawn
+     * @param ballType used to determine what color to draw
      */
-    private void score() {
-        //sets previous depending on the new ballType
-        //and scores depending on the previous type
-        if(ballType>2 && previous>2)
-        {
-            score +=100;
-            previous=3;
+    private void setCurrentBall(int ballType){
+        //if we click on the ball do something depending on the ball type
+        if(ballType<=2){
+            currentBall=BALL_RED;
         }
-        else if(ballType>2 && previous<=2)
-        {
-            score -=100;
-            previous=3;
+        if(ballType>2 && ballType<=10){
+            currentBall=BALL_BLUE;
         }
-        else if(ballType<=2 && previous >2 )
-        {
-            score +=100;
-            previous=1;
+        if(ballType>10 && ballType<=13){
+            currentBall=BALL_GREEN;
         }
-        else if(ballType<=2 && previous <=2 )
-        {
-            score -=100;
-            previous=1;
+        if(ballType>13 && ballType<=15){
+            currentBall=BALL_YELLOW;
         }
-        scored = true;
+        if(ballType>15 && ballType<=18){
+            currentBall=BALL_PURPLE;
+        }
     }
+
     /**
-     * Method called In case we clicked outside the ball
+     * checks if a ball was clicked
+     * @param x x coordinate of the ball
+     * @param y y coordinate of the ball
+     * @param clickedX x where we clicked
+     * @param clickedY y where we clicked
+     * @return returns true if we clicked the ball
      */
-    private void outsideClick() {
-        if(previous<=2){
-            ballclick();
-            if(ballType<=2 )
-            {
+    private boolean clickedABall(int x, int y, int clickedX, int clickedY){
+        if(clickedX>x && clickedX<(x+ballWidth) && clickedY>y && clickedY<(y+ballHeight))
+            return true;
+        else
+            return false;
+    }
 
-                score +=100;
-                previous=1;
-
-            }
-            else if(ballType>2 )
-            {
-
-                score +=100;
-                previous=5;
-            }
-            scored=true;
+    private void redBall(){
+        if(clickedABall(x,y,clickedX,clickedY)){
+            score -= 100;
+            getNewBall();
         }
+        else {
+            score+=100;
+            getNewBall();
+        }
+        setCurrentBall(ballType);
+    }
+    private void blueBall(){
+        if(clickedABall(x,y,clickedX,clickedY)) {
+            score += 100;
+            getNewBall();
+        }
+        setCurrentBall(ballType);
+    }
+    private void greenBall(){
+
+    }
+    private void yellowBall(){
+
+    }
+    private void purpleBall(){
+
     }
 
 

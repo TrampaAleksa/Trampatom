@@ -195,7 +195,6 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
                 moveBalls(XY);
                 canvas.draw(ball, XY, Canvas2.CLICKED_NONE);
             }
-            //TODO possible error gray on redraw
             if(ballclick1 && !ballclick2 && !ballclick3){
                 moveBalls(XY);
                 canvas.draw(ball,XY, Canvas2.CLICKED_ONE);
