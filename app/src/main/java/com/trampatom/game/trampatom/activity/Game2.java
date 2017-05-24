@@ -28,6 +28,8 @@ import static java.lang.Thread.sleep;
 public class Game2 extends AppCompatActivity implements View.OnTouchListener, Runnable{
 
     private static final long GAME_TIME = 30000;
+    private static final int BALL_NUMBER= 3;
+    private static final int BALL_SPEED=8;
 
     //Classes
         GameTimeAndScore gameTimeAndScore;
@@ -45,7 +47,7 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
         Bitmap background;
     //Other variables
         TextView tvScore, tvTime;
-        int deviceWidth, surfaceViewHeight;
+        int width, height, i;
         static int ballWidth, ballHeight;
     //Used for scoring
         int ballType=4;
@@ -55,10 +57,12 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
     //x1,x2,x3,y1,y2,y3
         int[] XY= {0,0,0,0,0,0};
         int clickedX, clickedY;
+    //used for moving the balls
+    int[] moveX= {1,1,1};
+    int[] moveY= {1,1,1};
+    double[] angles={0,0,0};
     //used for drawing the first ball
         boolean initialDraw;
-    //used for drawing a new ball whenever we scored
-        boolean scored;
     //used for ending the game when the time ends
         boolean gameover, newHighScore;
     //used for handling changing balls to gray
@@ -97,8 +101,8 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
             tvTime = (TextView) findViewById(R.id.tvTime);
             gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime);
         //get device's width and height
-            deviceWidth= MainActivity.getWidth();
-            surfaceViewHeight = MainActivity.getHeight();
+            width= MainActivity.getWidth();
+            height = MainActivity.getHeight();
         //Bitmaps
             ball = new Bitmap[4];
             ball[0] = BitmapFactory.decodeResource(getResources(),R.drawable.atomzuta);
@@ -106,10 +110,11 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
             ball[2] = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
             ball[3] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
             //background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
-            //background = Bitmap.createScaledBitmap(background, deviceWidth, deviceHeight, true);
+            //background = Bitmap.createScaledBitmap(background, width, deviceHeight, true);
         //ball Height and Width
             ballHeight=ball[0].getHeight();
             ballWidth=ball[0].getWidth();
+
         //Initial coordinates for the ball
         //Obtaining the highScore
             highScore = new HighScore(this);
@@ -117,7 +122,6 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
             newHighScore=false;
 
         initialDraw=true;
-        scored=false;
         ballclick1=ballclick2=ballclick3=clicked=false;
     }
 
@@ -134,28 +138,32 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
     private void ballclick() {
 
         //when we click the first ball, make it gray
-        if( clickedX>XY[0] && clickedX<(XY[0]+ballWidth) && clickedY>XY[3] && clickedY<(XY[3]+ballHeight) && !ballclick1){
+        if( clickedABall(XY[0], XY[3], clickedX,clickedY) && !ballclick1){
             ballclick1=true;
-            clicked=true;
         }
         //when we click the second ball, make it gray
-        if( clickedX>XY[1] && clickedX<(XY[1]+ballWidth) && clickedY>XY[4] && clickedY<(XY[4]+ballHeight) && ballclick1){
+        if(clickedABall(XY[1], XY[4], clickedX,clickedY) && ballclick1){
             ballclick2=true;
-            clicked=true;
         }
         //when we click the third ball, make it gray
-        if( clickedX>XY[2] && clickedX<(XY[2]+ballWidth) && clickedY>XY[5] && clickedY<(XY[5]+ballHeight) && ballclick2){
+        if( clickedABall(XY[2], XY[5], clickedX,clickedY) && clickedY<(XY[5]+ballHeight) && ballclick2){
             ballclick3=true;
-            clicked=true;
-          //  ball4= BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
         }
         //after we have clicked all three balls, score and draw new balls
         if(ballclick1 && ballclick2 && ballclick3){
             ballclick1=ballclick2=ballclick3=false;
             score +=300;
-            XY= randomCoordinate.randomThreeBallCoordinates();
-            scored=true;
+            XY= randomCoordinate.randomnegativeBallsCoordinates();
+            for(i=0; i<BALL_NUMBER; i++){
+                angles[i]= randomCoordinate.randomAngle();
+            }
         }
+    }
+    private boolean clickedABall(int x, int y, int clickedX, int clickedY){
+        if(clickedX>x && clickedX<(x+ballWidth) && clickedY>y && clickedY<(y+ballHeight))
+            return true;
+        else
+            return false;
     }
 
     @Override
@@ -171,30 +179,33 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
             if(initialDraw) {
                 //gets the canvas height for drawing balls on screen
                 mCanvas = ourHolder.lockCanvas();
-                surfaceViewHeight = mCanvas.getHeight();
+                height = mCanvas.getHeight();
                 ourHolder.unlockCanvasAndPost(mCanvas);
                 //prevents drawing over screen
-                randomCoordinate = new RandomCoordinate(deviceWidth, surfaceViewHeight, ballWidth, ballHeight);
-                XY= randomCoordinate.randomThreeBallCoordinates();
+                randomCoordinate = new RandomCoordinate(width, height, ballWidth, ballHeight);
+                XY= randomCoordinate.randomnegativeBallsCoordinates();
+                for(i=0; i<BALL_NUMBER; i++){
+                    angles[i]= randomCoordinate.randomAngle();
+                }
                 //initial draw
-                initialDraw= canvas.draw(ball,XY, Canvas2.CLICKED_NONE);
+                initialDraw= false;
+            }
+            //TODO method for ballclicks/refractor
+            if(!ballclick1 && !ballclick2 && !ballclick3) {
+                moveBalls(XY);
+                canvas.draw(ball, XY, Canvas2.CLICKED_NONE);
             }
             //TODO possible error gray on redraw
-            if(ballclick1 && !ballclick2 && !ballclick3 && clicked){
-                scored= canvas.draw(ball,XY, Canvas2.CLICKED_ONE);
-                clicked=false;
+            if(ballclick1 && !ballclick2 && !ballclick3){
+                moveBalls(XY);
+                canvas.draw(ball,XY, Canvas2.CLICKED_ONE);
             }
-            if(ballclick2 && !ballclick3&& clicked){
-                scored= canvas.draw(ball,XY, Canvas2.CLICKED_TWO);
-                clicked=false;
+            if(ballclick2 && !ballclick3){
+                moveBalls(XY);
+                canvas.draw(ball,XY, Canvas2.CLICKED_TWO);
             }
-            if(ballclick3&& clicked){
+            if(ballclick3){
                 canvas.draw(ball,XY, Canvas2.CLICKED_THREE);
-                clicked=false;
-            }
-            //draw a ball after the score changes
-            if(scored && !gameover){
-                    scored= canvas.draw(ball, XY, Canvas2.CLICKED_NONE);
             }
             //after the timer runs out finish the game
             if (gameover) {
@@ -209,6 +220,40 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
 
                 finish();
             }
+        }
+    }
+
+    private void moveBalls(int[] XY){
+        for(i=0; i<BALL_NUMBER; i++) {
+
+            int x = XY[i];
+            int y = XY[i + BALL_NUMBER];
+            x += moveX[i] * BALL_SPEED * Math.sin(angles[i]);
+            y += moveY[i] * BALL_SPEED * Math.cos(angles[i]);
+
+            //if the ball is off screen change its direction
+            if (x > width - ballWidth) {
+                x = width - ballWidth;
+                moveX[i] = -moveX[i];
+                // too far right
+            }
+            if (y > height - ballHeight) {
+                y = height - ballHeight;
+                moveY[i] = -moveY[i];
+                // too far bottom
+            }
+            if (x < 0) {
+                x = 0;
+                moveX[i] = -moveX[i];
+                // too far left
+            }
+            if (y < 0) {
+                y = 0;
+                moveY[i] = -moveY[i];
+                // too far top
+            }
+            XY[i] = x;
+            XY[i + BALL_NUMBER] = y;
         }
     }
 

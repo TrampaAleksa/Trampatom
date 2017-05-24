@@ -28,6 +28,7 @@ import java.util.Random;
 
 import static java.lang.Thread.sleep;
 
+//TODO check on code comments and maybe refactor
 public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchListener{
 
     private static final long GAME_TIME = 10000;
@@ -192,7 +193,6 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 }
                     x=randomCoordinate.randomX();
                     y=randomCoordinate.randomY();
-                //TODO remove parameters from method
                     XY=randomCoordinate.randomnegativeBallsCoordinates();
                 //first draw
                     initialDraw= canvas.draw(ball,negativeBall,x,y, XY);
