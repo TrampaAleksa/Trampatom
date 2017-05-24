@@ -24,13 +24,16 @@ import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.RandomCoordinate;
 
+import java.util.Random;
+
 import static java.lang.Thread.sleep;
 
 public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchListener{
 
     //Duration of the game
     private static final long GAME_TIME = 10000;
-
+    //speed of the balls
+    private static final int BALL_SPEED= 15;
     //Classes
     GameTimeAndScore gameTimeAndScore;
     RandomCoordinate randomCoordinate;
@@ -46,15 +49,18 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     Bitmap ball;
     //Other variables
     TextView tvScore, tvTime;
-    int deviceWidth, surfaceViewHeight;
+    int width, height;
     static int ballWidth, ballHeight;
     //Used for scoring
     int score, previousHighScore;
-    //coordinates of the currently drawn ball, coordinates where we clicked
+    //coordinates of the currently drawn ball
     int x, clickedX;
     int y, clickedY;
+    //used for moving balls, angle of the balls movement
+    int moveX, moveY;
+    double angle;
     //used for drawing the first ball, start timer only after canvasLoads
-    boolean initialDraw, canvasLoaded;
+    boolean initialDraw;
     //used for drawing a new ball whenever we scored
     boolean scored;
     //used for ending the game when the time ends
@@ -83,32 +89,34 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     private void init() {
         //set up the SurfaceView
-        mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
-        ourHolder = mSurfaceView.getHolder();
-        mSurfaceView.setOnTouchListener(this);
+            mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
+            ourHolder = mSurfaceView.getHolder();
+            mSurfaceView.setOnTouchListener(this);
         //Current score and remaining time
-        tvScore=(TextView) findViewById(R.id.tvScore);
-        tvTime = (TextView) findViewById(R.id.tvTime);
-        gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime);
+            tvScore=(TextView) findViewById(R.id.tvScore);
+            tvTime = (TextView) findViewById(R.id.tvTime);
+            gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime);
         //get device's width and height
-        deviceWidth= MainActivity.getWidth();
-        surfaceViewHeight = MainActivity.getHeight();
+            width= MainActivity.getWidth();
+            height = MainActivity.getHeight();
+        //movement of the ball
+            moveX=1;
+            moveY=1;
         //Bitmaps
-        ball= BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
-        //background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
-        //background = Bitmap.createScaledBitmap(background, deviceWidth, deviceHeight, true);
+            ball= BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
+            //background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
+            //background = Bitmap.createScaledBitmap(background, width, deviceHeight, true);
         //ball Height and Width
-        ballHeight=ball.getHeight();
-        ballWidth=ball.getWidth();
+            ballHeight=ball.getHeight();
+            ballWidth=ball.getWidth();
         //Initial coordinates for the ball
         //Obtaining the highScore
-        highScore = new HighScore(this);
-        previousHighScore=highScore.getHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY);
-        newHighScore=false;
+            highScore = new HighScore(this);
+            previousHighScore=highScore.getHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY);
+            newHighScore=false;
 
-        canvasLoaded=true;
-        initialDraw=true;
-        scored=false;
+            initialDraw=true;
+            scored=false;
     }
 
     @Override
@@ -120,6 +128,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             //if we click on the ball
             if( clickedX>x && clickedX<(x+ballWidth) && clickedY>y && clickedY<(y+ballHeight)) {
                 score+=100;
+                angle =  randomCoordinate.randomAngle();
                 x = randomCoordinate.randomX();
                 y = randomCoordinate.randomY();
                 scored=true;
@@ -139,20 +148,23 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             //The initial draw
             if(initialDraw) {
                 //setting the proper height of the canvas
-                mCanvas = ourHolder.lockCanvas();
-                surfaceViewHeight = mCanvas.getHeight();
-                ourHolder.unlockCanvasAndPost(mCanvas);
+                    mCanvas = ourHolder.lockCanvas();
+                    height = mCanvas.getHeight();
+                    ourHolder.unlockCanvasAndPost(mCanvas);
                 //prevents drawing over screen
-                randomCoordinate = new RandomCoordinate(deviceWidth, surfaceViewHeight, ballWidth, ballHeight);
-                x=randomCoordinate.randomX();
-                y=randomCoordinate.randomY();
+                    randomCoordinate = new RandomCoordinate(width, height, ballWidth, ballHeight);
+                    angle = randomCoordinate.randomAngle();
+                    x=randomCoordinate.randomX();
+                    y=randomCoordinate.randomY();
                 //first draw
-                initialDraw= canvas.draw(ball,x,y);
+                    initialDraw= canvas.draw(ball,x,y);
             }
             //draw a ball after the score changes
-            if(scored && !gameover){
-                    scored= canvas.draw(ball, x, y);
-            }
+
+
+            moveBall();
+            canvas.draw(ball, x, y);
+
             //after the timer runs out finish the game
             if (gameover) {
                 GameOver gameover = new GameOver(ourHolder,mCanvas);
@@ -169,7 +181,32 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
 
+    private void moveBall() {
+        x += moveX*BALL_SPEED * Math.sin(angle);
+        y += moveY*BALL_SPEED * Math.cos(angle);
 
+        //if the ball is off screen change its direction
+        if(x > width-ballWidth) {
+            x = width-ballWidth;
+            moveX = -moveX;
+            // too far right
+        }
+        if(y > height-ballHeight) {
+            y = height-ballHeight;
+            moveY = -moveY;
+            // too far bottom
+        }
+        if(x < 0) {
+            x = 0;
+            moveX = -moveX;
+            // too far left
+        }
+        if(y < 0) {
+            y = 0;
+            moveY = -moveY;
+           // too far top
+        }
+    }
 
 
     public void pause()

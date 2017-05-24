@@ -6,6 +6,8 @@ import com.trampatom.game.trampatom.activity.MainActivity;
 import java.util.Random;
 
 public class RandomCoordinate {
+    //used for converting an angle into radians
+    private static final double RADIANS = 3.14/180;
     //used for checking if the ball is over a screen's edge
     private final static int OVER_LEFT = 1;
     private final static int OVER_TOP = 2;
@@ -56,6 +58,19 @@ public class RandomCoordinate {
          return y;
     }
 
+    /**
+     * method used for getting a random angle for a ball's movement
+     * @return
+     */
+    public double randomAngle(){
+        int randomAngle;
+        double angle;
+        Random number = new Random();
+        randomAngle = number.nextInt(360);
+        angle= randomAngle * RADIANS;
+
+        return angle;
+    }
     public int[] randomThreeBallCoordinates(int ballWidth, int ballHeight){
         int x1,x2,x3,y1,y2,y3;
         x1=x2=x3=y1=y2=y3=0;
@@ -101,6 +116,7 @@ public class RandomCoordinate {
         return XY;
     }
 
+
     /**
      * Method for fixing an object's position in case it's offscreen
      * @param value coordinate of the object
@@ -119,28 +135,6 @@ public class RandomCoordinate {
         }
 
         return value;
-    }
-
-    /**
-     * Method used for determining if the ball is over an edge
-     * @param x coordinate of the ball
-     * @param y coordinate of the ball
-     * @return over what side of the screen is the ball
-     */
-    private int overEdge(int x, int y){
-            if(x<0){
-                return OVER_LEFT;
-            }
-            if(y<0){
-                return OVER_TOP;
-            }
-            if(x>width-ballWidth){
-                return OVER_RIGHT;
-            }
-            if(y>height-ballHeight){
-                return OVER_BOTTOM;
-            }
-            return OVER_NOTHING;
     }
 
     /**
@@ -189,5 +183,27 @@ public class RandomCoordinate {
                 break;
         }
         return XY;
+    }
+
+    /**
+     * Method used for determining if the ball is over an edge
+     * @param x coordinate of the ball
+     * @param y coordinate of the ball
+     * @return over what side of the screen is the ball
+     */
+    private int overEdge(int x, int y){
+        if(x<0){
+            return OVER_LEFT;
+        }
+        if(y<0){
+            return OVER_TOP;
+        }
+        if(x>width-ballWidth){
+            return OVER_RIGHT;
+        }
+        if(y>height-ballHeight){
+            return OVER_BOTTOM;
+        }
+        return OVER_NOTHING;
     }
 }
