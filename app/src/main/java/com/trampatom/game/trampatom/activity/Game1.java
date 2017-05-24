@@ -32,6 +32,7 @@ import static java.lang.Thread.sleep;
 public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchListener{
     //Duration of the game
     private static final long GAME_TIME = 10000;
+    private static final int BALL_SPEED= 8;
 
     //Classes
         GameTimeAndScore gameTimeAndScore;
@@ -48,7 +49,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         Bitmap possitiveBall, negativeBall, background;
     //Other variables
         TextView tvScore, tvTime;
-        int deviceWidth, surfaceViewHeight;
+        int width, height;
         static int ballWidth, ballHeight;
     //Used for scoring
         int ballType=4;
@@ -57,6 +58,10 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     //coordinates of the currently drawn ball, coordinates where we clicked
         int x, clickedX;
         int y, clickedY;
+    //used for moving the ball
+        int moveX = 1;
+        int moveY = 1;
+        double angle;
     //used for drawing the first ball
         boolean initialDraw;
     //used for drawing a new ball whenever we scored
@@ -96,13 +101,13 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             tvTime = (TextView) findViewById(R.id.tvTime);
             gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime);
         //get device's width and height
-            deviceWidth= MainActivity.getWidth();
-            surfaceViewHeight = MainActivity.getHeight();
+            width= MainActivity.getWidth();
+            height = MainActivity.getHeight();
         //Bitmaps
             possitiveBall= BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
             negativeBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
             background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
-            background = Bitmap.createScaledBitmap(background, deviceWidth, surfaceViewHeight, true);
+            background = Bitmap.createScaledBitmap(background, width, height, true);
         //ball Height and Width
             ballHeight=possitiveBall.getHeight();
             ballWidth=possitiveBall.getWidth();
@@ -129,26 +134,24 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             if (!ourHolder.getSurface().isValid())
                 continue;
 
-
-
             //The initial draw
             if(initialDraw) {
                 mCanvas = ourHolder.lockCanvas();
-                surfaceViewHeight = mCanvas.getHeight();
+                height = mCanvas.getHeight();
                 ourHolder.unlockCanvasAndPost(mCanvas);
-                randomCoordinate = new RandomCoordinate(deviceWidth, surfaceViewHeight, ballWidth, ballHeight);
+                randomCoordinate = new RandomCoordinate(width, height, ballWidth, ballHeight);
+                angle=randomCoordinate.randomAngle();
                 x=randomCoordinate.randomX();
                 y=randomCoordinate.randomY();
                 initialDraw= canvas.draw(possitiveBall,x,y);
             }
             //draw a ball after the score changes
-            if(scored && !gameover){
+                moveBall();
                 if(ballType >2)
                     scored= canvas.draw(possitiveBall, x, y);
                 else {
                     scored = canvas.draw(negativeBall, x, y);
                 }
-            }
             //after the timer runs out finish the game
             if (gameover) {
                 GameOver gameover = new GameOver(ourHolder,mCanvas);
@@ -159,9 +162,34 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
                 finish();
             }
+        }
+    }
+    private void moveBall() {
+        x += moveX*BALL_SPEED * Math.sin(angle);
+        y += moveY*BALL_SPEED * Math.cos(angle);
+
+        //if the ball is off screen change its direction
+        if(x > width-ballWidth) {
+            x = width-ballWidth;
+            moveX = -moveX;
+            // too far right
+        }
+        if(y > height-ballHeight) {
+            y = height-ballHeight;
+            moveY = -moveY;
+            // too far bottom
+        }
+        if(x < 0) {
+            x = 0;
+            moveX = -moveX;
+            // too far left
+        }
+        if(y < 0) {
+            y = 0;
+            moveY = -moveY;
+            // too far top
         }
     }
 
@@ -190,6 +218,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
      */
     private void ballclick() {
         //sets new coordinates
+        angle=randomCoordinate.randomAngle();
         x = randomCoordinate.randomX();
         y = randomCoordinate.randomY();
 
