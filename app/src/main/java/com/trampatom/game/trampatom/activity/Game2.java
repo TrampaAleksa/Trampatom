@@ -153,7 +153,7 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
         if(ballclick1 && ballclick2 && ballclick3){
             ballclick1=ballclick2=ballclick3=false;
             score +=300;
-            XY= randomCoordinate.randomThreeBallCoordinates(ballWidth, ballHeight);
+            XY= randomCoordinate.randomThreeBallCoordinates();
             scored=true;
         }
     }
@@ -175,10 +175,11 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
                 ourHolder.unlockCanvasAndPost(mCanvas);
                 //prevents drawing over screen
                 randomCoordinate = new RandomCoordinate(deviceWidth, surfaceViewHeight, ballWidth, ballHeight);
-                XY= randomCoordinate.randomThreeBallCoordinates(ballWidth,ballHeight);
+                XY= randomCoordinate.randomThreeBallCoordinates();
                 //initial draw
                 initialDraw= canvas.draw(ball,XY, Canvas2.CLICKED_NONE);
             }
+            //TODO possible error gray on redraw
             if(ballclick1 && !ballclick2 && !ballclick3 && clicked){
                 scored= canvas.draw(ball,XY, Canvas2.CLICKED_ONE);
                 clicked=false;

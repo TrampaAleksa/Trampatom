@@ -71,7 +71,7 @@ public class RandomCoordinate {
 
         return angle;
     }
-    public int[] randomThreeBallCoordinates(int ballWidth, int ballHeight){
+    public int[] randomThreeBallCoordinates(){
         int x1,x2,x3,y1,y2,y3;
         x1=x2=x3=y1=y2=y3=0;
         int[] XY1 ={x1,y1};
@@ -116,6 +116,27 @@ public class RandomCoordinate {
         return XY;
     }
 
+    public int[] randomnegativeBallsCoordinates(){
+        int x1,x2,x3,y1,y2,y3;
+        x1=x2=x3=y1=y2=y3=0;
+        int[] XY1 ={x1,y1};
+        int[] XY2 ={x2,y2};
+        int[] XY3 ={x3,y3};
+
+        //draw the first ball
+        XY1[0]=randomX();
+        XY1[1]=randomY();
+        //draw the second ball
+        XY2[0]=randomX();
+        XY2[1]=randomY();
+        //draw the third ball
+        XY3[0]=randomX();
+        XY3[1]=randomY();
+
+        int[] XY= {XY1[0],XY2[0],XY3[0],XY1[1], XY2[1], XY3[1]};
+        // int[] XY = {x1,x2,x3,y1,y2,y3};
+        return XY;
+    }
 
     /**
      * Method for fixing an object's position in case it's offscreen

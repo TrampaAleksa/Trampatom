@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.trampatom.game.trampatom.MusicService;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.utils.HighScore;
 
@@ -75,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             selectedGame=1;
             soundOn=true;
         //music
-           // svc=new Intent(this, MusicService.class);
-           // startService(svc);
+            svc=new Intent(this, MusicService.class);
+            startService(svc);
     }
 
     @Override
