@@ -5,7 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
+import com.trampatom.game.trampatom.activity.Game1;
+
 public class Canvas1 {
+    //TODO change png formats to jpg to save memory and speed
     SurfaceHolder ourHolder;
     Canvas ourCanvas;
     Bitmap background;
@@ -29,5 +32,57 @@ public class Canvas1 {
         ourCanvas.drawBitmap(ball, x, y, null);
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;
+    }
+
+    /**
+     * method used when drawing a purple ball
+     * @param ball color of the ball
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param XY1 XY coordinates for the other ball. not used until we click
+     * @param clicked used to split balls after we clicked
+     */
+    public void drawPurple(Bitmap ball, int x, int y, int[] XY1, int clicked){
+
+        switch(clicked)
+        {
+            //case: first purple ball drawn
+            case Game1.BALL_PURPLE_NO_CLICK:
+                ourCanvas=ourHolder.lockCanvas();
+                ourCanvas.drawRGB(0, 0, 200);
+                ourCanvas.drawBitmap(background, 0,0, null);
+                ourCanvas.drawBitmap(ball, x, y, null);
+                ourHolder.unlockCanvasAndPost(ourCanvas);
+                break;
+            //case: first purple clicked and split into two
+            case Game1.BALL_PURPLE_ONE_CLICK:
+                ourCanvas=ourHolder.lockCanvas();
+                ourCanvas.drawRGB(0, 0, 200);
+                ourCanvas.drawBitmap(background, 0,0, null);
+                //draw two purple balls
+                ourCanvas.drawBitmap(ball, x, y, null);
+                ourCanvas.drawBitmap(ball,XY1[0], XY1[1],null);
+                ourHolder.unlockCanvasAndPost(ourCanvas);
+                break;
+            //case: original ball clicked so it disappears
+            case Game1.BALL_PURPLE_TWO_CLICK_ORIGINAL:
+                ourCanvas=ourHolder.lockCanvas();
+                ourCanvas.drawRGB(0, 0, 200);
+                ourCanvas.drawBitmap(background, 0,0, null);
+                //draw two purple balls
+                ourCanvas.drawBitmap(ball,XY1[0], XY1[1],null);
+                ourHolder.unlockCanvasAndPost(ourCanvas);
+                break;
+            //case: second ball clicked so it disappears
+            case Game1.BALL_PURPLE_TWO_CLICK_SECOND:
+                ourCanvas=ourHolder.lockCanvas();
+                ourCanvas.drawRGB(0, 0, 200);
+                ourCanvas.drawBitmap(background, 0,0, null);
+                //draw two purple balls
+                ourCanvas.drawBitmap(ball, x, y, null);
+                ourHolder.unlockCanvasAndPost(ourCanvas);
+                break;
+        }
+
     }
 }

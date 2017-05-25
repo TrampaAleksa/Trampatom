@@ -28,12 +28,21 @@ import java.util.Random;
 import static java.lang.Thread.sleep;
 
 public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchListener{
-    //Duration of the game
+
     private static final long GAME_TIME = 25000;
     private static final int BALL_SPEED= 8;
+    private static final int BALL_SIZE_ADAPT= 18;
     private static final int BALL_YELLOW_REQUIRED_CLICKS= 4;
     private static final int BALL_GREEN_SPEED= 20;
+    //used for handling drawing of purple balls
+    public static final int BALL_PURPLE_NO_CLICK= 1;
+    public static final int BALL_PURPLE_ONE_CLICK= 2;
+    public static final int BALL_PURPLE_TWO_CLICK_ORIGINAL= 3;
+    public static final int BALL_PURPLE_TWO_CLICK_SECOND= 4;
 
+    //RED - don't click on the ball ; BLUE - click on the ball
+    //GREEN - super crazy ball ; YELLOW - click it a few times
+    //PURPLE splits into two after first click
     private static final int BALL_RED = 1;
     private static final int BALL_BLUE = 2;
     private static final int BALL_GREEN = 3;
@@ -64,10 +73,15 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     //coordinates of the currently drawn ball, coordinates where we clicked
         int x, clickedX;
         int y, clickedY;
+    //used for purple ball
+        int[] XY={0,0};
+        int otherMoveX= 1; int otherMoveY = 1;
+        int clicked=1;
+        boolean originalBallClicked= false; boolean secondBallClicked=false;
     //used for moving the ball
         int moveX = 1;
         int moveY = 1;
-        double angle;
+        double angle, secondAngle;
     //used for drawing the first ball
         boolean initialDraw;
     //used for drawing a new ball whenever we scored
@@ -113,14 +127,19 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //Bitmaps
             blueBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
             redBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
-            greenBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomnarandzasta);
+            greenBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzelena);
             yellowBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzuta);
-            purpleBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
+            purpleBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomroze);
             background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
             background = Bitmap.createScaledBitmap(background, width, height, true);
         //ball Height and Width
-            ballHeight= blueBall.getHeight();
-            ballWidth= blueBall.getWidth();
+            ballHeight= blueBall.getHeight()+BALL_SIZE_ADAPT;
+            ballWidth= blueBall.getWidth()+BALL_SIZE_ADAPT;
+            blueBall = Bitmap.createScaledBitmap(blueBall, ballWidth, ballHeight, true);
+            redBall = Bitmap.createScaledBitmap(redBall, ballWidth, ballHeight, true);
+            greenBall = Bitmap.createScaledBitmap(greenBall, ballWidth, ballHeight, true);
+            yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight+BALL_SIZE_ADAPT, true);
+            purpleBall = Bitmap.createScaledBitmap(purpleBall, ballWidth, ballHeight, true);
         //Initial coordinates for the ball
 
         //Obtaining the highScore
@@ -164,14 +183,17 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     canvas.draw(redBall, x, y);
                     break;
                 case BALL_YELLOW:
+                    //this ball doesn't move
                     canvas.draw(yellowBall, x, y);
                     break;
                 case BALL_GREEN:
+                    //this ball moves like crazy
                     moveGreenBall();
                     canvas.draw(greenBall, x, y);
                     break;
                 case BALL_PURPLE:
-                    canvas.draw(blueBall, x, y);
+                    movePurpleBall();
+                    canvas.drawPurple(purpleBall, x, y, XY, clicked);
                     break;
             }
             //after the timer runs out finish the game
@@ -241,6 +263,40 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             // too far top
         }
     }
+    private void movePurpleBall(){
+        if(clicked==BALL_PURPLE_NO_CLICK){
+            moveBall();
+        }
+        else{
+            //move the original ball
+            moveBall();
+            //move the other ball
+            XY[0] += otherMoveX*BALL_SPEED * Math.sin(secondAngle);
+            XY[1] += otherMoveY*BALL_SPEED * Math.cos(secondAngle);
+
+            //if the ball is off screen change its direction
+            if(XY[0] > width-ballWidth) {
+                XY[0] = width-ballWidth;
+                otherMoveX = -otherMoveX;
+                // too far right
+            }
+            if(XY[1] > height-ballHeight) {
+                XY[1] = height-ballHeight;
+                otherMoveY = -otherMoveY;
+                // too far bottom
+            }
+            if(XY[0] < 0) {
+                XY[0] = 0;
+                otherMoveX = -otherMoveX;
+                // too far left
+            }
+            if(XY[1] < 0) {
+                XY[1] = 0;
+                otherMoveY = -otherMoveY;
+                // too far top
+            }
+        }
+    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -262,7 +318,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     greenBall();
                 }
                 if(ballType>15 && ballType<=18){
-
+                    purpleBall();
                 }
             setCurrentBall(ballType);
         }
@@ -278,7 +334,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
         //determines if the ball will be positive or negative
         Random number3= new Random();
-        ballType= number3.nextInt(15);
+        ballType= number3.nextInt(18);
     }
 
     /**
@@ -354,8 +410,42 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
     private void purpleBall(){
-
+        //if we clicked on the first ball
+        if(clicked==BALL_PURPLE_NO_CLICK) {
+            if (clickedABall(x, y, clickedX, clickedY)) {
+                clicked = BALL_PURPLE_ONE_CLICK;
+                angle = randomCoordinate.randomAngle();
+                secondAngle= randomCoordinate.randomAngle();
+                XY[0]=x;
+                XY[1]=y;
+            }
+        }
+        //if we clicked on one of the split balls
+                else {
+                    if(clickedABall(x,y,clickedX, clickedY)){
+                        originalBallClicked= true;
+                        clicked=BALL_PURPLE_TWO_CLICK_ORIGINAL;
+                        //if this ball was the second one clicked draw a new ball and score
+                        if(secondBallClicked){
+                            score+=400;
+                            getNewBall();
+                            clicked=BALL_PURPLE_NO_CLICK;
+                            originalBallClicked=secondBallClicked=false;
+                        }
+                    }
+                    if(clickedABall(XY[0], XY[1], clickedX, clickedY)){
+                        secondBallClicked= true;
+                        clicked=BALL_PURPLE_TWO_CLICK_SECOND;
+                        if(originalBallClicked){
+                            score+=400;
+                            getNewBall();
+                            clicked=BALL_PURPLE_NO_CLICK;
+                            originalBallClicked=secondBallClicked=false;
+                        }
+                    }
+            }
     }
+
 
 
 
