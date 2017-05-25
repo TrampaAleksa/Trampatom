@@ -33,7 +33,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private static final int BALL_SPEED= 8;
     private static final int BALL_SIZE_ADAPT= 18;
     private static final int BALL_YELLOW_REQUIRED_CLICKS= 4;
-    private static final int BALL_GREEN_SPEED= 20;
+    private static final int BALL_GREEN_SPEED= 16;
     //used for handling drawing of purple balls
     public static final int BALL_PURPLE_NO_CLICK= 1;
     public static final int BALL_PURPLE_ONE_CLICK= 2;
@@ -43,11 +43,11 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     //RED - don't click on the ball ; BLUE - click on the ball
     //GREEN - super crazy ball ; YELLOW - click it a few times
     //PURPLE splits into two after first click
-    private static final int BALL_RED = 1;
-    private static final int BALL_BLUE = 2;
-    private static final int BALL_GREEN = 3;
-    private static final int BALL_YELLOW = 4;
-    private static final int BALL_PURPLE = 5;
+    public static final int BALL_RED = 1;
+    public static final int BALL_BLUE = 2;
+    public static final int BALL_GREEN = 3;
+    public static final int BALL_YELLOW = 4;
+    public static final int BALL_PURPLE = 5;
 
     //Classes
         GameTimeAndScore gameTimeAndScore;
@@ -77,10 +77,12 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         int[] XY={0,0};
         int otherMoveX= 1; int otherMoveY = 1;
         int clicked=1;
-        boolean originalBallClicked= false; boolean secondBallClicked=false;
+        boolean originalBallClicked= false; boolean secondBallClicked=false; boolean thirdBallClicked=false;
     //used for moving the ball
         int moveX = 1;
         int moveY = 1;
+        Random greenRandom;
+        int changeAngleGreen;
         double angle, secondAngle;
     //used for drawing the first ball
         boolean initialDraw;
@@ -88,6 +90,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         boolean scored;
     //used for ending the game when the time ends, congratulations if new high score
         boolean gameover, newHighScore;
+
+
+    int[] XYTS= {0,0,0,0};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -154,6 +159,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     @Override
     public void run() {
         canvas = new Canvas1(ourHolder,mCanvas, background);
+        greenRandom = new Random();
         while (isRunning) {
             //Do until you get the surface
             if (!ourHolder.getSurface().isValid())
@@ -238,6 +244,12 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
     private void moveGreenBall(){
+
+        //random chance for the ball to change direction
+       changeAngleGreen = greenRandom.nextInt(350);
+        if(changeAngleGreen<=20){
+            angle= randomCoordinate.randomAngle();
+        }
         x += moveX*BALL_GREEN_SPEED * Math.sin(angle);
         y += moveY*BALL_GREEN_SPEED * Math.cos(angle);
 
@@ -360,20 +372,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
 
-    /**
-     * checks if a ball was clicked
-     * @param x x coordinate of the ball
-     * @param y y coordinate of the ball
-     * @param clickedX x where we clicked
-     * @param clickedY y where we clicked
-     * @return returns true if we clicked the ball
-     */
-    private boolean clickedABall(int x, int y, int clickedX, int clickedY){
-        if(clickedX>x && clickedX<(x+ballWidth) && clickedY>y && clickedY<(y+ballHeight))
-            return true;
-        else
-            return false;
-    }
 
     private void redBall(){
         if(clickedABall(x,y,clickedX,clickedY)){
@@ -449,6 +447,20 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
 
 
+    /**
+     * checks if a ball was clicked
+     * @param x x coordinate of the ball
+     * @param y y coordinate of the ball
+     * @param clickedX x where we clicked
+     * @param clickedY y where we clicked
+     * @return returns true if we clicked the ball
+     */
+    private boolean clickedABall(int x, int y, int clickedX, int clickedY){
+        if(clickedX>x && clickedX<(x+ballWidth) && clickedY>y && clickedY<(y+ballHeight))
+            return true;
+        else
+            return false;
+    }
 
     public void pause()
     {
