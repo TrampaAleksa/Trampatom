@@ -31,6 +31,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     //Duration of the game
     private static final long GAME_TIME = 25000;
     private static final int BALL_SPEED= 8;
+    private static final int BALL_YELLOW_REQUIRED_CLICKS= 4;
+    private static final int BALL_GREEN_SPEED= 20;
 
     private static final int BALL_RED = 1;
     private static final int BALL_BLUE = 2;
@@ -57,7 +59,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         static int ballWidth, ballHeight;
     //Used for scoring
         int ballType=4, currentBall;
-        int previous=4;
+        int timesClicked=BALL_YELLOW_REQUIRED_CLICKS;
         int score, previousHighScore;
     //coordinates of the currently drawn ball, coordinates where we clicked
         int x, clickedX;
@@ -82,6 +84,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game);
         init();
+        //TODO remove score getting updated in the timer
         new CountDownTimer(GAME_TIME, 250) {
             public void onTick(long millisUntilFinished) {
                 gameTimeAndScore.setTimeAndScore(millisUntilFinished, score);
@@ -129,11 +132,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         scored=false;
     }
 
-    void startTimer(){
-
-    }
-
-
     @Override
     public void run() {
         canvas = new Canvas1(ourHolder,mCanvas, background);
@@ -154,21 +152,23 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 initialDraw= canvas.draw(blueBall,x,y);
             }
 
-            moveBall();
             //draw a ball after the score changes depending on the type
             switch(currentBall)
             {
                 case BALL_BLUE:
+                    moveBall();
                     canvas.draw(blueBall, x, y);
                     break;
                 case BALL_RED:
+                    moveBall();
                     canvas.draw(redBall, x, y);
                     break;
-                case BALL_GREEN:
-                    canvas.draw(blueBall, x, y);
-                    break;
                 case BALL_YELLOW:
-                    canvas.draw(blueBall, x, y);
+                    canvas.draw(yellowBall, x, y);
+                    break;
+                case BALL_GREEN:
+                    moveGreenBall();
+                    canvas.draw(greenBall, x, y);
                     break;
                 case BALL_PURPLE:
                     canvas.draw(blueBall, x, y);
@@ -215,7 +215,32 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             // too far top
         }
     }
+    private void moveGreenBall(){
+        x += moveX*BALL_GREEN_SPEED * Math.sin(angle);
+        y += moveY*BALL_GREEN_SPEED * Math.cos(angle);
 
+        //if the ball is off screen change its direction
+        if(x > width-ballWidth) {
+            x = width-ballWidth;
+            moveX = -moveX;
+            // too far right
+        }
+        if(y > height-ballHeight) {
+            y = height-ballHeight;
+            moveY = -moveY;
+            // too far bottom
+        }
+        if(x < 0) {
+            x = 0;
+            moveX = -moveX;
+            // too far left
+        }
+        if(y < 0) {
+            y = 0;
+            moveY = -moveY;
+            // too far top
+        }
+    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -231,14 +256,15 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     blueBall();
                 }
                 if(ballType>10 && ballType<=13){
-
+                    yellowBall();
                 }
                 if(ballType>13 && ballType<=15){
-
+                    greenBall();
                 }
                 if(ballType>15 && ballType<=18){
 
                 }
+            setCurrentBall(ballType);
         }
         return false;
     }
@@ -252,7 +278,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
         //determines if the ball will be positive or negative
         Random number3= new Random();
-        ballType= number3.nextInt(10);
+        ballType= number3.nextInt(15);
     }
 
     /**
@@ -268,10 +294,10 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             currentBall=BALL_BLUE;
         }
         if(ballType>10 && ballType<=13){
-            currentBall=BALL_GREEN;
+            currentBall=BALL_YELLOW;
         }
         if(ballType>13 && ballType<=15){
-            currentBall=BALL_YELLOW;
+            currentBall=BALL_GREEN;
         }
         if(ballType>15 && ballType<=18){
             currentBall=BALL_PURPLE;
@@ -302,20 +328,30 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             score+=100;
             getNewBall();
         }
-        setCurrentBall(ballType);
     }
     private void blueBall(){
         if(clickedABall(x,y,clickedX,clickedY)) {
             score += 100;
             getNewBall();
         }
-        setCurrentBall(ballType);
-    }
-    private void greenBall(){
-
     }
     private void yellowBall(){
-
+        if(clickedABall(x,y,clickedX,clickedY)) {
+            if (timesClicked > 0) {
+                timesClicked--;
+            }
+            else {
+                score+=500;
+                getNewBall();
+                timesClicked=BALL_YELLOW_REQUIRED_CLICKS;
+            }
+        }
+    }
+    private void greenBall(){
+        if(clickedABall(x,y,clickedX,clickedY)){
+            score+=400;
+            getNewBall();
+        }
     }
     private void purpleBall(){
 
