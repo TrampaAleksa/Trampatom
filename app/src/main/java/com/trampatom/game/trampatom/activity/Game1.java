@@ -32,13 +32,15 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private static final long GAME_TIME = 25000;
     private static final int BALL_SPEED= 8;
     private static final int BALL_SIZE_ADAPT= 18;
+    //used for handling drawing of yellow ball
     private static final int BALL_YELLOW_REQUIRED_CLICKS= 4;
+    private static final int BALL_YELLOW_SPEED_INCREASE= 3;
+    private static final int BALL_YELLOW_INITIAL_SPEED= 2;
+    private static final int BALL_YELLOW_SIZE_DECREASE= 10;
     private static final int BALL_GREEN_SPEED= 16;
     //used for handling drawing of purple balls
     public static final int BALL_PURPLE_NO_CLICK= 1;
     public static final int BALL_PURPLE_ONE_CLICK= 2;
-    public static final int BALL_PURPLE_TWO_CLICK_ORIGINAL= 3;
-    public static final int BALL_PURPLE_TWO_CLICK_SECOND= 4;
 
     //RED - don't click on the ball ; BLUE - click on the ball
     //GREEN - super crazy ball ; YELLOW - click it a few times
@@ -73,26 +75,27 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     //coordinates of the currently drawn ball, coordinates where we clicked
         int x, clickedX;
         int y, clickedY;
+    //used for yellow ball;
+        int yellowBallSpeed = BALL_YELLOW_INITIAL_SPEED;
+        boolean changedSize=false;
     //used for purple ball
-        int[] XY={0,0};
+        int[] XY={0,0,0,0};
+        int thirdMoveX= 1; int thirdMoveY=1;
         int otherMoveX= 1; int otherMoveY = 1;
-        int clicked=1;
+        int timesClickedPurple=BALL_PURPLE_NO_CLICK;
         boolean originalBallClicked= false; boolean secondBallClicked=false; boolean thirdBallClicked=false;
     //used for moving the ball
         int moveX = 1;
         int moveY = 1;
         Random greenRandom;
         int changeAngleGreen;
-        double angle, secondAngle;
+        double angle, secondAngle, thirdAngle;
     //used for drawing the first ball
         boolean initialDraw;
     //used for drawing a new ball whenever we scored
         boolean scored;
     //used for ending the game when the time ends, congratulations if new high score
         boolean gameover, newHighScore;
-
-
-    int[] XYTS= {0,0,0,0};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -143,7 +146,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             blueBall = Bitmap.createScaledBitmap(blueBall, ballWidth, ballHeight, true);
             redBall = Bitmap.createScaledBitmap(redBall, ballWidth, ballHeight, true);
             greenBall = Bitmap.createScaledBitmap(greenBall, ballWidth, ballHeight, true);
-            yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight+BALL_SIZE_ADAPT, true);
+            yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
             purpleBall = Bitmap.createScaledBitmap(purpleBall, ballWidth, ballHeight, true);
         //Initial coordinates for the ball
 
@@ -189,7 +192,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     canvas.draw(redBall, x, y);
                     break;
                 case BALL_YELLOW:
-                    //this ball doesn't move
+                    moveYellowBall();
                     canvas.draw(yellowBall, x, y);
                     break;
                 case BALL_GREEN:
@@ -199,7 +202,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     break;
                 case BALL_PURPLE:
                     movePurpleBall();
-                    canvas.drawPurple(purpleBall, x, y, XY, clicked);
+                    canvas.drawPurple(purpleBall, x, y, XY, timesClickedPurple);
                     break;
             }
             //after the timer runs out finish the game
@@ -220,6 +223,88 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private void moveBall() {
         x += moveX*BALL_SPEED * Math.sin(angle);
         y += moveY*BALL_SPEED * Math.cos(angle);
+
+        //if the ball is off screen change its direction
+        if(x > width-ballWidth) {
+            x = width-ballWidth;
+            moveX = -moveX;
+            // too far right
+        }
+        if(y > height-ballHeight) {
+            y = height-ballHeight;
+            moveY = -moveY;
+            // too far bottom
+        }
+        if(x < 0) {
+            x = 0;
+            moveX = -moveX;
+            // too far left
+        }
+        if(y < 0) {
+            y = 0;
+            moveY = -moveY;
+            // too far top
+        }
+    }
+    private void moveSecondBall() {
+        XY[0] += otherMoveX * BALL_SPEED * Math.sin(secondAngle);
+        XY[1] += otherMoveY * BALL_SPEED * Math.cos(secondAngle);
+
+        //if the ball is off screen change its direction
+        if (XY[0] > width - ballWidth) {
+            XY[0] = width - ballWidth;
+            otherMoveX = -otherMoveX;
+            // too far right
+        }
+        if (XY[1] > height - ballHeight) {
+            XY[1] = height - ballHeight;
+            otherMoveY = -otherMoveY;
+            // too far bottom
+        }
+        if (XY[0] < 0) {
+            XY[0] = 0;
+            otherMoveX = -otherMoveX;
+            // too far left
+        }
+        if (XY[1] < 0) {
+            XY[1] = 0;
+            otherMoveY = -otherMoveY;
+            // too far top
+        }
+    }
+    private void moveThirdBall() {
+        XY[2] += thirdMoveX * BALL_SPEED * Math.sin(thirdAngle);
+        XY[3] += thirdMoveY * BALL_SPEED * Math.cos(thirdAngle);
+
+        //if the ball is off screen change its direction
+        if (XY[2] > width - ballWidth) {
+            XY[2] = width - ballWidth;
+            thirdMoveX = -thirdMoveX;
+            // too far right
+        }
+        if (XY[3] > height - ballHeight) {
+            XY[3] = height - ballHeight;
+            thirdMoveY = -thirdMoveY;
+            // too far bottom
+        }
+        if (XY[2] < 0) {
+            XY[2] = 0;
+            thirdMoveX = -thirdMoveX;
+            // too far left
+        }
+        if (XY[3] < 0) {
+            XY[3] = 0;
+            thirdMoveY = -thirdMoveY;
+            // too far top
+        }
+    }
+
+    /**
+     * yellow ball moves very slowly but speeds up with every click
+     */
+    private void moveYellowBall(){
+        x += moveX*yellowBallSpeed * Math.sin(angle);
+        y += moveY*yellowBallSpeed * Math.cos(angle);
 
         //if the ball is off screen change its direction
         if(x > width-ballWidth) {
@@ -276,36 +361,19 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
     private void movePurpleBall(){
-        if(clicked==BALL_PURPLE_NO_CLICK){
+        if(timesClickedPurple==BALL_PURPLE_NO_CLICK){
             moveBall();
         }
-        else{
+        else {
             //move the original ball
-            moveBall();
-            //move the other ball
-            XY[0] += otherMoveX*BALL_SPEED * Math.sin(secondAngle);
-            XY[1] += otherMoveY*BALL_SPEED * Math.cos(secondAngle);
-
-            //if the ball is off screen change its direction
-            if(XY[0] > width-ballWidth) {
-                XY[0] = width-ballWidth;
-                otherMoveX = -otherMoveX;
-                // too far right
+            if (!originalBallClicked)
+                moveBall();
+            if (!secondBallClicked) {
+                //move the other ball
+                moveSecondBall();
             }
-            if(XY[1] > height-ballHeight) {
-                XY[1] = height-ballHeight;
-                otherMoveY = -otherMoveY;
-                // too far bottom
-            }
-            if(XY[0] < 0) {
-                XY[0] = 0;
-                otherMoveX = -otherMoveX;
-                // too far left
-            }
-            if(XY[1] < 0) {
-                XY[1] = 0;
-                otherMoveY = -otherMoveY;
-                // too far top
+            if(!thirdBallClicked){
+                moveThirdBall();
             }
         }
     }
@@ -390,16 +458,38 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
     private void yellowBall(){
+        if(!changedSize) {
+            ballWidth = ballHeight = ballWidth + 25;
+            yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
+            changedSize=true;
+        }
+        //every time the ball is clicked decrease its size and increase speed
         if(clickedABall(x,y,clickedX,clickedY)) {
             if (timesClicked > 0) {
                 timesClicked--;
+                clickedYellowBall();
             }
             else {
                 score+=500;
                 getNewBall();
+                //reset the yellow ball to its first state for later use
                 timesClicked=BALL_YELLOW_REQUIRED_CLICKS;
+                ballWidth=ballHeight= blueBall.getWidth();
+                yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
+                yellowBallSpeed=BALL_YELLOW_INITIAL_SPEED;
+                changedSize=false;
             }
         }
+    }
+
+    /**
+     * Method that reduces yellow ball's size and increases its speed every time it's called
+     */
+    private void clickedYellowBall(){
+        ballWidth -= BALL_YELLOW_SIZE_DECREASE;
+        ballHeight -= BALL_YELLOW_SIZE_DECREASE;
+        yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
+        yellowBallSpeed+= BALL_YELLOW_SPEED_INCREASE;
     }
     private void greenBall(){
         if(clickedABall(x,y,clickedX,clickedY)){
@@ -407,43 +497,43 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             getNewBall();
         }
     }
-    private void purpleBall(){
+    private void purpleBall() {
         //if we clicked on the first ball
-        if(clicked==BALL_PURPLE_NO_CLICK) {
+        if (timesClickedPurple == BALL_PURPLE_NO_CLICK) {
             if (clickedABall(x, y, clickedX, clickedY)) {
-                clicked = BALL_PURPLE_ONE_CLICK;
+                timesClickedPurple = BALL_PURPLE_ONE_CLICK;
                 angle = randomCoordinate.randomAngle();
-                secondAngle= randomCoordinate.randomAngle();
-                XY[0]=x;
-                XY[1]=y;
+                secondAngle = randomCoordinate.randomAngle();
+                thirdAngle = randomCoordinate.randomAngle();
+                XY[0] = x;          XY[1] = y;
+                XY[2] = x;          XY[3] = y;
             }
         }
         //if we clicked on one of the split balls
-                else {
-                    if(clickedABall(x,y,clickedX, clickedY)){
-                        originalBallClicked= true;
-                        clicked=BALL_PURPLE_TWO_CLICK_ORIGINAL;
-                        //if this ball was the second one clicked draw a new ball and score
-                        if(secondBallClicked){
-                            score+=400;
-                            getNewBall();
-                            clicked=BALL_PURPLE_NO_CLICK;
-                            originalBallClicked=secondBallClicked=false;
-                        }
-                    }
-                    if(clickedABall(XY[0], XY[1], clickedX, clickedY)){
-                        secondBallClicked= true;
-                        clicked=BALL_PURPLE_TWO_CLICK_SECOND;
-                        if(originalBallClicked){
-                            score+=400;
-                            getNewBall();
-                            clicked=BALL_PURPLE_NO_CLICK;
-                            originalBallClicked=secondBallClicked=false;
-                        }
-                    }
+        else  {
+            if(clickedABall(x,y,clickedX,clickedY)){
+            x=0-ballWidth;
+            y=0-ballHeight;
+            originalBallClicked=true;
             }
-    }
-
+            if(clickedABall(XY[0],XY[1],clickedX,clickedY)){
+                XY[0]=0-ballWidth;
+                XY[1]=0-ballHeight;
+                secondBallClicked=true;
+            }
+            if(clickedABall(XY[2],XY[3],clickedX,clickedY)){
+                XY[2]=0-ballWidth;
+                XY[3]=0-ballHeight;
+                thirdBallClicked=true;
+            }
+            if(originalBallClicked && secondBallClicked && thirdBallClicked){
+                timesClickedPurple = BALL_PURPLE_NO_CLICK;
+                originalBallClicked = secondBallClicked = thirdBallClicked = false;
+                score +=500;
+                getNewBall();
+            }
+        }
+        }
 
 
 
