@@ -34,7 +34,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private static final long GAME_TIME = 10000;
     private static final int BALL_SPEED= 8;
 
-    public static final int BALL_NEGATIVE_NUMBER = 3;
+    public static final int BALL_NEGATIVE_NUMBER = 7;
     //Classes
     GameTimeAndScore gameTimeAndScore;
     RandomCoordinate randomCoordinate;
@@ -58,13 +58,14 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     //coordinates of the currently drawn ball
     int x, clickedX;
     int y, clickedY;
-    int[] XY= {0,0,0,0,0,0};
+    //14 coordinates ; 7 red balls
+    int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     //used for moving balls, angle of the balls movement
     int moveX, moveY;
-    int[] negMoveX={1,1,1};
-    int[] negMoveY={1,1,1};
+    int[] negMoveX={1,1,1,1,1,1,1};
+    int[] negMoveY={1,1,1,1,1,1,1};
     double angle;
-    double[] angles= {0,0,0,0};
+    double[] angles= {0,0,0,0,0,0,0,0};
     //used for drawing the first ball, start timer only after canvasLoads
     boolean initialDraw;
     //used for drawing a new ball whenever we scored
@@ -163,7 +164,6 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             }
         }
     }
-    //TODO try and make static method for clicked a ball
     private boolean clickedABall(int x, int y, int clickedX, int clickedY){
         if(clickedX>x && clickedX<(x+ballWidth) && clickedY>y && clickedY<(y+ballHeight))
             return true;

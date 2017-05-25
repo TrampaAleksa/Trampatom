@@ -1,6 +1,7 @@
 package com.trampatom.game.trampatom.utils;
 
 
+import com.trampatom.game.trampatom.activity.Game3;
 import com.trampatom.game.trampatom.activity.MainActivity;
 
 import java.util.Random;
@@ -117,24 +118,15 @@ public class RandomCoordinate {
     }
 
     public int[] randomnegativeBallsCoordinates(){
-        int x1,x2,x3,y1,y2,y3;
-        x1=x2=x3=y1=y2=y3=0;
-        int[] XY1 ={x1,y1};
-        int[] XY2 ={x2,y2};
-        int[] XY3 ={x3,y3};
+        int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
         //draw the first ball
-        XY1[0]=randomX();
-        XY1[1]=randomY();
-        //draw the second ball
-        XY2[0]=randomX();
-        XY2[1]=randomY();
-        //draw the third ball
-        XY3[0]=randomX();
-        XY3[1]=randomY();
+        for(int i=0; i< Game3.BALL_NEGATIVE_NUMBER; i++){
+            XY[i] = randomX();
+            XY[i+Game3.BALL_NEGATIVE_NUMBER] = randomY();
+        }
 
-        int[] XY= {XY1[0],XY2[0],XY3[0],XY1[1], XY2[1], XY3[1]};
-        // int[] XY = {x1,x2,x3,y1,y2,y3};
+        // int[] XY = {x1,x2,x3,y1,y2,y3...};
         return XY;
     }
 
