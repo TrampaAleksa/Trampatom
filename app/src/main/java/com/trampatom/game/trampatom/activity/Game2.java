@@ -27,7 +27,7 @@ import static java.lang.Thread.sleep;
 
 public class Game2 extends AppCompatActivity implements View.OnTouchListener, Runnable{
 
-    private static final long GAME_TIME = 30000;
+    private static final long GAME_TIME = 60000;
     private static final int BALL_NUMBER= 3;
     private static final int BALL_SPEED=8;
 
@@ -112,8 +112,12 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
             //background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
             //background = Bitmap.createScaledBitmap(background, width, deviceHeight, true);
         //ball Height and Width
-            ballHeight=ball[0].getHeight();
-            ballWidth=ball[0].getWidth();
+            ballHeight=ball[0].getHeight()+15;
+            ballWidth=ball[0].getWidth()+15;
+            ball[0]=Bitmap.createScaledBitmap(ball[0],ballWidth, ballHeight, true);
+            ball[1]=Bitmap.createScaledBitmap(ball[1],ballWidth, ballHeight, true);
+            ball[2]=Bitmap.createScaledBitmap(ball[2],ballWidth, ballHeight, true);
+            ball[3]=Bitmap.createScaledBitmap(ball[3],ballWidth, ballHeight, true);
 
         //Initial coordinates for the ball
         //Obtaining the highScore

@@ -31,9 +31,10 @@ import static java.lang.Thread.sleep;
 //TODO check on code comments and maybe refactor
 public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchListener{
 
-    private static final long GAME_TIME = 10000;
+    private static final long GAME_TIME = 60000;
     private static final int BALL_SPEED= 8;
 
+    private static final int BALL_NEGATIVE_SPEED= 10;
     public static final int BALL_NEGATIVE_NUMBER = 7;
     //Classes
     GameTimeAndScore gameTimeAndScore;
@@ -48,7 +49,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     boolean isRunning=true;
     //Balls and Background Bitmaps
     Bitmap ball;
-    Bitmap negativeBall;
+    Bitmap[] negativeBall;
     //Other variables
     TextView tvScore, tvTime;
     int width, height, j,i;
@@ -59,7 +60,13 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     int x, clickedX;
     int y, clickedY;
     //14 coordinates ; 7 red balls
+    //TODO use lists\ arrays to get coordinates
     int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    //random sizes of balls
+    Random randomRedSize;
+    int[] randomSize={0,0,0,0,0,0,0};
+    int[] negWidth={0,0,0,0,0,0,0};
+    int[] negHeight={0,0,0,0,0,0,0};
     //used for moving balls, angle of the balls movement
     int moveX, moveY;
     int[] negMoveX={1,1,1,1,1,1,1};
@@ -109,18 +116,25 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //movement of the ballw
             moveX=1;
             moveY=1;
+        //sizes of red balls
+        randomRedSize = new Random();
+        for(i=0 ; i<BALL_NEGATIVE_NUMBER; i++) {
+            randomSize[i] = randomRedSize.nextInt(55);
+        }
         //Bitmaps
             ball= BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
-            negativeBall= BitmapFactory.decodeResource(getResources(), R.drawable.atomcrvena);
-            //background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
-            //background = Bitmap.createScaledBitmap(background, width, deviceHeight, true);
-        //ball Height and Width
-        //TODO maybe increase balls size
             ballHeight=ball.getHeight()+15;
             ballWidth=ball.getWidth()+15;
+            negativeBall = new Bitmap[7];
+        for(i=0; i<BALL_NEGATIVE_NUMBER; i++){
+            negWidth[i]=negHeight[i] =  ballWidth-15+ randomSize[i];
+            negativeBall[i]= BitmapFactory.decodeResource(getResources(), R.drawable.atomcrvena);
+            negativeBall[i]=Bitmap.createScaledBitmap(negativeBall[i],negWidth[i], negHeight[i], true);
+        }
             ball=Bitmap.createScaledBitmap(ball,ballWidth, ballHeight, true);
-            negativeBall=Bitmap.createScaledBitmap(negativeBall,ballWidth, ballHeight, true);
-        //Initial coordinates for the ball
+            //background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
+            //background = Bitmap.createScaledBitmap(background, width, deviceHeight, true);
+        //TODO maybe increase balls size
         //Obtaining the highScore
             highScore = new HighScore(this);
             previousHighScore=highScore.getHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY);
@@ -155,7 +169,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private void clickedNegative(){
 
         for(j=0; j<BALL_NEGATIVE_NUMBER; j++){
-        if(clickedABall(XY[j], XY[j+BALL_NEGATIVE_NUMBER], clickedX, clickedY)) {
+        if(clickedNegativeBall(XY[j], XY[j+BALL_NEGATIVE_NUMBER], clickedX, clickedY, negWidth[j], negHeight[j])) {
             score -= 100;
             XY[j] = randomCoordinate.randomX();
             XY[j+BALL_NEGATIVE_NUMBER]= randomCoordinate.randomY();
@@ -169,6 +183,12 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             return true;
         else
         return false;
+    }
+    private boolean clickedNegativeBall(int x, int y, int clickedX, int clickedY,int negWidth,int negHeight){
+        if(clickedX>x && clickedX<(x+negWidth) && clickedY>y && clickedY<(y+negHeight))
+            return true;
+        else
+            return false;
     }
 
     @Override
@@ -249,8 +269,8 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         for(i=0; i<BALL_NEGATIVE_NUMBER; i++) {
             int negX = XY[i];
             int negY = XY[i + BALL_NEGATIVE_NUMBER];
-            negX += negMoveX[i] * BALL_SPEED * Math.sin(angles[i]);
-            negY += negMoveY[i] * BALL_SPEED * Math.cos(angles[i]);
+            negX += negMoveX[i] * BALL_NEGATIVE_SPEED * Math.sin(angles[i]);
+            negY += negMoveY[i] * BALL_NEGATIVE_SPEED * Math.cos(angles[i]);
 
             //if the ball is off screen change its direction
             if (negX > width - ballWidth) {

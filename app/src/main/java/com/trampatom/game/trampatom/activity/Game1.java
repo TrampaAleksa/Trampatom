@@ -29,7 +29,7 @@ import static java.lang.Thread.sleep;
 
 public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchListener{
 
-    private static final long GAME_TIME = 25000;
+    private static final long GAME_TIME = 60000;
     private static final int BALL_SPEED= 8;
     private static final int BALL_SIZE_ADAPT= 18;
     //used for handling drawing of yellow ball

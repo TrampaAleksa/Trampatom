@@ -16,13 +16,13 @@ public class Canvas3 {
             this.ourHolder = holder;
         }
 
-    public boolean draw(Bitmap ball,Bitmap negativeBall, int x, int y, int[] XY){
+    public boolean draw(Bitmap ball,Bitmap[] negativeBall, int x, int y, int[] XY){
         ourCanvas = ourHolder.lockCanvas();
         ourCanvas.drawRGB(0, 0, 200);
         // canvas.drawBitmap(background,0,0,null);
         ourCanvas.drawBitmap(ball, x, y, null);
         for(i=0; i< Game3.BALL_NEGATIVE_NUMBER; i++) {
-            ourCanvas.drawBitmap(negativeBall, XY[i], XY[i + Game3.BALL_NEGATIVE_NUMBER], null);
+            ourCanvas.drawBitmap(negativeBall[i], XY[i], XY[i + Game3.BALL_NEGATIVE_NUMBER], null);
         }
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;
