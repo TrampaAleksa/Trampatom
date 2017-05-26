@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.R;
+import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.BallType;
 import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.canvas.Canvas1;
@@ -56,8 +57,10 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     public static final int BALL_YELLOW = 4;
     public static final int BALL_PURPLE = 5;
 
-    //Lists
+    //Lists and Arrays
         Ball b;
+        //array for moving the ball
+        int[] moveArray= {0,0,0,0};
     //Classes
         GameTimeAndScore gameTimeAndScore;
         RandomBallVariables randomCoordinate;
@@ -65,6 +68,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         HighScore highScore;
         BallType newBall;
         ClickedABall clickedABall;
+        BallMovement ballMovement;
     //For the SurfaceView to work
         SurfaceHolder ourHolder;
         SurfaceView mSurfaceView;
@@ -186,6 +190,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
                 newBall = new BallType(randomCoordinate);
                 clickedABall = new ClickedABall(ballWidth, ballHeight);
+                ballMovement = new BallMovement(width, height);
                 angle=randomCoordinate.randomAngle();
                 x=randomCoordinate.randomX();
                 y=randomCoordinate.randomY();
@@ -204,6 +209,12 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     canvas.draw(redBall, x, y);
                     break;
                 case BALL_YELLOW:
+                    if(!changedSize) {
+                        //resets the yellow ball to its original size when first drawing it
+                        ballWidth = ballHeight = ballWidth + 25;
+                        yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
+                        changedSize=true;
+                    }
                     moveYellowBall();
                     canvas.draw(yellowBall, x, y);
                     break;
@@ -233,30 +244,11 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
     private void moveBall() {
-        x += moveX*BALL_SPEED * Math.sin(angle);
-        y += moveY*BALL_SPEED * Math.cos(angle);
-
-        //if the ball is off screen change its direction
-        if(x > width-ballWidth) {
-            x = width-ballWidth;
-            moveX = -moveX;
-            // too far right
-        }
-        if(y > height-ballHeight) {
-            y = height-ballHeight;
-            moveY = -moveY;
-            // too far bottom
-        }
-        if(x < 0) {
-            x = 0;
-            moveX = -moveX;
-            // too far left
-        }
-        if(y < 0) {
-            y = 0;
-            moveY = -moveY;
-            // too far top
-        }
+       moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, BALL_SPEED);
+        x= moveArray[0];
+        y = moveArray[1];
+        moveX = moveArray[2];
+        moveY = moveArray[3];
     }
     private void moveSecondBall() {
         XY[0] += otherMoveX * BALL_SPEED * Math.sin(secondAngle);
@@ -468,11 +460,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
     private void yellowBall(){
-        if(!changedSize) {
-            ballWidth = ballHeight = ballWidth + 25;
-            yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
-            changedSize=true;
-        }
+
         //every time the ball is clicked decrease its size and increase speed
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)) {
             if (timesClicked > 0) {
