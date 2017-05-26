@@ -17,11 +17,12 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.trampatom.game.trampatom.R;
+import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.canvas.Canvas2;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
-import com.trampatom.game.trampatom.utils.RandomCoordinate;
+import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
 import static java.lang.Thread.sleep;
 
@@ -33,9 +34,10 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
 
     //Classes
         GameTimeAndScore gameTimeAndScore;
-        RandomCoordinate randomCoordinate;
+        RandomBallVariables randomCoordinate;
         Canvas2 canvas;
         HighScore highScore;
+        ClickedABall clickedABall;
     //For the SurfaceView to work
         SurfaceHolder ourHolder;
         SurfaceView mSurfaceView;
@@ -142,15 +144,15 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
     private void ballclick() {
 
         //when we click the first ball, make it gray
-        if( clickedABall(XY[0], XY[3], clickedX,clickedY) && !ballclick1){
+        if( clickedABall.ballClicked(XY[0], XY[3], clickedX,clickedY) && !ballclick1){
             ballclick1=true;
         }
         //when we click the second ball, make it gray
-        if(clickedABall(XY[1], XY[4], clickedX,clickedY) && ballclick1){
+        if(clickedABall.ballClicked(XY[1], XY[4], clickedX,clickedY) && ballclick1){
             ballclick2=true;
         }
         //when we click the third ball, make it gray
-        if( clickedABall(XY[2], XY[5], clickedX,clickedY) && clickedY<(XY[5]+ballHeight) && ballclick2){
+        if( clickedABall.ballClicked(XY[2], XY[5], clickedX,clickedY) && clickedY<(XY[5]+ballHeight) && ballclick2){
             ballclick3=true;
         }
         //after we have clicked all three balls, score and draw new balls
@@ -162,12 +164,6 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
                 angles[i]= randomCoordinate.randomAngle();
             }
         }
-    }
-    private boolean clickedABall(int x, int y, int clickedX, int clickedY){
-        if(clickedX>x && clickedX<(x+ballWidth) && clickedY>y && clickedY<(y+ballHeight))
-            return true;
-        else
-            return false;
     }
 
     @Override
@@ -186,7 +182,8 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
                 height = mCanvas.getHeight();
                 ourHolder.unlockCanvasAndPost(mCanvas);
                 //prevents drawing over screen
-                randomCoordinate = new RandomCoordinate(width, height, ballWidth, ballHeight);
+                randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
+                clickedABall = new ClickedABall(ballWidth, ballHeight);
                 XY= randomCoordinate.randomnegativeBallsCoordinates();
                 for(i=0; i<BALL_NUMBER; i++){
                     angles[i]= randomCoordinate.randomAngle();

@@ -6,7 +6,7 @@ import com.trampatom.game.trampatom.activity.MainActivity;
 
 import java.util.Random;
 
-public class RandomCoordinate {
+public class RandomBallVariables {
     //used for converting an angle into radians
     private static final double RADIANS = 3.14/180;
     //used for checking if the ball is over a screen's edge
@@ -28,14 +28,21 @@ public class RandomCoordinate {
 
     int ballWidth;
     int ballHeight;
+    Random random;
 
-    public RandomCoordinate(int width, int height, int ballWidth, int ballHeight){
+    public RandomBallVariables(int width, int height, int ballWidth, int ballHeight){
         this.width=width;
         this.height=height;
         this.ballWidth=ballWidth;
         this.ballHeight=ballHeight;
+        random = new Random();
     }
-    boolean draw1,draw2,draw3, help3, crossover;
+
+    public int getRandomBallType(){
+        int ballType;
+        ballType= random.nextInt(18);
+        return ballType;
+    }
 
     /**
      * Method for getting a random X coordinate

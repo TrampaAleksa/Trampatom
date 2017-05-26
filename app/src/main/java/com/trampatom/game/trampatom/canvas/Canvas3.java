@@ -27,5 +27,17 @@ public class Canvas3 {
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;
     }
+    public boolean drawGold(Bitmap ball,Bitmap[] negativeBall,Bitmap goldBall, int x, int y, int[] XY, int goldX, int goldY){
+        ourCanvas = ourHolder.lockCanvas();
+        ourCanvas.drawRGB(0, 0, 200);
+        // canvas.drawBitmap(background,0,0,null);
+        ourCanvas.drawBitmap(ball, x, y, null);
+        ourCanvas.drawBitmap(goldBall, goldX, goldY, null);
+        for(i=0; i< Game3.BALL_NEGATIVE_NUMBER; i++) {
+            ourCanvas.drawBitmap(negativeBall[i], XY[i], XY[i + Game3.BALL_NEGATIVE_NUMBER], null);
+        }
+        ourHolder.unlockCanvasAndPost(ourCanvas);
+        return false;
+    }
     }
 

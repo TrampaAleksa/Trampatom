@@ -16,13 +16,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.R;
+import com.trampatom.game.trampatom.ball.BallType;
+import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.canvas.Canvas1;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
-import com.trampatom.game.trampatom.utils.RandomCoordinate;
+import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
+import java.util.List;
 import java.util.Random;
 
 import static java.lang.Thread.sleep;
@@ -37,6 +41,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private static final int BALL_YELLOW_SPEED_INCREASE= 3;
     private static final int BALL_YELLOW_INITIAL_SPEED= 2;
     private static final int BALL_YELLOW_SIZE_DECREASE= 10;
+
     private static final int BALL_GREEN_SPEED= 16;
     //used for handling drawing of purple balls
     public static final int BALL_PURPLE_NO_CLICK= 1;
@@ -51,11 +56,15 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     public static final int BALL_YELLOW = 4;
     public static final int BALL_PURPLE = 5;
 
+    //Lists
+        Ball b;
     //Classes
         GameTimeAndScore gameTimeAndScore;
-        RandomCoordinate randomCoordinate;
+        RandomBallVariables randomCoordinate;
         Canvas1 canvas;
         HighScore highScore;
+        BallType newBall;
+        ClickedABall clickedABall;
     //For the SurfaceView to work
         SurfaceHolder ourHolder;
         SurfaceView mSurfaceView;
@@ -120,6 +129,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     }
 
     private void init() {
+        //classes
 
         //set up the SurfaceView
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
@@ -173,7 +183,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 mCanvas = ourHolder.lockCanvas();
                 height = mCanvas.getHeight();
                 ourHolder.unlockCanvasAndPost(mCanvas);
-                randomCoordinate = new RandomCoordinate(width, height, ballWidth, ballHeight);
+                randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
+                newBall = new BallType(randomCoordinate);
+                clickedABall = new ClickedABall(ballWidth, ballHeight);
                 angle=randomCoordinate.randomAngle();
                 x=randomCoordinate.randomX();
                 y=randomCoordinate.randomY();
@@ -407,14 +419,12 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
 // TODO Create a class for working with balls/part of ball logic
     private void getNewBall() {
-        //sets new coordinates
-        angle=randomCoordinate.randomAngle();
-        x = randomCoordinate.randomX();
-        y = randomCoordinate.randomY();
 
-        //determines if the ball will be positive or negative
-        Random number3= new Random();
-        ballType= number3.nextInt(18);
+        b = newBall.getNewBall();
+        x= b.getX();
+        y= b.getY();
+        ballType = b.getBallType();
+        angle = b.getAngle();
     }
 
     /**
@@ -442,7 +452,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
 
     private void redBall(){
-        if(clickedABall(x,y,clickedX,clickedY)){
+        if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
             score -= 100;
             getNewBall();
         }
@@ -452,7 +462,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
     private void blueBall(){
-        if(clickedABall(x,y,clickedX,clickedY)) {
+        if(clickedABall.ballClicked(x,y,clickedX,clickedY)) {
             score += 100;
             getNewBall();
         }
@@ -464,7 +474,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             changedSize=true;
         }
         //every time the ball is clicked decrease its size and increase speed
-        if(clickedABall(x,y,clickedX,clickedY)) {
+        if(clickedABall.ballClicked(x,y,clickedX,clickedY)) {
             if (timesClicked > 0) {
                 timesClicked--;
                 clickedYellowBall();
@@ -492,7 +502,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         yellowBallSpeed+= BALL_YELLOW_SPEED_INCREASE;
     }
     private void greenBall(){
-        if(clickedABall(x,y,clickedX,clickedY)){
+        if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
             score+=400;
             getNewBall();
         }
@@ -500,7 +510,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private void purpleBall() {
         //if we clicked on the first ball
         if (timesClickedPurple == BALL_PURPLE_NO_CLICK) {
-            if (clickedABall(x, y, clickedX, clickedY)) {
+            if (clickedABall.ballClicked(x, y, clickedX, clickedY)) {
                 timesClickedPurple = BALL_PURPLE_ONE_CLICK;
                 angle = randomCoordinate.randomAngle();
                 secondAngle = randomCoordinate.randomAngle();
@@ -511,17 +521,17 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
         //if we clicked on one of the split balls
         else  {
-            if(clickedABall(x,y,clickedX,clickedY)){
+            if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
             x=0-ballWidth;
             y=0-ballHeight;
             originalBallClicked=true;
             }
-            if(clickedABall(XY[0],XY[1],clickedX,clickedY)){
+            if(clickedABall.ballClicked(XY[0],XY[1],clickedX,clickedY)){
                 XY[0]=0-ballWidth;
                 XY[1]=0-ballHeight;
                 secondBallClicked=true;
             }
-            if(clickedABall(XY[2],XY[3],clickedX,clickedY)){
+            if(clickedABall.ballClicked(XY[2],XY[3],clickedX,clickedY)){
                 XY[2]=0-ballWidth;
                 XY[3]=0-ballHeight;
                 thirdBallClicked=true;
@@ -534,24 +544,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             }
         }
         }
-
-
-
-    /**
-     * checks if a ball was clicked
-     * @param x x coordinate of the ball
-     * @param y y coordinate of the ball
-     * @param clickedX x where we clicked
-     * @param clickedY y where we clicked
-     * @return returns true if we clicked the ball
-     */
-    private boolean clickedABall(int x, int y, int clickedX, int clickedY){
-        if(clickedX>x && clickedX<(x+ballWidth) && clickedY>y && clickedY<(y+ballHeight))
-            return true;
-        else
-            return false;
-    }
-
     public void pause()
     {
         isRunning=false;
