@@ -8,7 +8,6 @@ import android.view.SurfaceHolder;
 import com.trampatom.game.trampatom.activity.Game1;
 
 public class Canvas1 {
-    //TODO change png formats to jpg to save memory and speed
     SurfaceHolder ourHolder;
     Canvas ourCanvas;
     Bitmap background;
@@ -40,12 +39,10 @@ public class Canvas1 {
      * @param x x coordinate
      * @param y y coordinate
      * @param XY1 XY coordinates for the other ball. not used until we click
-     * @param clicked used to split balls after we clicked
      */
     public void drawPurple(Bitmap ball, int x, int y, int[] XY1, int timesClicked){
         //int memoriseFirstBall= 0;
 
-        //TODO New algorithm!
         if(timesClicked == Game1.BALL_PURPLE_NO_CLICK) {
             ourCanvas = ourHolder.lockCanvas();
             ourCanvas.drawRGB(0, 0, 200);

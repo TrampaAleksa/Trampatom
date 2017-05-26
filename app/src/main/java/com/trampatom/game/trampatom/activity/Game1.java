@@ -61,6 +61,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         Ball b;
         //array for moving the ball
         int[] moveArray= {0,0,0,0};
+        int[] moveArrayGreen = {0,0,0,0,0};
     //Classes
         GameTimeAndScore gameTimeAndScore;
         RandomBallVariables randomCoordinate;
@@ -133,7 +134,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     }
 
     private void init() {
-        //classes
 
         //set up the SurfaceView
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
@@ -173,6 +173,23 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         scored=false;
     }
 
+    private void initiateOnCanvas(){
+        //needed to get the height of the canvas
+        mCanvas = ourHolder.lockCanvas();
+        height = mCanvas.getHeight();
+        ourHolder.unlockCanvasAndPost(mCanvas);
+        // object instances
+        randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
+        newBall = new BallType(randomCoordinate);
+        clickedABall = new ClickedABall(ballWidth, ballHeight);
+        ballMovement = new BallMovement(width, height);
+        //used for the first ball
+        angle=randomCoordinate.randomAngle();
+        x=randomCoordinate.randomX();
+        y=randomCoordinate.randomY();
+        initialDraw= canvas.draw(blueBall,x,y);
+    }
+
     @Override
     public void run() {
         canvas = new Canvas1(ourHolder,mCanvas, background);
@@ -184,17 +201,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
             //The initial draw
             if(initialDraw) {
-                mCanvas = ourHolder.lockCanvas();
-                height = mCanvas.getHeight();
-                ourHolder.unlockCanvasAndPost(mCanvas);
-                randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
-                newBall = new BallType(randomCoordinate);
-                clickedABall = new ClickedABall(ballWidth, ballHeight);
-                ballMovement = new BallMovement(width, height);
-                angle=randomCoordinate.randomAngle();
-                x=randomCoordinate.randomX();
-                y=randomCoordinate.randomY();
-                initialDraw= canvas.draw(blueBall,x,y);
+                initiateOnCanvas();
             }
 
             //draw a ball after the score changes depending on the type
@@ -243,6 +250,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             }
         }
     }
+
+    //TODO use arrays and for loop to move all three balls!
     private void moveBall() {
        moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, BALL_SPEED);
         x= moveArray[0];
@@ -251,118 +260,41 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         moveY = moveArray[3];
     }
     private void moveSecondBall() {
-        XY[0] += otherMoveX * BALL_SPEED * Math.sin(secondAngle);
-        XY[1] += otherMoveY * BALL_SPEED * Math.cos(secondAngle);
-
-        //if the ball is off screen change its direction
-        if (XY[0] > width - ballWidth) {
-            XY[0] = width - ballWidth;
-            otherMoveX = -otherMoveX;
-            // too far right
-        }
-        if (XY[1] > height - ballHeight) {
-            XY[1] = height - ballHeight;
-            otherMoveY = -otherMoveY;
-            // too far bottom
-        }
-        if (XY[0] < 0) {
-            XY[0] = 0;
-            otherMoveX = -otherMoveX;
-            // too far left
-        }
-        if (XY[1] < 0) {
-            XY[1] = 0;
-            otherMoveY = -otherMoveY;
-            // too far top
-        }
+        moveArray = ballMovement.moveBall(XY[0],XY[1],ballWidth, ballHeight, otherMoveX, otherMoveY, secondAngle, BALL_SPEED);
+        XY[0]= moveArray[0];
+        XY[1] = moveArray[1];
+        otherMoveX = moveArray[2];
+        otherMoveY = moveArray[3];
     }
     private void moveThirdBall() {
-        XY[2] += thirdMoveX * BALL_SPEED * Math.sin(thirdAngle);
-        XY[3] += thirdMoveY * BALL_SPEED * Math.cos(thirdAngle);
-
-        //if the ball is off screen change its direction
-        if (XY[2] > width - ballWidth) {
-            XY[2] = width - ballWidth;
-            thirdMoveX = -thirdMoveX;
-            // too far right
-        }
-        if (XY[3] > height - ballHeight) {
-            XY[3] = height - ballHeight;
-            thirdMoveY = -thirdMoveY;
-            // too far bottom
-        }
-        if (XY[2] < 0) {
-            XY[2] = 0;
-            thirdMoveX = -thirdMoveX;
-            // too far left
-        }
-        if (XY[3] < 0) {
-            XY[3] = 0;
-            thirdMoveY = -thirdMoveY;
-            // too far top
-        }
+        moveArray = ballMovement.moveBall(XY[2],XY[3],ballWidth, ballHeight, thirdMoveX, thirdMoveY, thirdAngle, BALL_SPEED);
+        XY[2]= moveArray[0];
+        XY[3] = moveArray[1];
+        thirdMoveX = moveArray[2];
+        thirdMoveY = moveArray[3];
     }
 
     /**
      * yellow ball moves very slowly but speeds up with every click
      */
     private void moveYellowBall(){
-        x += moveX*yellowBallSpeed * Math.sin(angle);
-        y += moveY*yellowBallSpeed * Math.cos(angle);
-
-        //if the ball is off screen change its direction
-        if(x > width-ballWidth) {
-            x = width-ballWidth;
-            moveX = -moveX;
-            // too far right
-        }
-        if(y > height-ballHeight) {
-            y = height-ballHeight;
-            moveY = -moveY;
-            // too far bottom
-        }
-        if(x < 0) {
-            x = 0;
-            moveX = -moveX;
-            // too far left
-        }
-        if(y < 0) {
-            y = 0;
-            moveY = -moveY;
-            // too far top
-        }
+        moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, yellowBallSpeed);
+        x= moveArray[0];
+        y = moveArray[1];
+        moveX = moveArray[2];
+        moveY = moveArray[3];
     }
     private void moveGreenBall(){
-
-        //random chance for the ball to change direction
-       changeAngleGreen = greenRandom.nextInt(350);
+        int changeAngleGreen = greenRandom.nextInt(350);
         if(changeAngleGreen<=20){
             angle= randomCoordinate.randomAngle();
         }
-        x += moveX*BALL_GREEN_SPEED * Math.sin(angle);
-        y += moveY*BALL_GREEN_SPEED * Math.cos(angle);
+        moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, BALL_GREEN_SPEED);
+        x= moveArray[0];
+        y = moveArray[1];
+        moveX = moveArray[2];
+        moveY = moveArray[3];
 
-        //if the ball is off screen change its direction
-        if(x > width-ballWidth) {
-            x = width-ballWidth;
-            moveX = -moveX;
-            // too far right
-        }
-        if(y > height-ballHeight) {
-            y = height-ballHeight;
-            moveY = -moveY;
-            // too far bottom
-        }
-        if(x < 0) {
-            x = 0;
-            moveX = -moveX;
-            // too far left
-        }
-        if(y < 0) {
-            y = 0;
-            moveY = -moveY;
-            // too far top
-        }
     }
     private void movePurpleBall(){
         if(timesClickedPurple==BALL_PURPLE_NO_CLICK){
@@ -409,9 +341,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         return false;
     }
 
-// TODO Create a class for working with balls/part of ball logic
     private void getNewBall() {
-
         b = newBall.getNewBall();
         x= b.getX();
         y= b.getY();
@@ -479,7 +409,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             }
         }
     }
-
     /**
      * Method that reduces yellow ball's size and increases its speed every time it's called
      */
@@ -532,6 +461,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             }
         }
         }
+
+
+
     public void pause()
     {
         isRunning=false;
@@ -550,7 +482,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         ourThread = new Thread(this);
         ourThread.start();
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -562,4 +493,3 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         pause();
     }
 }
-

@@ -91,11 +91,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(selectedGame<MAX_NUMBER_OF_GAMES)
                 selectedGame++;
                 //sets the selected game and shows the high score for THAT game
-                //TODO selectedGame and highScore text view method
                 tvSelectedGame.setText(Integer.toString(selectedGame));
                 highScore.textHighScore(tvHighScore, selectedGame);
                 break;
-            //TODO animation on button click change?
             case R.id.bPrev:
                 //select the previous game
                 if(selectedGame>MIN_NUMBER_OF_GAMES)
@@ -107,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bSound:
                 if(soundOn){
                     //TODO api <21 for drawable
-                    //TODO fix drawable to not move on drawable change
                     //Mute and set sound button to "muted"
                     stopService(svc);
                     sound.setBackground(getDrawable(R.drawable.mutebuttonmuted));

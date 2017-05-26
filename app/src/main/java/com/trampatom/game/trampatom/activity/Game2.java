@@ -79,7 +79,6 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game);
         init();
-        //TODO solve timer delay
         new CountDownTimer(GAME_TIME, 250) {
             public void onTick(long millisUntilFinished) {
                 gameTimeAndScore.setTimeAndScore(millisUntilFinished, score);
@@ -191,7 +190,6 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
                 //initial draw
                 initialDraw= false;
             }
-            //TODO method for ballclicks/refractor
             if(!ballclick1 && !ballclick2 && !ballclick3) {
                 moveBalls(XY);
                 canvas.draw(ball, XY, Canvas2.CLICKED_NONE);

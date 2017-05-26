@@ -28,7 +28,6 @@ import java.util.Random;
 
 import static java.lang.Thread.sleep;
 
-//TODO check on code comments and maybe refactor
 public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchListener{
 
     private static final long GAME_TIME = 60000;
@@ -154,7 +153,6 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             goldBall=Bitmap.createScaledBitmap(goldBall,ballWidth, ballHeight, true);
             //background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
             //background = Bitmap.createScaledBitmap(background, width, deviceHeight, true);
-        //TODO maybe increase balls size
         //Obtaining the highScore
             highScore = new HighScore(this);
             previousHighScore=highScore.getHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY);

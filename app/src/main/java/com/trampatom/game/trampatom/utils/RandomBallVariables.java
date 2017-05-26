@@ -79,50 +79,6 @@ public class RandomBallVariables {
 
         return angle;
     }
-    public int[] randomThreeBallCoordinates(){
-        int x1,x2,x3,y1,y2,y3;
-        x1=x2=x3=y1=y2=y3=0;
-        int[] XY1 ={x1,y1};
-        int[] XY2 ={x2,y2};
-        int[] XY3 ={x3,y3};
-
-        //draw the first ball
-        XY1[0]=randomX();
-        XY1[1]=randomY();
-        //draw the second ball
-        XY2[0]=randomX();
-        XY2[1]=randomY();
-        //move it if it is crossed with the first
-        if(XY2[1]<(XY1[1]+ballHeight) && XY2[1]>(XY1[1]-ballHeight)) {
-            if (XY2[0] > (XY1[0] - ballWidth) && XY2[0] < (XY1[0] + ballWidth)) {
-               XY2= moveBall(XY2[0],XY2[1]);
-            }
-        }
-        //draw the third ball
-        XY3[0]=randomX();
-        XY3[1]=randomY();
-        //move it if its within the first ball
-        if(XY3[1]<(XY1[1]+ballHeight) && XY3[1]>(XY1[1]-ballHeight)) {
-                if (XY3[0] > (XY1[0] - ballWidth) && XY3[0] < (XY1[0] + ballWidth)) {
-                    XY3= moveBall(XY3[0],XY3[1]);
-                }
-        }
-        //move it if its within the second ball
-        if(XY3[1]<(XY2[1]+ballHeight) && XY3[1]>(XY2[1]-ballHeight)) {
-            if(XY3[0]>(XY2[0]-ballWidth) && XY3[0]<(XY2[0]+ballWidth)){
-                XY3=  moveBall(XY3[0],XY3[1]);
-            }
-        }
-        //safety. In case after moving out of second ball into the first
-        if(XY3[1]<(XY1[1]+ballHeight) && XY3[1]>(XY1[1]-ballHeight)) {
-            if (XY3[0] > (XY1[0] - ballWidth) && XY3[0] < (XY1[0] + ballWidth)) {
-                XY3= moveBall(XY3[0],XY3[1]);
-            }
-        }
-        int[] XY= {XY1[0],XY2[0],XY3[0],XY1[1], XY2[1], XY3[1]};
-       // int[] XY = {x1,x2,x3,y1,y2,y3};
-        return XY;
-    }
 
     public int[] randomnegativeBallsCoordinates(){
         int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
