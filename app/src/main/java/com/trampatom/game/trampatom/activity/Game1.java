@@ -47,6 +47,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     //used for handling drawing of purple balls
     public static final int BALL_PURPLE_NO_CLICK= 1;
     public static final int BALL_PURPLE_ONE_CLICK= 2;
+    public static final int BALL_PURPLE_NUMBER= 3;
 
     //RED - don't click on the ball ; BLUE - click on the ball
     //GREEN - super crazy ball ; YELLOW - click it a few times
@@ -60,8 +61,13 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     //Lists and Arrays
         Ball b;
         //array for moving the ball
+        int i;
         int[] moveArray= {0,0,0,0};
         int[] moveArrayGreen = {0,0,0,0,0};
+        //arrays for purple ball
+        int [] purpleXY = {0,0,0,0,0,0};
+        double [] purpleAngles= {0,0,0};
+        int [] purpleMoveXY= {1,1,1,1,1,1};
     //Classes
         GameTimeAndScore gameTimeAndScore;
         RandomBallVariables randomCoordinate;
@@ -93,6 +99,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         int yellowBallSpeed = BALL_YELLOW_INITIAL_SPEED;
         boolean changedSize=false;
     //used for purple ball
+        int ballPurpleNumber =1;
         int[] XY={0,0,0,0};
         int thirdMoveX= 1; int thirdMoveY=1;
         int otherMoveX= 1; int otherMoveY = 1;
@@ -187,6 +194,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         angle=randomCoordinate.randomAngle();
         x=randomCoordinate.randomX();
         y=randomCoordinate.randomY();
+        purpleXY[0]= randomCoordinate.randomX();
+        purpleXY[1]= randomCoordinate.randomY();
+        purpleAngles[0]= randomCoordinate.randomX();
         initialDraw= canvas.draw(blueBall,x,y);
     }
 
@@ -203,40 +213,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             if(initialDraw) {
                 initiateOnCanvas();
             }
-
-            //draw a ball after the score changes depending on the type
-            switch(currentBall)
-            {
-                case BALL_BLUE:
-                    moveBall();
-                    canvas.draw(blueBall, x, y);
-                    break;
-                case BALL_RED:
-                    moveBall();
-                    canvas.draw(redBall, x, y);
-                    break;
-                case BALL_YELLOW:
-                    if(!changedSize) {
-                        //resets the yellow ball to its original size when first drawing it
-                        ballWidth = ballHeight = ballWidth + 25;
-                        yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
-                        changedSize=true;
-                    }
-                    moveYellowBall();
-                    canvas.draw(yellowBall, x, y);
-                    break;
-                case BALL_GREEN:
-                    //this ball moves like crazy
-                    moveGreenBall();
-                    canvas.draw(greenBall, x, y);
-                    break;
-                case BALL_PURPLE:
-                    movePurpleBall();
-                    canvas.drawPurple(purpleBall, x, y, XY, timesClickedPurple);
-                    break;
-            }
+            moveAndDraw();
             //after the timer runs out finish the game
-            if (gameover) {
+            /*if (gameover) {
                 GameOver gameover = new GameOver(ourHolder,mCanvas);
                 //set the high score if there is a new one
                 newHighScore=highScore.isHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY, score);
@@ -247,7 +226,44 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     e.printStackTrace();
                 }
                 finish();
-            }
+            }*/
+        }
+    }
+
+    /**
+     * draw a ball after the score changes depending on the type
+     */
+    public void moveAndDraw(){
+        switch(currentBall)
+        {
+            case BALL_BLUE:
+                moveBall();
+                canvas.draw(blueBall, x, y);
+                break;
+            case BALL_RED:
+                moveBall();
+                canvas.draw(redBall, x, y);
+                break;
+            case BALL_YELLOW:
+                if(!changedSize) {
+                    //resets the yellow ball to its original size when first drawing it
+                    ballWidth = ballHeight = ballWidth + 25;
+                    yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
+                    changedSize=true;
+                }
+                moveYellowBall();
+                canvas.draw(yellowBall, x, y);
+                break;
+            case BALL_GREEN:
+                //this ball moves like crazy
+                moveGreenBall();
+                canvas.draw(greenBall, x, y);
+                break;
+            case BALL_PURPLE:
+                movePurpleBall();
+               // canvas.drawPurple(purpleBall, x, y, XY, timesClickedPurple);
+                canvas.drawPurple(purpleBall, purpleXY, timesClickedPurple);
+                break;
         }
     }
 
@@ -296,21 +312,33 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         moveY = moveArray[3];
 
     }
+
+    /**
+     * manages movement of all purple balls using three movement methods
+     */
     private void movePurpleBall(){
-        if(timesClickedPurple==BALL_PURPLE_NO_CLICK){
-            moveBall();
+
+        //move every ball by its angle
+        for(i=0; i<ballPurpleNumber; i++){
+            moveArray = ballMovement.moveBall(purpleXY[i],purpleXY[i+BALL_PURPLE_NUMBER],
+                    ballWidth, ballHeight, purpleMoveXY[i], purpleMoveXY[i+BALL_PURPLE_NUMBER], purpleAngles[i], BALL_SPEED);
+            purpleXY[i]= moveArray[0];
+            purpleXY[i+BALL_PURPLE_NUMBER] = moveArray[1];
+            purpleMoveXY[i] = moveArray[2];
+            purpleMoveXY[i+BALL_PURPLE_NUMBER] = moveArray[3];
         }
-        else {
-            //move the original ball
-            if (!originalBallClicked)
-                moveBall();
-            if (!secondBallClicked) {
-                //move the other ball
-                moveSecondBall();
-            }
-            if(!thirdBallClicked){
-                moveThirdBall();
-            }
+        //draw three balls when they are clicked
+        if(timesClickedPurple==BALL_PURPLE_ONE_CLICK) {
+                ballPurpleNumber = BALL_PURPLE_NUMBER;
+                //remove the balls that were clicked from the screen
+                if (originalBallClicked)
+                    purpleXY[0] = purpleXY[BALL_PURPLE_NUMBER] = 0 - ballWidth - 10;
+                if (secondBallClicked) {
+                    purpleXY[1] = purpleXY[1 + BALL_PURPLE_NUMBER] = 0 - ballWidth - 10;
+                }
+                if (thirdBallClicked) {
+                    purpleXY[2] = purpleXY[2 + BALL_PURPLE_NUMBER] = 0 - ballWidth - 10;
+                }
         }
     }
 
@@ -345,7 +373,11 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         b = newBall.getNewBall();
         x= b.getX();
         y= b.getY();
-        ballType = b.getBallType();
+        purpleXY[0]= randomCoordinate.randomX();
+        purpleXY[BALL_PURPLE_NUMBER]= randomCoordinate.randomY();
+        purpleAngles[0] = randomCoordinate.randomAngle();
+        //ballType = b.getBallType();
+        ballType= 16;
         angle = b.getAngle();
     }
 
@@ -425,32 +457,32 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
     private void purpleBall() {
-        //if we clicked on the first ball
         if (timesClickedPurple == BALL_PURPLE_NO_CLICK) {
-            if (clickedABall.ballClicked(x, y, clickedX, clickedY)) {
+            //if we clicked on the first ball
+            if (clickedABall.ballClicked(purpleXY[0], purpleXY[BALL_PURPLE_NUMBER], clickedX, clickedY)) {
                 timesClickedPurple = BALL_PURPLE_ONE_CLICK;
-                angle = randomCoordinate.randomAngle();
-                secondAngle = randomCoordinate.randomAngle();
-                thirdAngle = randomCoordinate.randomAngle();
-                XY[0] = x;          XY[1] = y;
-                XY[2] = x;          XY[3] = y;
+                purpleAngles[0] = randomCoordinate.randomAngle();
+                purpleAngles[1] = randomCoordinate.randomAngle();
+                purpleAngles[2] = randomCoordinate.randomAngle();
+                purpleXY[1] = purpleXY[0];          purpleXY[1+BALL_PURPLE_NUMBER] = purpleXY[BALL_PURPLE_NUMBER];
+                purpleXY[2] = purpleXY[0];          purpleXY[2+BALL_PURPLE_NUMBER] = purpleXY[BALL_PURPLE_NUMBER];
             }
         }
-        //if we clicked on one of the split balls
+        //if we clicked on one of the split balls remove them from the screen
         else  {
-            if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
-            x=0-ballWidth;
-            y=0-ballHeight;
+            if(clickedABall.ballClicked(purpleXY[0],purpleXY[BALL_PURPLE_NUMBER],clickedX,clickedY)){
+                purpleXY[0]=0-ballWidth;
+                purpleXY[BALL_PURPLE_NUMBER]=0-ballHeight;
             originalBallClicked=true;
             }
-            if(clickedABall.ballClicked(XY[0],XY[1],clickedX,clickedY)){
-                XY[0]=0-ballWidth;
-                XY[1]=0-ballHeight;
+            if(clickedABall.ballClicked(purpleXY[1],purpleXY[1+BALL_PURPLE_NUMBER],clickedX,clickedY)){
+                purpleXY[1]=0-ballWidth;
+                purpleXY[1+BALL_PURPLE_NUMBER]=0-ballHeight;
                 secondBallClicked=true;
             }
-            if(clickedABall.ballClicked(XY[2],XY[3],clickedX,clickedY)){
-                XY[2]=0-ballWidth;
-                XY[3]=0-ballHeight;
+            if(clickedABall.ballClicked(purpleXY[2],purpleXY[2+BALL_PURPLE_NUMBER],clickedX,clickedY)){
+                purpleXY[2]=0-ballWidth;
+                purpleXY[2+BALL_PURPLE_NUMBER]=0-ballHeight;
                 thirdBallClicked=true;
             }
             if(originalBallClicked && secondBallClicked && thirdBallClicked){
