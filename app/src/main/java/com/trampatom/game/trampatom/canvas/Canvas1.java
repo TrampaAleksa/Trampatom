@@ -8,6 +8,9 @@ import android.view.SurfaceHolder;
 import com.trampatom.game.trampatom.activity.Game1;
 
 public class Canvas1 {
+
+    private static final int BALL_PURPLE_NO_CLICK = 1;
+
     SurfaceHolder ourHolder;
     Canvas ourCanvas;
     Bitmap background;
@@ -63,7 +66,7 @@ public class Canvas1 {
     public void drawPurple(Bitmap ball, int [] purpleXY, int timesClicked){
         //int memoriseFirstBall= 0;
 
-        if(timesClicked == Game1.BALL_PURPLE_NO_CLICK) {
+        if(timesClicked == BALL_PURPLE_NO_CLICK) {
             ourCanvas = ourHolder.lockCanvas();
             ourCanvas.drawRGB(0, 0, 200);
             ourCanvas.drawBitmap(background, 0, 0, null);

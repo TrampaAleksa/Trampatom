@@ -27,27 +27,12 @@ import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
-import java.util.List;
 import java.util.Random;
 
+import com.trampatom.game.trampatom.utils.Keys;
 import static java.lang.Thread.sleep;
 
 public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchListener{
-
-    private static final long GAME_TIME = 60000;
-    private static final int BALL_SPEED= 8;
-    private static final int BALL_SIZE_ADAPT= 18;
-    //used for handling drawing of yellow ball
-    private static final int BALL_YELLOW_REQUIRED_CLICKS= 4;
-    private static final int BALL_YELLOW_SPEED_INCREASE= 3;
-    private static final int BALL_YELLOW_INITIAL_SPEED= 2;
-    private static final int BALL_YELLOW_SIZE_DECREASE= 10;
-
-    private static final int BALL_GREEN_SPEED= 16;
-    //used for handling drawing of purple balls
-    public static final int BALL_PURPLE_NO_CLICK= 1;
-    public static final int BALL_PURPLE_ONE_CLICK= 2;
-    public static final int BALL_PURPLE_NUMBER= 3;
 
     //RED - don't click on the ball ; BLUE - click on the ball
     //GREEN - super crazy ball ; YELLOW - click it a few times
@@ -63,12 +48,12 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //array for moving the ball
         int i;
         int[] moveArray= {0,0,0,0};
-        int[] moveArrayGreen = {0,0,0,0,0};
         //arrays for purple ball
         int [] purpleXY = {0,0,0,0,0,0};
         double [] purpleAngles= {0,0,0};
         int [] purpleMoveXY= {1,1,1,1,1,1};
     //Classes
+        Keys keys;
         GameTimeAndScore gameTimeAndScore;
         RandomBallVariables randomCoordinate;
         Canvas1 canvas;
@@ -90,27 +75,23 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         static int ballWidth, ballHeight;
     //Used for scoring
         int ballType=4, currentBall;
-        int timesClicked=BALL_YELLOW_REQUIRED_CLICKS;
+        int timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
         int score, previousHighScore;
     //coordinates of the currently drawn ball, coordinates where we clicked
         int x, clickedX;
         int y, clickedY;
     //used for yellow ball;
-        int yellowBallSpeed = BALL_YELLOW_INITIAL_SPEED;
+        int yellowBallSpeed = keys.BALL_YELLOW_INITIAL_SPEED;
         boolean changedSize=false;
     //used for purple ball
         int ballPurpleNumber =1;
-        int[] XY={0,0,0,0};
-        int thirdMoveX= 1; int thirdMoveY=1;
-        int otherMoveX= 1; int otherMoveY = 1;
-        int timesClickedPurple=BALL_PURPLE_NO_CLICK;
+        int timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
         boolean originalBallClicked= false; boolean secondBallClicked=false; boolean thirdBallClicked=false;
     //used for moving the ball
         int moveX = 1;
         int moveY = 1;
         Random greenRandom;
-        int changeAngleGreen;
-        double angle, secondAngle, thirdAngle;
+        double angle;
     //used for drawing the first ball
         boolean initialDraw;
     //used for drawing a new ball whenever we scored
@@ -128,7 +109,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         setContentView(R.layout.game);
         init();
         //TODO remove score getting updated in the timer
-        new CountDownTimer(GAME_TIME, 250) {
+        new CountDownTimer(keys.GAME_TIME, 250) {
             public void onTick(long millisUntilFinished) {
                 gameTimeAndScore.setTimeAndScore(millisUntilFinished, score);
             }
@@ -137,11 +118,10 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 gameover= true;
             }
         }.start();
-
     }
 
     private void init() {
-
+        keys = new Keys();
         //set up the SurfaceView
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
             ourHolder = mSurfaceView.getHolder();
@@ -153,24 +133,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //get device's width and height
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();
-        //Bitmaps
-            blueBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
-            redBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
-            greenBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzelena);
-            yellowBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzuta);
-            purpleBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomroze);
-            background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
-            background = Bitmap.createScaledBitmap(background, width, height, true);
-        //ball Height and Width
-            ballHeight= blueBall.getHeight()+BALL_SIZE_ADAPT;
-            ballWidth= blueBall.getWidth()+BALL_SIZE_ADAPT;
-            blueBall = Bitmap.createScaledBitmap(blueBall, ballWidth, ballHeight, true);
-            redBall = Bitmap.createScaledBitmap(redBall, ballWidth, ballHeight, true);
-            greenBall = Bitmap.createScaledBitmap(greenBall, ballWidth, ballHeight, true);
-            yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
-            purpleBall = Bitmap.createScaledBitmap(purpleBall, ballWidth, ballHeight, true);
-        //Initial coordinates for the ball
-
+        //set and resize all the bitmaps
+            initiateBitmaps();
         //Obtaining the highScore
             highScore = new HighScore(this);
             previousHighScore=highScore.getHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY);
@@ -179,25 +143,24 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         initialDraw=true;
         scored=false;
     }
-
-    private void initiateOnCanvas(){
-        //needed to get the height of the canvas
-        mCanvas = ourHolder.lockCanvas();
-        height = mCanvas.getHeight();
-        ourHolder.unlockCanvasAndPost(mCanvas);
-        // object instances
-        randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
-        newBall = new BallType(randomCoordinate);
-        clickedABall = new ClickedABall(ballWidth, ballHeight);
-        ballMovement = new BallMovement(width, height);
-        //used for the first ball
-        angle=randomCoordinate.randomAngle();
-        x=randomCoordinate.randomX();
-        y=randomCoordinate.randomY();
-        purpleXY[0]= randomCoordinate.randomX();
-        purpleXY[1]= randomCoordinate.randomY();
-        purpleAngles[0]= randomCoordinate.randomX();
-        initialDraw= canvas.draw(blueBall,x,y);
+    private void initiateBitmaps(){
+        //initiate bitmaps
+            blueBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
+            redBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
+            greenBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzelena);
+            yellowBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzuta);
+            purpleBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomroze);
+            background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
+            background = Bitmap.createScaledBitmap(background, width, height, true);
+        //ball Height and Width
+            ballHeight= blueBall.getHeight()+keys.BALL_SIZE_ADAPT;
+            ballWidth= blueBall.getWidth()+keys.BALL_SIZE_ADAPT;
+        //resize all balls to the new ball width and height
+            blueBall = Bitmap.createScaledBitmap(blueBall, ballWidth, ballHeight, true);
+            redBall = Bitmap.createScaledBitmap(redBall, ballWidth, ballHeight, true);
+            greenBall = Bitmap.createScaledBitmap(greenBall, ballWidth, ballHeight, true);
+            yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
+            purpleBall = Bitmap.createScaledBitmap(purpleBall, ballWidth, ballHeight, true);
     }
 
     @Override
@@ -213,9 +176,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             if(initialDraw) {
                 initiateOnCanvas();
             }
-            moveAndDraw();
+                moveAndDraw();
             //after the timer runs out finish the game
-            /*if (gameover) {
+            if (gameover) {
                 GameOver gameover = new GameOver(ourHolder,mCanvas);
                 //set the high score if there is a new one
                 newHighScore=highScore.isHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY, score);
@@ -226,10 +189,28 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     e.printStackTrace();
                 }
                 finish();
-            }*/
+            }
         }
     }
-
+    private void initiateOnCanvas(){
+        //needed to get the height of the canvas
+        mCanvas = ourHolder.lockCanvas();
+        height = mCanvas.getHeight();
+        ourHolder.unlockCanvasAndPost(mCanvas);
+        // object instances
+        randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
+        newBall = new BallType(randomCoordinate);
+        clickedABall = new ClickedABall(ballWidth, ballHeight);
+        ballMovement = new BallMovement(width, height);
+        //used for the first ball
+        angle=randomCoordinate.randomAngle();
+        x=randomCoordinate.randomX();
+        y=randomCoordinate.randomY();
+        purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
+        purpleXY[keys.PURPLE_BALL_XY1+keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
+        purpleAngles[keys.PURPLE_BALL_ANGLE_ONE]= randomCoordinate.randomX();
+        initialDraw= canvas.draw(blueBall,x,y);
+    }
     /**
      * draw a ball after the score changes depending on the type
      */
@@ -247,7 +228,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             case BALL_YELLOW:
                 if(!changedSize) {
                     //resets the yellow ball to its original size when first drawing it
-                    ballWidth = ballHeight = ballWidth + 25;
+                    ballWidth = ballHeight = ballWidth + keys.YELLOW_BALL_INITIAL_SIZE;
                     yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
                     changedSize=true;
                 }
@@ -269,47 +250,33 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     //TODO use arrays and for loop to move all three balls!
     private void moveBall() {
-       moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, BALL_SPEED);
-        x= moveArray[0];
-        y = moveArray[1];
-        moveX = moveArray[2];
-        moveY = moveArray[3];
+       moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, keys.BALL_SPEED);
+        x= moveArray[keys.NEW_BALL_X_COORDINATE];
+        y = moveArray[keys.NEW_BALL_Y_COORDINATE];
+        moveX = moveArray[keys.NEW_BALL_MOVEX_VALUE];
+        moveY = moveArray[keys.NEW_BALL_MOVEY_VALUE];
     }
-    private void moveSecondBall() {
-        moveArray = ballMovement.moveBall(XY[0],XY[1],ballWidth, ballHeight, otherMoveX, otherMoveY, secondAngle, BALL_SPEED);
-        XY[0]= moveArray[0];
-        XY[1] = moveArray[1];
-        otherMoveX = moveArray[2];
-        otherMoveY = moveArray[3];
-    }
-    private void moveThirdBall() {
-        moveArray = ballMovement.moveBall(XY[2],XY[3],ballWidth, ballHeight, thirdMoveX, thirdMoveY, thirdAngle, BALL_SPEED);
-        XY[2]= moveArray[0];
-        XY[3] = moveArray[1];
-        thirdMoveX = moveArray[2];
-        thirdMoveY = moveArray[3];
-    }
-
     /**
      * yellow ball moves very slowly but speeds up with every click
      */
     private void moveYellowBall(){
         moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, yellowBallSpeed);
-        x= moveArray[0];
-        y = moveArray[1];
-        moveX = moveArray[2];
-        moveY = moveArray[3];
+        x= moveArray[keys.NEW_BALL_X_COORDINATE];
+        y = moveArray[keys.NEW_BALL_Y_COORDINATE];
+        moveX = moveArray[keys.NEW_BALL_MOVEX_VALUE];
+        moveY = moveArray[keys.NEW_BALL_MOVEY_VALUE];
     }
     private void moveGreenBall(){
-        int changeAngleGreen = greenRandom.nextInt(350);
+        //gets a random number and if its below 20 change the angle
+        int changeAngleGreen = greenRandom.nextInt(keys.GREEN_BALL_ANGLE_CHANGE_CHANCE);
         if(changeAngleGreen<=20){
             angle= randomCoordinate.randomAngle();
         }
-        moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, BALL_GREEN_SPEED);
-        x= moveArray[0];
-        y = moveArray[1];
-        moveX = moveArray[2];
-        moveY = moveArray[3];
+        moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, keys.GREEN_BALL_SPEED);
+        x= moveArray[keys.NEW_BALL_X_COORDINATE];
+        y = moveArray[keys.NEW_BALL_Y_COORDINATE];
+        moveX = moveArray[keys.NEW_BALL_MOVEX_VALUE];
+        moveY = moveArray[keys.NEW_BALL_MOVEY_VALUE];
 
     }
 
@@ -320,24 +287,24 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
         //move every ball by its angle
         for(i=0; i<ballPurpleNumber; i++){
-            moveArray = ballMovement.moveBall(purpleXY[i],purpleXY[i+BALL_PURPLE_NUMBER],
-                    ballWidth, ballHeight, purpleMoveXY[i], purpleMoveXY[i+BALL_PURPLE_NUMBER], purpleAngles[i], BALL_SPEED);
-            purpleXY[i]= moveArray[0];
-            purpleXY[i+BALL_PURPLE_NUMBER] = moveArray[1];
-            purpleMoveXY[i] = moveArray[2];
-            purpleMoveXY[i+BALL_PURPLE_NUMBER] = moveArray[3];
+            moveArray = ballMovement.moveBall(purpleXY[i],purpleXY[i+keys.PURPLE_BALL_NUMBER],
+                    ballWidth, ballHeight, purpleMoveXY[i], purpleMoveXY[i+keys.PURPLE_BALL_NUMBER], purpleAngles[i], keys.BALL_SPEED);
+            purpleXY[i]= moveArray[keys.NEW_BALL_X_COORDINATE];
+            purpleXY[i+keys.PURPLE_BALL_NUMBER] = moveArray[keys.NEW_BALL_Y_COORDINATE];
+            purpleMoveXY[i] = moveArray[keys.NEW_BALL_MOVEX_VALUE];
+            purpleMoveXY[i+keys.PURPLE_BALL_NUMBER] = moveArray[keys.NEW_BALL_MOVEY_VALUE];
         }
         //draw three balls when they are clicked
-        if(timesClickedPurple==BALL_PURPLE_ONE_CLICK) {
-                ballPurpleNumber = BALL_PURPLE_NUMBER;
+        if(timesClickedPurple==keys.BALL_PURPLE_ONE_CLICK) {
+                ballPurpleNumber = keys.PURPLE_BALL_NUMBER;
                 //remove the balls that were clicked from the screen
                 if (originalBallClicked)
-                    purpleXY[0] = purpleXY[BALL_PURPLE_NUMBER] = 0 - ballWidth - 10;
+                    purpleXY[keys.PURPLE_BALL_XY1] = purpleXY[keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
                 if (secondBallClicked) {
-                    purpleXY[1] = purpleXY[1 + BALL_PURPLE_NUMBER] = 0 - ballWidth - 10;
+                    purpleXY[keys.PURPLE_BALL_XY2] = purpleXY[keys.PURPLE_BALL_XY2 + keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
                 }
                 if (thirdBallClicked) {
-                    purpleXY[2] = purpleXY[2 + BALL_PURPLE_NUMBER] = 0 - ballWidth - 10;
+                    purpleXY[keys.PURPLE_BALL_XY3] = purpleXY[keys.PURPLE_BALL_XY3 + keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
                 }
         }
     }
@@ -349,19 +316,19 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             clickedX = (int) event.getX();
             clickedY = (int) event.getY();
             //if we click on the ball do something depending on the ball type
-                if(ballType<=2){
+                if(ballType<=keys.TYPE_BALL_RED_CHANCE){
                     redBall();
                 }
-                if(ballType>2 && ballType<=10){
+                if(ballType>keys.TYPE_BALL_RED_CHANCE && ballType<=keys.TYPE_BALL_BLUE_CHANCE){
                     blueBall();
                 }
-                if(ballType>10 && ballType<=13){
+                if(ballType>keys.TYPE_BALL_BLUE_CHANCE && ballType<=keys.TYPE_BALL_YELLOW_CHANCE){
                     yellowBall();
                 }
-                if(ballType>13 && ballType<=15){
+                if(ballType>keys.TYPE_BALL_YELLOW_CHANCE && ballType<=keys.TYPE_BALL_GREEN_CHANCE){
                     greenBall();
                 }
-                if(ballType>15 && ballType<=18){
+                if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
                     purpleBall();
                 }
             setCurrentBall(ballType);
@@ -373,12 +340,12 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         b = newBall.getNewBall();
         x= b.getX();
         y= b.getY();
-        purpleXY[0]= randomCoordinate.randomX();
-        purpleXY[BALL_PURPLE_NUMBER]= randomCoordinate.randomY();
-        purpleAngles[0] = randomCoordinate.randomAngle();
-        //ballType = b.getBallType();
-        ballType= 16;
+        ballType = b.getBallType();
         angle = b.getAngle();
+        //we need to get a new purple ball too because it uses its own coordinates
+        purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
+        purpleXY[keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
+        purpleAngles[keys.PURPLE_BALL_ANGLE_ONE] = randomCoordinate.randomAngle();
     }
 
     /**
@@ -387,19 +354,19 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
      */
     private void setCurrentBall(int ballType){
         //if we click on the ball do something depending on the ball type
-        if(ballType<=2){
+        if(ballType<=keys.TYPE_BALL_RED_CHANCE){
             currentBall=BALL_RED;
         }
-        if(ballType>2 && ballType<=10){
+        if(ballType>keys.TYPE_BALL_RED_CHANCE && ballType<=keys.TYPE_BALL_BLUE_CHANCE){
             currentBall=BALL_BLUE;
         }
-        if(ballType>10 && ballType<=13){
+        if(ballType>keys.TYPE_BALL_BLUE_CHANCE && ballType<=keys.TYPE_BALL_YELLOW_CHANCE){
             currentBall=BALL_YELLOW;
         }
-        if(ballType>13 && ballType<=15){
+        if(ballType>keys.TYPE_BALL_YELLOW_CHANCE && ballType<=keys.TYPE_BALL_GREEN_CHANCE){
             currentBall=BALL_GREEN;
         }
-        if(ballType>15 && ballType<=18){
+        if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
             currentBall=BALL_PURPLE;
         }
     }
@@ -433,10 +400,10 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 score+=500;
                 getNewBall();
                 //reset the yellow ball to its first state for later use
-                timesClicked=BALL_YELLOW_REQUIRED_CLICKS;
+                timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
                 ballWidth=ballHeight= blueBall.getWidth();
                 yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
-                yellowBallSpeed=BALL_YELLOW_INITIAL_SPEED;
+                yellowBallSpeed=keys.BALL_YELLOW_INITIAL_SPEED;
                 changedSize=false;
             }
         }
@@ -445,10 +412,10 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
      * Method that reduces yellow ball's size and increases its speed every time it's called
      */
     private void clickedYellowBall(){
-        ballWidth -= BALL_YELLOW_SIZE_DECREASE;
-        ballHeight -= BALL_YELLOW_SIZE_DECREASE;
+        ballWidth -= keys.BALL_YELLOW_SIZE_DECREASE;
+        ballHeight -= keys.BALL_YELLOW_SIZE_DECREASE;
         yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
-        yellowBallSpeed+= BALL_YELLOW_SPEED_INCREASE;
+        yellowBallSpeed+= keys.BALL_YELLOW_SPEED_INCREASE;
     }
     private void greenBall(){
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
@@ -457,37 +424,39 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
     private void purpleBall() {
-        if (timesClickedPurple == BALL_PURPLE_NO_CLICK) {
+        if (timesClickedPurple == keys.BALL_PURPLE_NO_CLICK) {
             //if we clicked on the first ball
-            if (clickedABall.ballClicked(purpleXY[0], purpleXY[BALL_PURPLE_NUMBER], clickedX, clickedY)) {
-                timesClickedPurple = BALL_PURPLE_ONE_CLICK;
-                purpleAngles[0] = randomCoordinate.randomAngle();
-                purpleAngles[1] = randomCoordinate.randomAngle();
-                purpleAngles[2] = randomCoordinate.randomAngle();
-                purpleXY[1] = purpleXY[0];          purpleXY[1+BALL_PURPLE_NUMBER] = purpleXY[BALL_PURPLE_NUMBER];
-                purpleXY[2] = purpleXY[0];          purpleXY[2+BALL_PURPLE_NUMBER] = purpleXY[BALL_PURPLE_NUMBER];
+            if (clickedABall.ballClicked(purpleXY[keys.PURPLE_BALL_XY1], purpleXY[keys.PURPLE_BALL_NUMBER], clickedX, clickedY)) {
+                timesClickedPurple = keys.BALL_PURPLE_ONE_CLICK;
+                purpleAngles[keys.PURPLE_BALL_ANGLE_ONE] = randomCoordinate.randomAngle();
+                purpleAngles[keys.PURPLE_BALL_ANGLE_TWO] = randomCoordinate.randomAngle();
+                purpleAngles[keys.PURPLE_BALL_ANGLE_THREE] = randomCoordinate.randomAngle();
+                purpleXY[keys.PURPLE_BALL_XY2] = purpleXY[keys.PURPLE_BALL_XY1];
+                purpleXY[keys.PURPLE_BALL_XY2+keys.PURPLE_BALL_NUMBER] = purpleXY[keys.PURPLE_BALL_NUMBER];
+                purpleXY[keys.PURPLE_BALL_XY3] = purpleXY[keys.PURPLE_BALL_XY1];
+                purpleXY[keys.PURPLE_BALL_XY3+keys.PURPLE_BALL_NUMBER] = purpleXY[keys.PURPLE_BALL_NUMBER];
             }
         }
         //if we clicked on one of the split balls remove them from the screen
         else  {
-            if(clickedABall.ballClicked(purpleXY[0],purpleXY[BALL_PURPLE_NUMBER],clickedX,clickedY)){
-                purpleXY[0]=0-ballWidth;
-                purpleXY[BALL_PURPLE_NUMBER]=0-ballHeight;
-            originalBallClicked=true;
+            if(clickedABall.ballClicked(purpleXY[0],purpleXY[keys.PURPLE_BALL_NUMBER],clickedX,clickedY)){
+                purpleXY[keys.PURPLE_BALL_XY1]=0-ballWidth;
+                purpleXY[keys.PURPLE_BALL_NUMBER]=0-ballHeight;
+                originalBallClicked=true;
             }
-            if(clickedABall.ballClicked(purpleXY[1],purpleXY[1+BALL_PURPLE_NUMBER],clickedX,clickedY)){
-                purpleXY[1]=0-ballWidth;
-                purpleXY[1+BALL_PURPLE_NUMBER]=0-ballHeight;
+            if(clickedABall.ballClicked(purpleXY[keys.PURPLE_BALL_XY2],purpleXY[keys.PURPLE_BALL_XY2+keys.PURPLE_BALL_NUMBER],clickedX,clickedY)){
+                purpleXY[keys.PURPLE_BALL_XY2]=0-ballWidth;
+                purpleXY[keys.PURPLE_BALL_XY2+keys.PURPLE_BALL_NUMBER]=0-ballHeight;
                 secondBallClicked=true;
             }
-            if(clickedABall.ballClicked(purpleXY[2],purpleXY[2+BALL_PURPLE_NUMBER],clickedX,clickedY)){
-                purpleXY[2]=0-ballWidth;
-                purpleXY[2+BALL_PURPLE_NUMBER]=0-ballHeight;
+            if(clickedABall.ballClicked(purpleXY[keys.PURPLE_BALL_XY3],purpleXY[keys.PURPLE_BALL_XY3+keys.PURPLE_BALL_NUMBER],clickedX,clickedY)){
+                purpleXY[keys.PURPLE_BALL_XY3]=0-ballWidth;
+                purpleXY[keys.PURPLE_BALL_XY3+keys.PURPLE_BALL_NUMBER]=0-ballHeight;
                 thirdBallClicked=true;
             }
             if(originalBallClicked && secondBallClicked && thirdBallClicked){
-                timesClickedPurple = BALL_PURPLE_NO_CLICK;
                 originalBallClicked = secondBallClicked = thirdBallClicked = false;
+                timesClickedPurple = keys.BALL_PURPLE_NO_CLICK;
                 score +=500;
                 getNewBall();
             }
