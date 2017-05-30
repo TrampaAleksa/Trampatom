@@ -17,11 +17,13 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.trampatom.game.trampatom.R;
+import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.canvas.Canvas3;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
+import com.trampatom.game.trampatom.utils.Keys;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
 import java.util.Random;
@@ -30,7 +32,6 @@ import static java.lang.Thread.sleep;
 
 public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchListener{
 
-    private static final long GAME_TIME = 60000;
     private static final int BALL_SPEED= 8;
     private static final int BALL_GOLD_DURATION= 3;
 
@@ -42,6 +43,8 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     Canvas3 canvas;
     HighScore highScore;
     ClickedABall clickedABall;
+    Keys keys;
+    BallMovement ballMovement;
     //For the SurfaceView to work
     SurfaceHolder ourHolder;
     SurfaceView mSurfaceView;
@@ -83,6 +86,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         int[] negMoveY={1,1,1,1,1,1,1};
         double angle;
         double[] angles= {0,0,0,0,0,0,0,0};
+        int redBallSpeed = 8;
     //used for drawing the first ball, start timer only after canvasLoads
     boolean initialDraw;
     //used for drawing a new ball whenever we scored
@@ -98,25 +102,28 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game);
         init();
-        new CountDownTimer(GAME_TIME, 250) {
+        new CountDownTimer(keys.GOLD_BALL_TIMER, 250) {
             public void onTick(long millisUntilFinished) {
-                gameTimeAndScore.setTimeAndScore(millisUntilFinished, score);
-                if (((millisUntilFinished / 1000) < goldBallTime)) {
+                //increase red balls speed in a certain interval
+               redBallSpeed = ballMovement.redBallsSpeedUp(redBallSpeed,(int) millisUntilFinished/1000);
+              /*  if (((millisUntilFinished / 1000) < goldBallTime)) {
                     if ( (goldBallTime - BALL_GOLD_DURATION < (millisUntilFinished / 1000)) && !drewGoldBall) {
                         drawGoldBall = true;
                     } else drewGoldBall = true;
-                }
+                }*/
             }
 
             public void onFinish() {
-                //finish the game when the timer ends
-                gameover = true;
+
             }
         }.start();
         }
 
 
     private void init() {
+        //Classes
+        keys = new Keys();
+        ballMovement = new BallMovement(width, height);
         //set up the SurfaceView
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
             ourHolder = mSurfaceView.getHolder();
@@ -128,7 +135,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //get device's width and height
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();
-        //movement of the ballw
+        //movement of the ball
             moveX=1;
             moveY=1;
         //used for gold ball
@@ -192,18 +199,14 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             angle =  randomCoordinate.randomAngle();
             x = randomCoordinate.randomX();
             y = randomCoordinate.randomY();
-            scored=true;
+            gameTimeAndScore.setScore(score);
         }
     }
     private void clickedNegative(){
 
         for(j=0; j<BALL_NEGATIVE_NUMBER; j++){
         if(clickedABall.negativeBallClicked(XY[j], XY[j+BALL_NEGATIVE_NUMBER], clickedX, clickedY, negWidth[j], negHeight[j])) {
-            score -= 100;
-            XY[j] = randomCoordinate.randomX();
-            XY[j+BALL_NEGATIVE_NUMBER]= randomCoordinate.randomY();
-            angles[j]= randomCoordinate.randomAngle();
-            scored = true;
+            gameover = true;
             }
         }
     }
@@ -299,8 +302,8 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         for(i=0; i<BALL_NEGATIVE_NUMBER; i++) {
             int negX = XY[i];
             int negY = XY[i + BALL_NEGATIVE_NUMBER];
-            negX += negMoveX[i] * BALL_NEGATIVE_SPEED * Math.sin(angles[i]);
-            negY += negMoveY[i] * BALL_NEGATIVE_SPEED * Math.cos(angles[i]);
+            negX += negMoveX[i] * redBallSpeed * Math.sin(angles[i]);
+            negY += negMoveY[i] * redBallSpeed * Math.cos(angles[i]);
 
             //if the ball is off screen change its direction
             if (negX > width - ballWidth) {

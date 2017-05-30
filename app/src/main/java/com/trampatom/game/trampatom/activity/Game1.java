@@ -248,7 +248,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
 
-    //TODO use arrays and for loop to move all three balls!
     private void moveBall() {
        moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, keys.BALL_SPEED);
         x= moveArray[keys.NEW_BALL_X_COORDINATE];

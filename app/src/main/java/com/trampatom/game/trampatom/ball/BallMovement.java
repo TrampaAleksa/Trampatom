@@ -4,6 +4,7 @@ package com.trampatom.game.trampatom.ball;
 import java.util.Random;
 
 public class BallMovement {
+    private static int RED_BALL_SPEED_LIMIT = 14;
     int width;
     int height;
     Random random;
@@ -55,7 +56,25 @@ public class BallMovement {
         return helpArray;
     }
 
-    //TODO fix problem with angle
+    /**
+     * Method for slowly speeding up red balls every 10 seconds
+     * @param redBallSpeed the current speed that will be increased
+     * @param seconds the time of our timer we use for speeding up
+     * @return the new speed
+     */
+    public int redBallsSpeedUp(int redBallSpeed, int seconds){
+        if(seconds %10 == 0){
+            //every 10 seconds of the timer increase the speed of the red balls
+            redBallSpeed ++;
+            //limit the speed to prevent infinite speeding up on long survival times
+            if(redBallSpeed >= RED_BALL_SPEED_LIMIT+1)
+                redBallSpeed = RED_BALL_SPEED_LIMIT;
+        }
+
+        return redBallSpeed;
+    }
+
+
     public int[] moveGreenBall(int x, int y ,int ballWidth, int ballHeight, int moveX, int moveY, double angle,int ballSpeed){
         int changeAngleGreen = random.nextInt(350);
         if(changeAngleGreen<=20){

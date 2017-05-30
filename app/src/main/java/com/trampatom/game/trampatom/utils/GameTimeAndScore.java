@@ -7,8 +7,8 @@ import android.widget.TextView;
  * Class used for setting the time and score
  */
 public class GameTimeAndScore {
+    private static final int BALL_GOLD_DURATION = 3;
     private String time,scoreS;
-    private int i=0;
     private TextView tvScore, tvTime;
     public GameTimeAndScore(TextView tvScore, TextView tvTime){
         this.tvScore = tvScore;
@@ -24,10 +24,30 @@ public class GameTimeAndScore {
         time=Long.toString(millisUntilFinished/1000);
         scoreS=Integer.toString(score);
         tvScore.setText("SCORE: "+scoreS);
-       // if(millisUntilFinished==1)
-            i++;
-        if(i%4==0)
+         if(millisUntilFinished==1)
             tvTime.setText(time);
 
+    }
+    public boolean setTimeRemaining(long millisUntilFinished){
+        time=Long.toString(millisUntilFinished/1000);
+        tvTime.setText(time);
+        return millisUntilFinished == 1;
+
+    }
+
+    public void setScore(int score){
+        scoreS = "SCORE: "+ Integer.toString(score);
+        tvScore.setText(scoreS);
+    }
+
+    //TODO Gold ball logic
+    public boolean drawGoldBall(long millisUntilFinished, int goldBallTime, boolean drewGoldBall){
+        if (((millisUntilFinished / 1000) < goldBallTime)) {
+            if ( (goldBallTime - BALL_GOLD_DURATION < (millisUntilFinished / 1000)) && !drewGoldBall) {
+                return true;
+            } else drewGoldBall = true;
+        }
+
+        return false;
     }
 }

@@ -33,13 +33,16 @@
 
 
     </LinearLayout>
+
     <FrameLayout
+        android:id="@+id/linLaySV"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <SurfaceView
-            android:layout_width="match_parent" android:layout_height="match_parent"
-            android:id="@+id/SV1">
+            android:id="@+id/SV1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
 
         </SurfaceView>
