@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -33,10 +35,9 @@ import static java.lang.Thread.sleep;
 public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchListener{
 
     private static final int BALL_SPEED= 8;
-    private static final int BALL_GOLD_DURATION= 3;
-
-    private static final int BALL_NEGATIVE_SPEED= 10;
     public static final int BALL_NEGATIVE_NUMBER = 7;
+    //Arrays
+    int[] ballMovementArray = {0,0,0,0};
     //Classes
     GameTimeAndScore gameTimeAndScore;
     RandomBallVariables randomCoordinate;
@@ -81,18 +82,20 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         boolean drawGoldBall= false;
         boolean drewGoldBall = false;
     //used for moving balls
-        int moveX, moveY;
+        int moveX= 1;int moveY = 1;
         int[] negMoveX={1,1,1,1,1,1,1};
         int[] negMoveY={1,1,1,1,1,1,1};
         double angle;
         double[] angles= {0,0,0,0,0,0,0,0};
         int redBallSpeed = 8;
     //used for drawing the first ball, start timer only after canvasLoads
-    boolean initialDraw;
+    boolean initialDraw, startedTimer = false;
     //used for drawing a new ball whenever we scored
     boolean scored;
     //used for ending the game when the time ends
     boolean gameover, newHighScore;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,23 +105,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game);
         init();
-        new CountDownTimer(keys.GOLD_BALL_TIMER, 250) {
-            public void onTick(long millisUntilFinished) {
-                //increase red balls speed in a certain interval
-               redBallSpeed = ballMovement.redBallsSpeedUp(redBallSpeed,(int) millisUntilFinished/1000);
-              /*  if (((millisUntilFinished / 1000) < goldBallTime)) {
-                    if ( (goldBallTime - BALL_GOLD_DURATION < (millisUntilFinished / 1000)) && !drewGoldBall) {
-                        drawGoldBall = true;
-                    } else drewGoldBall = true;
-                }*/
-            }
-
-            public void onFinish() {
-
-            }
-        }.start();
-        }
-
+    }
 
     private void init() {
         //Classes
@@ -135,16 +122,11 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //get device's width and height
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();
-        //movement of the ball
-            moveX=1;
-            moveY=1;
         //used for gold ball
         randomRedSize = new Random();
         goldBallTime = randomRedSize.nextInt(55);
         //sizes of red balls
-        for(i=0 ; i<BALL_NEGATIVE_NUMBER; i++) {
-            randomSize[i] = randomRedSize.nextInt(55);
-        }
+        for(i=0 ; i<BALL_NEGATIVE_NUMBER; i++) {randomSize[i] = randomRedSize.nextInt(55);}
         //Bitmaps
             ball= BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
             goldBall =BitmapFactory.decodeResource(getResources(),R.drawable.atomzuta);
@@ -183,16 +165,8 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         return false;
     }
 
-
-    //TODO remove scored variable
-    private void clickedGold() {
-        if(clickedABall.ballClicked(goldX,goldY,clickedX,clickedY)){
-            score+=800;
-            scored=true;
-            goldX = goldY = 0- ballWidth;
-        }
-    }
-
+    //checks if we clicked some ball and does that balls action:
+    //blue - score ; red - lose game ; gold - gain a life
     private void clickedPositive(){
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
             score+=100;
@@ -210,132 +184,146 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             }
         }
     }
+    //TODO remove scored variable
+    private void clickedGold() {
+        if(clickedABall.ballClicked(goldX,goldY,clickedX,clickedY)){
+            score+=800;
+            goldX = goldY = 0- ballWidth;
+        }
+    }
 
 
     @Override
     public void run() {
         canvas = new Canvas3(ourHolder,mCanvas);
-        int i;
         while (isRunning) {
             //Do until you get the surface
             if (!ourHolder.getSurface().isValid())
                 continue;
 
+            //sets a timer for speeding up red balls, and for randomizing gold ball's appereance
+            timedActions();
             //The initial draw
             if(initialDraw) {
-                //setting the proper height of the canvas
-                    mCanvas = ourHolder.lockCanvas();
-                    height = mCanvas.getHeight();
-                    ourHolder.unlockCanvasAndPost(mCanvas);
-                //prevents drawing over screen
-                    randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
-                    clickedABall= new ClickedABall(ballWidth, ballHeight);
-                    goldX = randomCoordinate.randomX();
-                    goldY = randomCoordinate.randomY();
-                    angle = randomCoordinate.randomAngle();
-                for(i=0; i<BALL_NEGATIVE_NUMBER; i++){
-                    angles[i]= randomCoordinate.randomAngle();
-                }
-                    x=randomCoordinate.randomX();
-                    y=randomCoordinate.randomY();
-                    XY=randomCoordinate.randomnegativeBallsCoordinates();
-                //first draw
-                    initialDraw= canvas.draw(ball,negativeBall,x,y, XY);
+              firstDraw();
             }
-            //draw a ball after the score changes
+            //move every ball
             moveBall();
             moveNegativeBalls(XY);
-            if(!drawGoldBall)
-            canvas.draw(ball,negativeBall,x,y, XY);
-            if(drawGoldBall){
-                canvas.drawGold(ball,negativeBall,goldBall,x,y, XY, goldX, goldY);
-                if(!drewGoldBall)
-                drawGoldBall = true;
-                else {
-                    drawGoldBall = false;
-                    goldX = goldY = 0- ballWidth;
-                }
-            }
+            //at some random time a gold ball will be drawn
+            goldDraw();
             //after the timer runs out finish the game
-            if (gameover) {
-                GameOver gameover = new GameOver(ourHolder,mCanvas);
-                newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
-                gameover.gameOver(score, newHighScore);
-                try {
-                    sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                finish();
-            }
+            endGame();
         }
     }
 
-    private void moveBall() {
-        x += moveX*BALL_SPEED * Math.sin(angle);
-        y += moveY*BALL_SPEED * Math.cos(angle);
+    public void timedActions() {
+        //timer has to be started once, but it resets every time it finishes
+        if (!startedTimer) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    new CountDownTimer(keys.GOLD_BALL_TIMER, 250) {
+                        public void onTick(long millisUntilFinished) {
+                            //increase red balls speed in a certain interval
+                            redBallSpeed = ballMovement.redBallsSpeedUp(redBallSpeed, (int) millisUntilFinished / 1000);
+                            startedTimer = true;
 
-        //if the ball is off screen change its direction
-        if(x > width-ballWidth) {
-            x = width-ballWidth;
-            moveX = -moveX;
-            // too far right
+              /*  if (((millisUntilFinished / 1000) < goldBallTime)) {
+                    if ( (goldBallTime - BALL_GOLD_DURATION < (millisUntilFinished / 1000)) && !drewGoldBall) {
+                        drawGoldBall = true;
+                    } else drewGoldBall = true;
+                }*/
+                        }
+
+                        public void onFinish() {
+                            //after the timer reaches zero, it will be reset
+                            startedTimer = false;
+                        }
+                    }.start();
+                }
+            });
         }
-        if(y > height-ballHeight) {
-            y = height-ballHeight;
-            moveY = -moveY;
-            // too far bottom
+    }
+    private void firstDraw(){
+        //setting the proper height of the canvas
+        mCanvas = ourHolder.lockCanvas();
+        height = mCanvas.getHeight();
+        ourHolder.unlockCanvasAndPost(mCanvas);
+        //prevents drawing over screen
+        randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
+        clickedABall= new ClickedABall(ballWidth, ballHeight);
+        goldX = randomCoordinate.randomX();
+        goldY = randomCoordinate.randomY();
+        angle = randomCoordinate.randomAngle();
+        for(i=0; i<BALL_NEGATIVE_NUMBER; i++){
+            angles[i]= randomCoordinate.randomAngle();
         }
-        if(x < 0) {
-            x = 0;
-            moveX = -moveX;
-            // too far left
-        }
-        if(y < 0) {
-            y = 0;
-            moveY = -moveY;
-           // too far top
-        }
+        x=randomCoordinate.randomX();
+        y=randomCoordinate.randomY();
+        XY=randomCoordinate.randomnegativeBallsCoordinates();
+        //first draw
+        initialDraw= canvas.draw(ball,negativeBall,x,y, XY);
+    }
+    private void moveBall() {
+            //need to create local because of a width and height problem. Fix later
+            BallMovement positiveBallMovement = new BallMovement(width, height);
+            //update blue ball's position
+            ballMovementArray = positiveBallMovement.moveBall(x, y, ballWidth, ballHeight, moveX, moveY, angle, BALL_SPEED);
+            //set x,y, moveX, moveY to new values
+            x = ballMovementArray[keys.NEW_BALL_X_COORDINATE];
+            y = ballMovementArray[keys.NEW_BALL_Y_COORDINATE];
+            moveX = ballMovementArray[keys.NEW_BALL_MOVEX_VALUE];
+            moveY = ballMovementArray[keys.NEW_BALL_MOVEY_VALUE];
     }
     private void moveNegativeBalls(int[] XY){
-        int i=0;
+        //need to create local because of a width and height problem. Fix later
+        BallMovement negBallMovement = new BallMovement(width, height);
         for(i=0; i<BALL_NEGATIVE_NUMBER; i++) {
-            int negX = XY[i];
-            int negY = XY[i + BALL_NEGATIVE_NUMBER];
-            negX += negMoveX[i] * redBallSpeed * Math.sin(angles[i]);
-            negY += negMoveY[i] * redBallSpeed * Math.cos(angles[i]);
-
-            //if the ball is off screen change its direction
-            if (negX > width - ballWidth) {
-                negX = width - ballWidth;
-                negMoveX[i] = -negMoveX[i];
-                // too far right
-            }
-            if (negY > height - ballHeight) {
-                negY = height - ballHeight;
-                negMoveY[i] = -negMoveY[i];
-                // too far bottom
-            }
-            if (negX < 0) {
-                negX = 0;
-                negMoveX[i] = -negMoveX[i];
-                // too far left
-            }
-            if (negY < 0) {
-                negY = 0;
-                negMoveY[i] = -negMoveY[i];
-                // too far top
-            }
-            XY[i]=negX;
-            XY[i+BALL_NEGATIVE_NUMBER]=negY;
+            //for every red ball update its position
+            ballMovementArray = negBallMovement.moveBall(XY[i], XY[i+BALL_NEGATIVE_NUMBER], ballWidth, ballHeight, negMoveX[i], negMoveY[i], angles[i], redBallSpeed);
+           //set x,y, moveX, moveY to new values
+            XY[i] = ballMovementArray[keys.NEW_BALL_X_COORDINATE];
+            XY[i+BALL_NEGATIVE_NUMBER] = ballMovementArray[keys.NEW_BALL_Y_COORDINATE];
+            negMoveX[i] = ballMovementArray[keys.NEW_BALL_MOVEX_VALUE];
+            negMoveY[i] = ballMovementArray[keys.NEW_BALL_MOVEY_VALUE];
         }
 
+    }
+    private void goldDraw(){
+        if(!drawGoldBall)
+            canvas.draw(ball,negativeBall,x,y, XY);
+        if(drawGoldBall){
+            canvas.drawGold(ball,negativeBall,goldBall,x,y, XY, goldX, goldY);
+            if(!drewGoldBall)
+                drawGoldBall = true;
+            else {
+                drawGoldBall = false;
+                goldX = goldY = 0- ballWidth;
+            }
+        }
+    }
+    private void endGame(){
+        if (gameover) {
+            GameOver gameover = new GameOver(ourHolder,mCanvas);
+            newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
+            gameover.gameOver(score, newHighScore);
+            try {
+                sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            finish();
+        }
     }
 
 
 
 
 
+
+
+    //used for handling the game's Runnable thread
     public void pause()
     {
         isRunning=false;

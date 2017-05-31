@@ -4,7 +4,10 @@ package com.trampatom.game.trampatom.ball;
 import java.util.Random;
 
 public class BallMovement {
-    private static int RED_BALL_SPEED_LIMIT = 14;
+    //used for determining in how many seconds will the red balls speed up
+    private static final int RED_BALL_SPEED_UP_INTERVAL = 10;
+    //used to set a speed liit to red balls in the survival game
+    private static final int RED_BALL_SPEED_LIMIT = 14;
     int width;
     int height;
     Random random;
@@ -25,6 +28,7 @@ public class BallMovement {
      * @param moveY used for ball bouncing, always 1 or -1
      * @param angle angle at witch the ball moves
      * @param ballSpeed speed of the ball
+     * @return returns an integer array that holds x,y, moveX, moveY values
      */
     public int[] moveBall(int x, int y ,int ballWidth, int ballHeight, int moveX, int moveY, double angle,int ballSpeed){
         x += moveX*ballSpeed * Math.sin(angle);
@@ -63,7 +67,7 @@ public class BallMovement {
      * @return the new speed
      */
     public int redBallsSpeedUp(int redBallSpeed, int seconds){
-        if(seconds %10 == 0){
+        if(seconds %RED_BALL_SPEED_UP_INTERVAL == 0){
             //every 10 seconds of the timer increase the speed of the red balls
             redBallSpeed ++;
             //limit the speed to prevent infinite speeding up on long survival times

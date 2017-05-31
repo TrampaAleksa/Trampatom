@@ -75,17 +75,17 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         static int ballWidth, ballHeight;
     //Used for scoring
         int ballType=4, currentBall;
-        int timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
+        int timesClicked;
         int score, previousHighScore;
     //coordinates of the currently drawn ball, coordinates where we clicked
         int x, clickedX;
         int y, clickedY;
     //used for yellow ball;
-        int yellowBallSpeed = keys.BALL_YELLOW_INITIAL_SPEED;
+        int yellowBallSpeed;
         boolean changedSize=false;
     //used for purple ball
         int ballPurpleNumber =1;
-        int timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
+        int timesClickedPurple;
         boolean originalBallClicked= false; boolean secondBallClicked=false; boolean thirdBallClicked=false;
     //used for moving the ball
         int moveX = 1;
@@ -122,6 +122,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     private void init() {
         keys = new Keys();
+        timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
+        yellowBallSpeed = keys.BALL_YELLOW_INITIAL_SPEED;
+        timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
         //set up the SurfaceView
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
             ourHolder = mSurfaceView.getHolder();
