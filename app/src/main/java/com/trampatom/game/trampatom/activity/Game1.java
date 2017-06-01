@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -77,6 +79,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         int ballType=4, currentBall;
         int timesClicked;
         int score, previousHighScore;
+        String scoreS;
     //coordinates of the currently drawn ball, coordinates where we clicked
         int x, clickedX;
         int y, clickedY;
@@ -92,10 +95,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         int moveY = 1;
         Random greenRandom;
         double angle;
-    //used for drawing the first ball
-        boolean initialDraw;
-    //used for drawing a new ball whenever we scored
-        boolean scored;
+    //used for drawing the first ball , used to start the timer once
+        boolean initialDraw, startedTimer;
     //used for ending the game when the time ends, congratulations if new high score
         boolean gameover, newHighScore;
 
@@ -108,16 +109,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game);
         init();
-        //TODO remove score getting updated in the timer
-        new CountDownTimer(keys.GAME_TIME, 250) {
-            public void onTick(long millisUntilFinished) {
-                gameTimeAndScore.setTimeAndScore(millisUntilFinished, score);
-            }
-            public void onFinish() {
-                //finish the game when the timer ends
-                gameover= true;
-            }
-        }.start();
     }
 
     private void init() {
@@ -144,7 +135,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             newHighScore=false;
         currentBall= BALL_BLUE;
         initialDraw=true;
-        scored=false;
     }
     private void initiateBitmaps(){
         //initiate bitmaps
@@ -174,25 +164,44 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             //Do until you get the surface
             if (!ourHolder.getSurface().isValid())
                 continue;
-
+            //start the game time
+            timedActions();
             //The initial draw
             if(initialDraw) {
                 initiateOnCanvas();
             }
                 moveAndDraw();
             //after the timer runs out finish the game
-            if (gameover) {
-                GameOver gameover = new GameOver(ourHolder,mCanvas);
-                //set the high score if there is a new one
-                newHighScore=highScore.isHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY, score);
-                gameover.gameOver(score, newHighScore);
-                try {
-                    sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                endGame();
+        }
+    }
+
+    public void timedActions() {
+        //timer has to be started once, but it resets every time it finishes
+        if (!startedTimer) {
+            //get a handler so that we can run the timer outside of the main ui thread
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    new CountDownTimer(keys.GAME_TIME, 250) {
+                        public void onTick(long millisUntilFinished) {
+                            //seconds remaining and the starting time
+                            int seconds =(int) millisUntilFinished/1000;
+                            int totalTimerTime = (int) keys.GAME_TIME/1000;
+                            //update the time with every tick
+                            gameTimeAndScore.setTimeRemaining(millisUntilFinished);
+                            startedTimer = true;
+                        }
+
+                        public void onFinish() {
+                            //when the timer finishes, end the game
+                            gameover = true;
+                            //uncomment if the timer has to be reset every time it reaches zero
+                            //startedTimer = false;
+                        }
+                    }.start();
                 }
-                finish();
-            }
+            });
         }
     }
     private void initiateOnCanvas(){
@@ -250,7 +259,19 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 break;
         }
     }
-
+    private void endGame(){
+        if (gameover) {
+            GameOver gameover = new GameOver(ourHolder,mCanvas);
+            newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
+            gameover.gameOver(score, newHighScore);
+            try {
+                sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            finish();
+        }
+    }
     private void moveBall() {
        moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, keys.BALL_SPEED);
         x= moveArray[keys.NEW_BALL_X_COORDINATE];
@@ -281,7 +302,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         moveY = moveArray[keys.NEW_BALL_MOVEY_VALUE];
 
     }
-
     /**
      * manages movement of all purple balls using three movement methods
      */
@@ -339,6 +359,10 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     }
 
     private void getNewBall() {
+        //set the score from the previous ball
+        scoreS = "SCORE: " + score;
+        tvScore.setText(scoreS);
+        //get a new ball with new coordinates and angle of movement
         b = newBall.getNewBall();
         x= b.getX();
         y= b.getY();
@@ -349,7 +373,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         purpleXY[keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
         purpleAngles[keys.PURPLE_BALL_ANGLE_ONE] = randomCoordinate.randomAngle();
     }
-
     /**
      * used to set the ball color to be drawn
      * @param ballType used to determine what color to draw

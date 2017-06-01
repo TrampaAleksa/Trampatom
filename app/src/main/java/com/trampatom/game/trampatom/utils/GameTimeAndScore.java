@@ -40,14 +40,4 @@ public class GameTimeAndScore {
         tvScore.setText(scoreS);
     }
 
-    //TODO Gold ball logic
-    public boolean drawGoldBall(long millisUntilFinished, int goldBallTime, boolean drewGoldBall){
-        if (((millisUntilFinished / 1000) < goldBallTime)) {
-            if ( (goldBallTime - BALL_GOLD_DURATION < (millisUntilFinished / 1000)) && !drewGoldBall) {
-                return true;
-            } else drewGoldBall = true;
-        }
-
-        return false;
-    }
 }
