@@ -40,7 +40,7 @@ public class RandomBallVariables {
 
     public int getRandomBallType(){
         int ballType;
-        ballType= random.nextInt(18);
+        ballType= random.nextInt(21);
         return ballType;
     }
 

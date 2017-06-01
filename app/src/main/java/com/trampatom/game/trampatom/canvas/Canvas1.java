@@ -36,33 +36,6 @@ public class Canvas1 {
         return false;
     }
 
-   /* /**
-     * method used when drawing a purple ball
-     * @param ball color of the ball
-     * @param x x coordinate
-     * @param y y coordinate
-     * @param XY1 XY coordinates for the other ball. not used until we click
-     */
-    /*public void drawPurple(Bitmap ball, int x, int y, int[] XY1, int timesClicked){
-        //int memoriseFirstBall= 0;
-
-        if(timesClicked == Game1.BALL_PURPLE_NO_CLICK) {
-            ourCanvas = ourHolder.lockCanvas();
-            ourCanvas.drawRGB(0, 0, 200);
-            ourCanvas.drawBitmap(background, 0, 0, null);
-            ourCanvas.drawBitmap(ball, x, y, null);
-            ourHolder.unlockCanvasAndPost(ourCanvas);
-        }
-        else {
-            ourCanvas = ourHolder.lockCanvas();
-            ourCanvas.drawRGB(0, 0, 200);
-            ourCanvas.drawBitmap(background, 0, 0, null);
-            ourCanvas.drawBitmap(ball, x, y, null);
-            ourCanvas.drawBitmap(ball, XY1[0], XY1[1], null);
-            ourCanvas.drawBitmap(ball, XY1[2], XY1[3], null);
-            ourHolder.unlockCanvasAndPost(ourCanvas);
-        }
-    }*/
     public void drawPurple(Bitmap ball, int [] purpleXY, int timesClicked){
         //int memoriseFirstBall= 0;
 
@@ -82,5 +55,12 @@ public class Canvas1 {
             ourCanvas.drawBitmap(ball, purpleXY[2], purpleXY[5], null);
             ourHolder.unlockCanvasAndPost(ourCanvas);
         }
+    }
+    public void drawWave(Bitmap[] waveBall, int x, int y){
+        ourCanvas = ourHolder.lockCanvas();
+        ourCanvas.drawRGB(0, 0, 200);
+        ourCanvas.drawBitmap(background, 0, 0, null);
+        ourCanvas.drawBitmap(waveBall[0], x, y, null);
+        ourHolder.unlockCanvasAndPost(ourCanvas);
     }
 }

@@ -45,12 +45,15 @@ public class Keys {
     //used for managing green balls
         public int GREEN_BALL_ANGLE_CHANGE_CHANCE = 350;
         public int GREEN_BALL_SPEED = 16;
+    //used for managing wave balls
+        public int WAVE_BALL_NUMBER = 7;
     //used for determining what ball will be drawn
     public int TYPE_BALL_RED_CHANCE = 2;
     public int TYPE_BALL_BLUE_CHANCE = 10;
     public int TYPE_BALL_YELLOW_CHANCE = 13;
     public int TYPE_BALL_GREEN_CHANCE = 15;
     public int TYPE_BALL_PURPLE_CHANCE = 18;
+    public int TYPE_BALL_WAVE_CHANCE = 21;
 
 
 //SECOND GAME

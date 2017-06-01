@@ -44,6 +44,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     public static final int BALL_GREEN = 3;
     public static final int BALL_YELLOW = 4;
     public static final int BALL_PURPLE = 5;
+    public static final int BALL_WAVE = 6;
 
     //Lists and Arrays
         Ball b;
@@ -54,6 +55,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         int [] purpleXY = {0,0,0,0,0,0};
         double [] purpleAngles= {0,0,0};
         int [] purpleMoveXY= {1,1,1,1,1,1};
+        //array for wave bitmaps
+        Bitmap[] waveBall;
     //Classes
         Keys keys;
         GameTimeAndScore gameTimeAndScore;
@@ -136,8 +139,17 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         currentBall= BALL_BLUE;
         initialDraw=true;
     }
+    // TODO make method for initiating all bitmaps
     private void initiateBitmaps(){
         //initiate bitmaps
+            waveBall = new Bitmap[7];
+            waveBall[0] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
+            waveBall[1] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
+            waveBall[2] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
+            waveBall[3] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
+            waveBall[4] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
+            waveBall[5] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
+            waveBall[6] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
             blueBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
             redBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
             greenBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzelena);
@@ -154,6 +166,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             greenBall = Bitmap.createScaledBitmap(greenBall, ballWidth, ballHeight, true);
             yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
             purpleBall = Bitmap.createScaledBitmap(purpleBall, ballWidth, ballHeight, true);
+        for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
+            waveBall[i] =  Bitmap.createScaledBitmap(waveBall[i], ballWidth, ballHeight, true);
+        }
     }
 
     @Override
@@ -254,22 +269,11 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
-               // canvas.drawPurple(purpleBall, x, y, XY, timesClickedPurple);
                 canvas.drawPurple(purpleBall, purpleXY, timesClickedPurple);
                 break;
-        }
-    }
-    private void endGame(){
-        if (gameover) {
-            GameOver gameover = new GameOver(ourHolder,mCanvas);
-            newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
-            gameover.gameOver(score, newHighScore);
-            try {
-                sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            finish();
+            case BALL_WAVE:
+                canvas.drawWave(waveBall, 300, 300 );
+                break;
         }
     }
     private void moveBall() {
@@ -330,6 +334,20 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 }
         }
     }
+    private void endGame(){
+        if (gameover) {
+            GameOver gameover = new GameOver(ourHolder,mCanvas);
+            newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
+            gameover.gameOver(score, newHighScore);
+            try {
+                sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            finish();
+        }
+    }
+
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -353,26 +371,14 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
                     purpleBall();
                 }
+            if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
+                waveBall();
+            }
             setCurrentBall(ballType);
         }
         return false;
     }
 
-    private void getNewBall() {
-        //set the score from the previous ball
-        scoreS = "SCORE: " + score;
-        tvScore.setText(scoreS);
-        //get a new ball with new coordinates and angle of movement
-        b = newBall.getNewBall();
-        x= b.getX();
-        y= b.getY();
-        ballType = b.getBallType();
-        angle = b.getAngle();
-        //we need to get a new purple ball too because it uses its own coordinates
-        purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
-        purpleXY[keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
-        purpleAngles[keys.PURPLE_BALL_ANGLE_ONE] = randomCoordinate.randomAngle();
-    }
     /**
      * used to set the ball color to be drawn
      * @param ballType used to determine what color to draw
@@ -393,6 +399,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
         if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
             currentBall=BALL_PURPLE;
+        }
+        if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
+            currentBall=BALL_WAVE;
         }
     }
 
@@ -487,8 +496,29 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             }
         }
         }
+    private void waveBall(){
+        //getNewBall();
+    }
 
 
+
+
+    private void getNewBall() {
+        //set the score from the previous ball
+        scoreS = "SCORE: " + score;
+        tvScore.setText(scoreS);
+        //get a new ball with new coordinates and angle of movement
+        b = newBall.getNewBall();
+        x= b.getX();
+        y= b.getY();
+        //ballType = b.getBallType();
+        ballType = 20;
+        angle = b.getAngle();
+        //we need to get a new purple ball too because it uses its own coordinates
+        purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
+        purpleXY[keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
+        purpleAngles[keys.PURPLE_BALL_ANGLE_ONE] = randomCoordinate.randomAngle();
+    }
 
     public void pause()
     {
