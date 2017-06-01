@@ -38,6 +38,12 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     public static final int BALL_NEGATIVE_NUMBER = 7;
     //Arrays
     int[] ballMovementArray = {0,0,0,0};
+    int[] randomSize={0,0,0,0,0,0,0};
+    int[] negWidth={0,0,0,0,0,0,0};
+    int[] negHeight={0,0,0,0,0,0,0};
+    //14 coordinates ; 7 red balls
+    //TODO use lists / arrays to get coordinates
+    int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     //Classes
     GameTimeAndScore gameTimeAndScore;
     RandomBallVariables randomCoordinate;
@@ -46,6 +52,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     ClickedABall clickedABall;
     Keys keys;
     BallMovement ballMovement;
+    Random randomRedSize;
     //For the SurfaceView to work
     SurfaceHolder ourHolder;
     SurfaceView mSurfaceView;
@@ -65,21 +72,13 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     //coordinates of the currently drawn ball
     int x, clickedX;
     int y, clickedY;
-    //14 coordinates ; 7 red balls
-    //TODO use lists / arrays to get coordinates
-    int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    //random sizes of balls
-    Random randomRedSize;
-    int[] randomSize={0,0,0,0,0,0,0};
-    int[] negWidth={0,0,0,0,0,0,0};
-    int[] negHeight={0,0,0,0,0,0,0};
     //used for golden ball
         //set at -1 to prevent clicking on it before it is drawn
         int goldX=-1; int goldY=-1;
         //time when the ball will be drawn
         int goldBallTime;
         //spare life
-        boolean gotLife = true;
+        boolean gotLife = false;
         //used for determining when to draw the ball
         boolean drawGoldBall= false;
     //used for moving balls
@@ -91,8 +90,6 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         int redBallSpeed = 8;
     //used for drawing the first ball, start timer only after canvasLoads
     boolean initialDraw, startedTimer = false;
-    //used for drawing a new ball whenever we scored
-    boolean scored;
     //used for ending the game when the time ends
     boolean gameover, newHighScore;
 
@@ -149,7 +146,6 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             newHighScore=false;
 
             initialDraw=true;
-            scored=false;
     }
 
     @Override
@@ -188,10 +184,9 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             }
         }
     }
-    //TODO remove scored variable
     private void clickedGold() {
         if(clickedABall.ballClicked(goldX,goldY,clickedX,clickedY)){
-            score+=800;
+            gotLife = true;
             goldX = goldY = 0- ballWidth;
         }
     }
@@ -224,6 +219,12 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     public void timedActions() {
         //timer has to be started once, but it resets every time it finishes
         if (!startedTimer) {
+            if(randomCoordinate != null) {
+                //in case we haven't clicked the ball get new coordinates in every timer cycle
+                goldX = randomCoordinate.randomX();
+                goldY = randomCoordinate.randomY();
+            }
+            //get a handler so that we can run the timer outside of the main ui thread
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
@@ -233,11 +234,10 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
                             int totalTimerTime = (int) keys.GOLD_BALL_TIMER/1000;
                             //increase red balls speed in a certain interval
                             redBallSpeed = ballMovement.redBallsSpeedUp(redBallSpeed, seconds);
-                            tvTime.setText(Integer.toString(seconds));
                             //5 seconds after the timer restarts, draw the gold ball
                             if(seconds < totalTimerTime-5){
-                                //show gold ball for the duration of GOLD BALL DURATION
-                                if ( (totalTimerTime-5 - keys.GOLD_BALL_DURATION < (seconds))) {
+                                //show gold ball for the duration of GOLD BALL DURATION, only if we don't have a life
+                                if ( (totalTimerTime-5 - keys.GOLD_BALL_DURATION < seconds) && !gotLife) {
                                     //condition that determines if the gold ball should be drawn
                                     drawGoldBall = true;
                                 } else drawGoldBall = false;
@@ -304,12 +304,6 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             canvas.draw(ball,negativeBall,x,y, XY);
         if(drawGoldBall){
             canvas.drawGold(ball,negativeBall,goldBall,x,y, XY, goldX, goldY);
-            /*if(!drewGoldBall)
-                drawGoldBall = true;
-            else {
-                drawGoldBall = false;
-                goldX = goldY = 0- ballWidth;
-            }*/
         }
     }
     private void endGame(){
