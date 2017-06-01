@@ -55,9 +55,10 @@ public class Keys {
 
 //SECOND GAME
     //gold ball timer
-        public long GOLD_BALL_TIMER = 60000;
+        public long GOLD_BALL_TIMER = 20000;
+        public long GOLD_BALL_DURATION = 3;
         public int RED_SPEED_UP_TIMER = 10000;
     //negative ball
-        public int BALL_EGATIVE_NUMBER = 7;
+        public int BALL_NEGATIVE_NUMBER = 7;
 
 }

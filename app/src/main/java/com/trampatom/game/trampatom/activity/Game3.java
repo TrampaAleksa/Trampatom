@@ -78,9 +78,10 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         int goldX=-1; int goldY=-1;
         //time when the ball will be drawn
         int goldBallTime;
+        //spare life
+        boolean gotLife = true;
         //used for determining when to draw the ball
         boolean drawGoldBall= false;
-        boolean drewGoldBall = false;
     //used for moving balls
         int moveX= 1;int moveY = 1;
         int[] negMoveX={1,1,1,1,1,1,1};
@@ -180,6 +181,9 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
         for(j=0; j<BALL_NEGATIVE_NUMBER; j++){
         if(clickedABall.negativeBallClicked(XY[j], XY[j+BALL_NEGATIVE_NUMBER], clickedX, clickedY, negWidth[j], negHeight[j])) {
+            if(gotLife)
+                gotLife = false;
+            else
             gameover = true;
             }
         }
@@ -225,15 +229,20 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 public void run() {
                     new CountDownTimer(keys.GOLD_BALL_TIMER, 250) {
                         public void onTick(long millisUntilFinished) {
+                            int seconds =(int) millisUntilFinished/1000;
+                            int totalTimerTime = (int) keys.GOLD_BALL_TIMER/1000;
                             //increase red balls speed in a certain interval
-                            redBallSpeed = ballMovement.redBallsSpeedUp(redBallSpeed, (int) millisUntilFinished / 1000);
+                            redBallSpeed = ballMovement.redBallsSpeedUp(redBallSpeed, seconds);
+                            tvTime.setText(Integer.toString(seconds));
+                            //5 seconds after the timer restarts, draw the gold ball
+                            if(seconds < totalTimerTime-5){
+                                //show gold ball for the duration of GOLD BALL DURATION
+                                if ( (totalTimerTime-5 - keys.GOLD_BALL_DURATION < (seconds))) {
+                                    //condition that determines if the gold ball should be drawn
+                                    drawGoldBall = true;
+                                } else drawGoldBall = false;
+                            }
                             startedTimer = true;
-
-              /*  if (((millisUntilFinished / 1000) < goldBallTime)) {
-                    if ( (goldBallTime - BALL_GOLD_DURATION < (millisUntilFinished / 1000)) && !drewGoldBall) {
-                        drawGoldBall = true;
-                    } else drewGoldBall = true;
-                }*/
                         }
 
                         public void onFinish() {
@@ -295,12 +304,12 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             canvas.draw(ball,negativeBall,x,y, XY);
         if(drawGoldBall){
             canvas.drawGold(ball,negativeBall,goldBall,x,y, XY, goldX, goldY);
-            if(!drewGoldBall)
+            /*if(!drewGoldBall)
                 drawGoldBall = true;
             else {
                 drawGoldBall = false;
                 goldX = goldY = 0- ballWidth;
-            }
+            }*/
         }
     }
     private void endGame(){

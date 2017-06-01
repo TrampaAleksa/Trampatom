@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BallType {
+    public static final int GOLD_BALL_DRAW = 1;
+    public static final int GOLD_BALL_DONT_DRAW = 0;
     private RandomBallVariables randomBallVariables;
 
     public BallType(RandomBallVariables randomBallVariables){
@@ -36,5 +38,15 @@ public class BallType {
         ball.setAngle(angle);
 
         return ball;
+    }
+
+    /**
+     * Method for getting a set of x and y coordinates in an array
+     * @return
+     */
+    public int[] getXY(){
+        //get random x and y coordinate and return it as an array
+        int[] XY = {randomBallVariables.randomX(),randomBallVariables.randomY()};
+        return XY;
     }
 }

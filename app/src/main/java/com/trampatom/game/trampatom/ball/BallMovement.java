@@ -5,9 +5,9 @@ import java.util.Random;
 
 public class BallMovement {
     //used for determining in how many seconds will the red balls speed up
-    private static final int RED_BALL_SPEED_UP_INTERVAL = 10;
+    private static final int RED_BALL_SPEED_UP_INTERVAL = 8;
     //used to set a speed liit to red balls in the survival game
-    private static final int RED_BALL_SPEED_LIMIT = 14;
+    private static final int RED_BALL_SPEED_LIMIT = 16;
     int width;
     int height;
     Random random;
