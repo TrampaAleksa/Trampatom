@@ -12,6 +12,7 @@ public class BallMovement {
     int height;
     Random random;
 
+    //TODO inject ball width and height
     public BallMovement(int width, int height) {
         this.width = width;
         this.height = height;
@@ -54,6 +55,35 @@ public class BallMovement {
             y = 0;
             moveY = -moveY;
             // too far top
+        }
+
+        int helpArray[] = {x,y,moveX,moveY};
+        return helpArray;
+    }
+
+    /**
+     * method used for moving the wave balls on the y coordinate left and right
+     * @param x current x coordinate
+     * @param y current y coordinate
+     * @param moveX direction of movement
+     * @param moveY direcion of y movement
+     * @param ballSpeed ball speed
+     * @return x , y , moveX, moveY
+     */
+    public int[] moveWave(int x, int y ,int ballWidth, int moveX, int moveY,int ballSpeed){
+        // wave moves just in x coordinate but y could be used later
+        x += moveX*ballSpeed;
+
+        //if the ball is off screen change its direction
+        if(x > width-ballWidth) {
+            x = width-ballWidth;
+            moveX = -moveX;
+            // too far right
+        }
+        if(x < 0) {
+            x = 0;
+            moveX = -moveX;
+            // too far left
         }
 
         int helpArray[] = {x,y,moveX,moveY};

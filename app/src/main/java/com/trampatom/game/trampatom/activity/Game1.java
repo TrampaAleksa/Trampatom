@@ -55,8 +55,10 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         int [] purpleXY = {0,0,0,0,0,0};
         double [] purpleAngles= {0,0,0};
         int [] purpleMoveXY= {1,1,1,1,1,1};
-        //array for wave bitmaps
+        //array for wave balls
         Bitmap[] waveBall;
+        int[] waveXY = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        int[] moveWaveXY = {1,1,1,1,1,1,1,1,1,1,1,1,1,1};
     //Classes
         Keys keys;
         GameTimeAndScore gameTimeAndScore;
@@ -93,6 +95,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         int ballPurpleNumber =1;
         int timesClickedPurple;
         boolean originalBallClicked= false; boolean secondBallClicked=false; boolean thirdBallClicked=false;
+    //used for wave ball
+        int currentWaveBall = 0;
     //used for moving the ball
         int moveX = 1;
         int moveY = 1;
@@ -233,6 +237,10 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         angle=randomCoordinate.randomAngle();
         x=randomCoordinate.randomX();
         y=randomCoordinate.randomY();
+        waveXY[keys.WAVE_BALL_NUMBER]= ballHeight*2;
+        for(i=1; i<keys.WAVE_BALL_NUMBER; i++){
+            waveXY[i+keys.WAVE_BALL_NUMBER]= waveXY[i+keys.WAVE_BALL_NUMBER-1]+ ballHeight+10;
+        }
         purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
         purpleXY[keys.PURPLE_BALL_XY1+keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
         purpleAngles[keys.PURPLE_BALL_ANGLE_ONE]= randomCoordinate.randomX();
@@ -272,7 +280,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 canvas.drawPurple(purpleBall, purpleXY, timesClickedPurple);
                 break;
             case BALL_WAVE:
-                canvas.drawWave(waveBall, 300, 300 );
+                moveWave();
+                canvas.drawWave(waveBall, waveXY );
                 break;
         }
     }
@@ -334,6 +343,16 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 }
         }
     }
+    private void moveWave(){
+        for(i=currentWaveBall; i<keys.WAVE_BALL_NUMBER; i++){
+            moveArray = ballMovement.moveWave(waveXY[i], waveXY[i+keys.WAVE_BALL_NUMBER],
+                    ballWidth, moveWaveXY[i], moveWaveXY[i+keys.WAVE_BALL_NUMBER],keys.BALL_SPEED+i);
+            waveXY[i]= moveArray[keys.NEW_BALL_X_COORDINATE];
+            waveXY[i+keys.WAVE_BALL_NUMBER] = moveArray[keys.NEW_BALL_Y_COORDINATE];
+            moveWaveXY[i] = moveArray[keys.NEW_BALL_MOVEX_VALUE];
+            moveWaveXY[i+keys.WAVE_BALL_NUMBER] = moveArray[keys.NEW_BALL_MOVEY_VALUE];
+        }
+    }
     private void endGame(){
         if (gameover) {
             GameOver gameover = new GameOver(ourHolder,mCanvas);
@@ -371,9 +390,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
                     purpleBall();
                 }
-            if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
-                waveBall();
-            }
+                if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
+                    waveBall();
+                }
             setCurrentBall(ballType);
         }
         return false;
@@ -497,7 +516,19 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
         }
     private void waveBall(){
-        //getNewBall();
+    //TODO multiple click ball types should update score with every click
+        //if we click the correct ball in the sequence remove it and get score
+        if(clickedABall.ballClicked(waveXY[currentWaveBall], waveXY[currentWaveBall+keys.WAVE_BALL_NUMBER], clickedX, clickedY)){
+            waveXY[currentWaveBall] = -ballWidth;
+            currentWaveBall ++;
+            //gain more and more score the more balls you click
+            score += currentBall*10;
+            if(currentWaveBall == keys.WAVE_BALL_NUMBER){
+                // to round up the gain; with *10 you gain 420 score total
+                score -=20;
+                getNewBall();
+            }
+        }
     }
 
 
@@ -505,16 +536,21 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     private void getNewBall() {
         //set the score from the previous ball
-        scoreS = "SCORE: " + score;
+        scoreS = "Score: " + score;
         tvScore.setText(scoreS);
         //get a new ball with new coordinates and angle of movement
         b = newBall.getNewBall();
         x= b.getX();
         y= b.getY();
-        //ballType = b.getBallType();
-        ballType = 20;
+        ballType = b.getBallType();
         angle = b.getAngle();
-        //we need to get a new purple ball too because it uses its own coordinates
+        for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
+            //reset wave balls for next time it appears
+            waveXY[i] = 0;
+            moveWaveXY[i] = 1;
+            currentWaveBall = 0;
+        }
+        //we need to get a new purple ball for next time it appears
         purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
         purpleXY[keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
         purpleAngles[keys.PURPLE_BALL_ANGLE_ONE] = randomCoordinate.randomAngle();

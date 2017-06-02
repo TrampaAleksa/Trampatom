@@ -10,7 +10,9 @@ import com.trampatom.game.trampatom.activity.Game1;
 public class Canvas1 {
 
     private static final int BALL_PURPLE_NO_CLICK = 1;
+    private static final int WAVE_BALL_NUMBER = 7;
 
+    int i;
     SurfaceHolder ourHolder;
     Canvas ourCanvas;
     Bitmap background;
@@ -56,11 +58,13 @@ public class Canvas1 {
             ourHolder.unlockCanvasAndPost(ourCanvas);
         }
     }
-    public void drawWave(Bitmap[] waveBall, int x, int y){
+    public void drawWave(Bitmap[] waveBall, int[] waveXY){
         ourCanvas = ourHolder.lockCanvas();
         ourCanvas.drawRGB(0, 0, 200);
         ourCanvas.drawBitmap(background, 0, 0, null);
-        ourCanvas.drawBitmap(waveBall[0], x, y, null);
+        for(i=0; i<WAVE_BALL_NUMBER; i++) {
+            ourCanvas.drawBitmap(waveBall[i], waveXY[i], waveXY[i+WAVE_BALL_NUMBER], null);
+        }
         ourHolder.unlockCanvasAndPost(ourCanvas);
     }
 }
