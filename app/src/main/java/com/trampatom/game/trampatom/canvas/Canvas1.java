@@ -29,10 +29,10 @@ public class Canvas1 {
      * @param y the new y coordinate
      * @return always returns false
      */
-    public boolean draw(Bitmap ball,int x, int y){
+    public boolean draw(Bitmap ball,int x, int y, int moveBackground){
         ourCanvas=ourHolder.lockCanvas();
         ourCanvas.drawRGB(0, 0, 200);
-        ourCanvas.drawBitmap(background, 0,0, null);
+        ourCanvas.drawBitmap(background, 0,moveBackground, null);
         ourCanvas.drawBitmap(ball, x, y, null);
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;

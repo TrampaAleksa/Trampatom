@@ -17,7 +17,7 @@ import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.utils.HighScore;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    private static final int MAX_NUMBER_OF_GAMES = 3;
+    private static final int MAX_NUMBER_OF_GAMES = 2;
     private static final int MIN_NUMBER_OF_GAMES = 1;
 
     public static int getWidth() {
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_menu);
 
         init();
 
@@ -58,14 +58,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      highScore = new HighScore(this);
         //Views
             Button start = (Button) findViewById(R.id.bStart);
+            start.setText("START");
             start.setOnClickListener(this);
             ImageButton next = (ImageButton) findViewById(R.id.bNext);
             next.setOnClickListener(this);
             ImageButton previous = (ImageButton) findViewById(R.id.bPrev);
-            previous.setOnClickListener(this);
+        previous.setOnClickListener(this);
             sound = (ImageButton) findViewById(R.id.bSound);
             sound.setOnClickListener(this);
-            tvHighScore = (TextView) findViewById(R.id.tvHighScore1);
+            tvHighScore = (TextView) findViewById(R.id.tvHighScoreValue);
             tvSelectedGame = (TextView) findViewById(R.id.tvGame);
         //Variables
             Display display = getWindowManager().getDefaultDisplay();
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(selectedGame<MAX_NUMBER_OF_GAMES)
                 selectedGame++;
                 //sets the selected game and shows the high score for THAT game
-                tvSelectedGame.setText(Integer.toString(selectedGame));
+                    tvSelectedGame.setText("SURVIVAL");
                 highScore.textHighScore(tvHighScore, selectedGame);
                 break;
             case R.id.bPrev:
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(selectedGame>MIN_NUMBER_OF_GAMES)
                     selectedGame--;
                 //sets the selected game and shows the high score for THAT game
-                tvSelectedGame.setText(Integer.toString(selectedGame));
+                tvSelectedGame.setText("CLASSIC");
                 highScore.textHighScore(tvHighScore, selectedGame);
                 break;
             case R.id.bSound:
@@ -129,11 +130,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(start);
         }
         if(selectedGame==2){
-            Intent start = new Intent(this, Game2.class);
+            Intent start = new Intent(this, Game3.class);
             startActivity(start);
         }
         if(selectedGame==3){
-            Intent start = new Intent(this, Game3.class);
+            Intent start = new Intent(this, Game2.class);
             startActivity(start);
         }
     }
