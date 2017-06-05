@@ -9,8 +9,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.trampatom.game.trampatom.MusicService;
 import com.trampatom.game.trampatom.R;
@@ -63,6 +66,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             next.setOnClickListener(this);
             ImageButton previous = (ImageButton) findViewById(R.id.bPrev);
         previous.setOnClickListener(this);
+            ImageButton howTo = (ImageButton) findViewById(R.id.bHowTo);
+            howTo.setOnClickListener(this);
+            ImageButton ibBack = (ImageButton) findViewById(R.id.ibBack);
+            ibBack.setOnClickListener(this);
             sound = (ImageButton) findViewById(R.id.bSound);
             sound.setOnClickListener(this);
             tvHighScore = (TextView) findViewById(R.id.tvHighScoreValue);
@@ -110,6 +117,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     soundOn=true;
                     startService(svc);
                 }
+                break;
+            case R.id.bHowTo:
+                (findViewById(R.id.includedLayout)).setVisibility(View.VISIBLE);
+                break;
+            case R.id.ibBack:
+                (findViewById(R.id.includedLayout)).setVisibility(View.GONE);
                 break;
         }
     }

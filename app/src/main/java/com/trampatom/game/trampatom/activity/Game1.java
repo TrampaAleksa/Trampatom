@@ -149,13 +149,13 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private void initiateBitmaps(){
         //initiate bitmaps
             waveBall = new Bitmap[7];
-            waveBall[0] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
-            waveBall[1] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
-            waveBall[2] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
-            waveBall[3] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
-            waveBall[4] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
-            waveBall[5] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
-            waveBall[6] = BitmapFactory.decodeResource(getResources(),R.drawable.atomsiva);
+            waveBall[0] = BitmapFactory.decodeResource(getResources(),R.drawable.wave1);
+            waveBall[1] = BitmapFactory.decodeResource(getResources(),R.drawable.wave2);
+            waveBall[2] = BitmapFactory.decodeResource(getResources(),R.drawable.wave3);
+            waveBall[3] = BitmapFactory.decodeResource(getResources(),R.drawable.wave4);
+            waveBall[4] = BitmapFactory.decodeResource(getResources(),R.drawable.wave5);
+            waveBall[5] = BitmapFactory.decodeResource(getResources(),R.drawable.wave6);
+            waveBall[6] = BitmapFactory.decodeResource(getResources(),R.drawable.wave7);
             blueBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
             redBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
             greenBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzelena);

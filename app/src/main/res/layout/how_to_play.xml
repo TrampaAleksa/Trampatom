@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="500dp"
+    android:layout_gravity="center">
+
+
+    <ImageView
+        android:id="@+id/ivHowTo"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/atominstrukcije" />
+
+    <ImageButton
+        android:id="@+id/ibBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivHowTo"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="26dp"
+        android:layout_alignRight="@+id/ivHowTo"
+        android:background="@android:color/transparent"
+        app:srcCompat="@android:drawable/ic_menu_revert" />
+</RelativeLayout>
