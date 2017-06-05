@@ -16,10 +16,12 @@ public class Canvas1 {
     SurfaceHolder ourHolder;
     Canvas ourCanvas;
     Bitmap background;
+    int backgroundHeight;
     public Canvas1(SurfaceHolder holder, Canvas canvas, Bitmap background){
         this.ourCanvas=canvas;
         this.ourHolder=holder;
         this.background = background;
+        backgroundHeight = background.getHeight();
     }
 
     /**
@@ -29,10 +31,11 @@ public class Canvas1 {
      * @param y the new y coordinate
      * @return always returns false
      */
-    public boolean draw(Bitmap ball,int x, int y, int moveBackground){
+    public boolean draw(Bitmap ball,int x, int y, int backgroundHalf1, int backgroundHalf2){
         ourCanvas=ourHolder.lockCanvas();
         ourCanvas.drawRGB(0, 0, 200);
-        ourCanvas.drawBitmap(background, 0,moveBackground, null);
+        ourCanvas.drawBitmap(background, 0,backgroundHalf1, null);
+        ourCanvas.drawBitmap(background, 0,backgroundHalf2, null);
         ourCanvas.drawBitmap(ball, x, y, null);
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;

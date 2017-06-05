@@ -61,9 +61,6 @@ public class HighScore {
                 tvHighScore.setText(Integer.toString(getHighScore(GAME_ONE_HIGH_SCORE_KEY)));
                 break;
             case 2:
-                tvHighScore.setText(Integer.toString(getHighScore(GAME_TWO_HIGH_SCORE_KEY)));
-                break;
-            case 3:
                 tvHighScore.setText(Integer.toString(getHighScore(GAME_THREE_HIGH_SCORE_KEY)));
                 break;
         }

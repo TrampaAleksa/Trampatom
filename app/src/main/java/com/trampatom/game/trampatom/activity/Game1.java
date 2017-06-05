@@ -76,7 +76,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         boolean isRunning=true;
     //Balls and Background Bitmaps
         Bitmap blueBall, redBall, greenBall, yellowBall, purpleBall, background;
-        int moveBackground = 0;
+        int backgroundHalf1 = 0;
+        int backgroundHalf2 = 0;
     //Other variables
         TextView tvScore, tvTime;
         int width, height;
@@ -161,6 +162,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             yellowBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzuta);
             purpleBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomroze);
             background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
+            backgroundHalf2 = background.getHeight();
         //ball Height and Width
             ballHeight= blueBall.getHeight()+keys.BALL_SIZE_ADAPT;
             ballWidth= blueBall.getWidth()+keys.BALL_SIZE_ADAPT;
@@ -244,22 +246,23 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
         purpleXY[keys.PURPLE_BALL_XY1+keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
         purpleAngles[keys.PURPLE_BALL_ANGLE_ONE]= randomCoordinate.randomX();
-        initialDraw= canvas.draw(blueBall,x,y, moveBackground);
+        initialDraw= canvas.draw(blueBall,x,y, backgroundHalf1,backgroundHalf2);
     }
     /**
      * draw a ball after the score changes depending on the type
      */
     public void moveAndDraw(){
-        moveBackground--;
+        backgroundHalf1--;
+        backgroundHalf2--;
         switch(currentBall)
         {
             case BALL_BLUE:
                 moveBall();
-                canvas.draw(blueBall, x, y, moveBackground);
+                canvas.draw(blueBall, x, y, backgroundHalf1, backgroundHalf2);
                 break;
             case BALL_RED:
                 moveBall();
-                canvas.draw(redBall, x, y, moveBackground);
+                canvas.draw(redBall, x, y, backgroundHalf1, backgroundHalf2);
                 break;
             case BALL_YELLOW:
                 if(!changedSize) {
@@ -269,12 +272,12 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     changedSize=true;
                 }
                 moveYellowBall();
-                canvas.draw(yellowBall, x, y, moveBackground);
+                canvas.draw(yellowBall, x, y, backgroundHalf1,backgroundHalf2);
                 break;
             case BALL_GREEN:
                 //this ball moves like crazy
                 moveGreenBall();
-                canvas.draw(greenBall, x, y, moveBackground);
+                canvas.draw(greenBall, x, y, backgroundHalf1,backgroundHalf2);
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
@@ -357,7 +360,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private void endGame(){
         if (gameover) {
             GameOver gameover = new GameOver(ourHolder,mCanvas);
-            newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
+            newHighScore=highScore.isHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY, score);
             gameover.gameOver(score, newHighScore);
             try {
                 sleep(3000);

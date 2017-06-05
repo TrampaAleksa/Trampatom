@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.trampatom.game.trampatom.MusicService;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.utils.HighScore;
+import com.trampatom.game.trampatom.utils.SelectAGame;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int MAX_NUMBER_OF_GAMES = 2;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Intent svc;
     TextView tvHighScore, tvSelectedGame;
     HighScore highScore;
+    SelectAGame selectAGame;
     ImageButton sound;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             sound.setOnClickListener(this);
             tvHighScore = (TextView) findViewById(R.id.tvHighScoreValue);
             tvSelectedGame = (TextView) findViewById(R.id.tvGame);
+        //Classes
+        selectAGame = new SelectAGame(tvSelectedGame);
         //Variables
             Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
@@ -88,19 +92,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 launchGame();
                 break;
             case R.id.bNext:
-                //select the next game
-                if(selectedGame<MAX_NUMBER_OF_GAMES)
-                selectedGame++;
-                //sets the selected game and shows the high score for THAT game
-                    tvSelectedGame.setText("SURVIVAL");
+                selectedGame = selectAGame.setSelectedGame(selectedGame);
                 highScore.textHighScore(tvHighScore, selectedGame);
                 break;
             case R.id.bPrev:
-                //select the previous game
-                if(selectedGame>MIN_NUMBER_OF_GAMES)
-                    selectedGame--;
-                //sets the selected game and shows the high score for THAT game
-                tvSelectedGame.setText("CLASSIC");
+                selectedGame = selectAGame.setSelectedGame(selectedGame);
                 highScore.textHighScore(tvHighScore, selectedGame);
                 break;
             case R.id.bSound:
