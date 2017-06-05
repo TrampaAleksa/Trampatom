@@ -18,8 +18,6 @@ import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.SelectAGame;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    private static final int MAX_NUMBER_OF_GAMES = 2;
-    private static final int MIN_NUMBER_OF_GAMES = 1;
 
     public static int getWidth() {
         return width;
@@ -31,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //screen width and height
     public static int width;
     public static int height;
-    int lastHighScore;
     //used for setting high score and seeing what game is selected
     int selectedGame;
     //used for muting/ unmuting music
