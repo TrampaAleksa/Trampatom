@@ -7,20 +7,28 @@ import com.trampatom.game.trampatom.utils.RandomBallVariables;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that should be used to handle ball types for game 1.
+ * Contains methods for getting a new ball, and should contain ball action methods
+ */
 public class BallType {
     public static final int GOLD_BALL_DRAW = 1;
     public static final int GOLD_BALL_DONT_DRAW = 0;
     private RandomBallVariables randomBallVariables;
 
+    /**
+     * Constructor for BallType. We should pass in an instance of RandomBallVariables.
+     * This is used to get random coordinates, angles and new ball types.
+     */
     public BallType(RandomBallVariables randomBallVariables){
         this.randomBallVariables = randomBallVariables;
     }
 
     /**
      * Method for getting a new ball
-     * @return a ball object
+     * @return a ball object to be used to extract the ball coordinates, angle and type.
      */
-
+//TODO finish using Ball class to get every ball type
     public Ball getNewBall(){
         //define a list with a set of information about the specific ball
         Ball ball= new Ball();

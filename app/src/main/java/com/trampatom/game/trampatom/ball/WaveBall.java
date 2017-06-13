@@ -1,6 +1,8 @@
 package com.trampatom.game.trampatom.ball;
 
-
+/**
+ * Class that should contain methods for handling wave balls
+ */
 public class WaveBall {
 
     int width, height;

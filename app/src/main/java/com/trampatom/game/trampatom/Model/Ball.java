@@ -1,6 +1,8 @@
 package com.trampatom.game.trampatom.Model;
 
-
+/**
+ * Class containing getters and setters for a lot of ball related stuff
+ */
 public class Ball {
     public Ball(){
 

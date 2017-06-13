@@ -5,6 +5,9 @@ import android.graphics.Typeface;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Class that should contain methods for setting different fonts
+ */
 public class Fonts {
     Typeface face;
 

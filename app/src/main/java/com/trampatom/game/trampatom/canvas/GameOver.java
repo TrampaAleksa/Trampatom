@@ -6,11 +6,22 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
+
+/**
+ * Class that should contain methods for handling drawing on canvas at the end of the game.
+ */
 public class GameOver {
     SurfaceHolder ourHolder;
     Canvas ourCanvas;
     Paint paint;
     int xPos, yPos;
+
+    /**
+     * Constructor that should be used to get instance of the canvas and a background
+     * so that we don't pass them as parameters every time
+     * @param holder we need the holder for our canvas
+     * @param canvas the canvas that we will draw on
+     */
     public GameOver(SurfaceHolder holder, Canvas canvas){
         //set the paint for the GAMEOVER text
         paint = new Paint();
@@ -22,8 +33,9 @@ public class GameOver {
     }
 
     /**
-     * Method for drawing a blank screen that says Game Over and displays the final score
+     * Method for drawing a screen that says Game Over and displays the final score
      * @param score we have to pass the score for it to be displayed
+     * @param newHighScore if true we should also display text indicating that we got a new high score
      */
     public void gameOver(int score, boolean newHighScore){
 

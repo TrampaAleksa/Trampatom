@@ -34,17 +34,41 @@ import static java.lang.Thread.sleep;
 
 public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchListener{
 
+
     private static final int BALL_SPEED= 8;
     public static final int BALL_NEGATIVE_NUMBER = 7;
-    //Arrays
-    int[] ballMovementArray = {0,0,0,0};
-    int[] randomSize={0,0,0,0,0,0,0};
-    int[] negWidth={0,0,0,0,0,0,0};
-    int[] negHeight={0,0,0,0,0,0,0};
-    //14 coordinates ; 7 red balls
-    //TODO use lists / arrays to get coordinates
-    int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    //Classes
+
+    // ------------------- General Ball Variables --------------------------------------- \\
+
+        //Balls and Background Bitmaps
+            Bitmap ball;
+            Bitmap[] negativeBall;
+            Bitmap goldBall;
+
+        //coordinates of the currently drawn ball, coordinates where we clicked
+            int x, clickedX;
+            int y, clickedY;
+        //used for moving the ball
+            int moveX = 1;
+            int moveY = 1;
+            double angle;
+
+
+    // ------------------- Ball type variables ------------------------------------------ \\
+
+
+    //used for golden ball
+        //set at -1 to prevent clicking on it before it is drawn
+            int goldX=-1; int goldY=-1;
+        //spare life
+            boolean gotLife = false;
+        //used for determining when to draw the ball
+            boolean drawGoldBall= false;
+    //used for red ball
+            int redBallSpeed = 8;
+
+    // ------------------- Classes ------------------------------------------------------ \\
+
     GameTimeAndScore gameTimeAndScore;
     RandomBallVariables randomCoordinate;
     Canvas3 canvas;
@@ -52,47 +76,47 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     ClickedABall clickedABall;
     Keys keys;
     BallMovement ballMovement;
-    Random randomRedSize;
+    Random randomNumber;
+
+
+    // ------------------- Arrays ------------------------------------------------------- \\
+
+    int[] ballMovementArray = {0,0,0,0};
+    int[] randomSize={0,0,0,0,0,0,0};
+    int[] negWidth={0,0,0,0,0,0,0};
+    int[] negHeight={0,0,0,0,0,0,0};
+    //14 coordinates ; 7 red balls
+    //TODO use lists / arrays to get coordinates
+    int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    //Used to move neg balls in a cirtain direction
+    int[] negMoveX={1,1,1,1,1,1,1};
+    int[] negMoveY={1,1,1,1,1,1,1};
+    double[] angles= {0,0,0,0,0,0,0,0};
+
+
+    // ------------------- Game Variables ----------------------------------------------- \\
+
+    TextView tvScore, tvTime;
+    int width, height, j,i;
+    //every ball should have the same width and height
+    int ballWidth, ballHeight;
+    //used for displaying the score and setting new highScore at the end of the game
+    int score, previousHighScore;
+    //used for ending the game when the time ends, congratulations if new high score
+    boolean gameover, newHighScore;
+
+    // ------------------- Surface View ------------------------------------------------- \\
+
     //For the SurfaceView to work
     SurfaceHolder ourHolder;
     SurfaceView mSurfaceView;
     Canvas mCanvas;
     Thread ourThread = null;
     boolean isRunning=true;
-    //Balls and Background Bitmaps
-    Bitmap ball;
-    Bitmap[] negativeBall;
-    Bitmap goldBall;
-    //Other variables
-    TextView tvScore, tvTime;
-    int width, height, j,i;
-    int ballWidth, ballHeight;
-    //Used for scoring
-    int score, previousHighScore;
-    //coordinates of the currently drawn ball
-    int x, clickedX;
-    int y, clickedY;
-    //used for golden ball
-        //set at -1 to prevent clicking on it before it is drawn
-        int goldX=-1; int goldY=-1;
-        //time when the ball will be drawn
-        int goldBallTime;
-        //spare life
-        boolean gotLife = false;
-        //used for determining when to draw the ball
-        boolean drawGoldBall= false;
-    //used for moving balls
-        int moveX= 1;int moveY = 1;
-        int[] negMoveX={1,1,1,1,1,1,1};
-        int[] negMoveY={1,1,1,1,1,1,1};
-        double angle;
-        double[] angles= {0,0,0,0,0,0,0,0};
-        int redBallSpeed = 8;
-    //used for drawing the first ball, start timer only after canvasLoads
-    boolean initialDraw, startedTimer = false;
-    //used for ending the game when the time ends
-    boolean gameover, newHighScore;
+    //used for drawing the first ball , used to start the timer once
+    boolean initialDraw, startedTimer;
 
+    // ---------------------------------------------------------------------------------- \\
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,10 +129,13 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         init();
     }
 
+    // --------------------------------------- Initialization ------------------------------ \\
+
     private void init() {
         //Classes
-        keys = new Keys();
-        ballMovement = new BallMovement(width, height);
+            keys = new Keys();
+            ballMovement = new BallMovement(width, height);
+            randomNumber = new Random();
         //set up the SurfaceView
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
             ourHolder = mSurfaceView.getHolder();
@@ -120,11 +147,8 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //get device's width and height
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();
-        //used for gold ball
-        randomRedSize = new Random();
-        goldBallTime = randomRedSize.nextInt(55);
-        //sizes of red balls
-        for(i=0 ; i<BALL_NEGATIVE_NUMBER; i++) {randomSize[i] = randomRedSize.nextInt(55);}
+        //sizes of red balls, this will get random sizes for every red ball
+            for(i=0 ; i<BALL_NEGATIVE_NUMBER; i++) {randomSize[i] = randomNumber.nextInt(55);}
         //Bitmaps
             ball= BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
             goldBall =BitmapFactory.decodeResource(getResources(),R.drawable.atomzuta);
@@ -148,24 +172,33 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             initialDraw=true;
     }
 
+
+    // --------------------------------------Main Game Action ------------------------------- \\
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             //get coordinates where we touched
-            clickedX =(int) event.getX();
-            clickedY =(int) event.getY();
-            //if we click on the ball
-            clickedPositive();
-            clickedNegative();
-            clickedGold();
+                clickedX =(int) event.getX();
+                clickedY =(int) event.getY();
+            //checks if we clicked some ball and does that balls action:
+            //blue - score ; red - lose game ; gold - gain a life
+                clickedPositive();
+                clickedNegative();
+                clickedGold();
         }
         return false;
     }
 
-    //checks if we clicked some ball and does that balls action:
-    //blue - score ; red - lose game ; gold - gain a life
+        // ------------------------------------------ Ball Click Actions ------------------------ \\
+
+    /**
+     * Method for doing positive ball's action on click: Positive gives score if clicked
+     */
     private void clickedPositive(){
+        //check if you clicked positive ball
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
+            //get score and a new ball
             score+=100;
             angle =  randomCoordinate.randomAngle();
             x = randomCoordinate.randomX();
@@ -173,10 +206,17 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             gameTimeAndScore.setScore(score);
         }
     }
-    private void clickedNegative(){
 
+
+    /**
+     * Method for doing negative ball's action on click: Negative makes you lose the game
+     * if you don't have a spare life, if you have a spare life, the life is lost.
+     */
+    private void clickedNegative(){
+        //check if you clicked any negative ball
         for(j=0; j<BALL_NEGATIVE_NUMBER; j++){
         if(clickedABall.negativeBallClicked(XY[j], XY[j+BALL_NEGATIVE_NUMBER], clickedX, clickedY, negWidth[j], negHeight[j])) {
+            //if you had a life lose it, but don't lose the game
             if(gotLife)
                 gotLife = false;
             else
@@ -184,13 +224,22 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             }
         }
     }
+    /**
+     * Method for doing gold ball's action on click: Gold gives you a spare life.
+     * A spare life should stop you from loosing the game if you click on a negative ball
+     */
     private void clickedGold() {
         if(clickedABall.ballClicked(goldX,goldY,clickedX,clickedY)){
+            //variable used to determine if gold ball will be drawn later, and if you should lose the game
+            //upon clicking a negative ball
             gotLife = true;
+            //remove the ball from screen
             goldX = goldY = 0- ballWidth;
         }
     }
 
+
+     // ------------------------------------------- Main Game Loop ---------------------------------------- \\
 
     @Override
     public void run() {
@@ -216,6 +265,13 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
 
+        // ---------------------------------- On Game Start ---------------------------------------- \\
+
+    /**
+     * Method for handling the game's timer. The timer runs in a endless loop.
+     * <p>It should be used to draw a gold ball if we don't have a spare life, and to
+     * periodically change the speed of red balls making the game harder.</p>
+     */
     public void timedActions() {
         //timer has to be started once, but it resets every time it finishes
         if (!startedTimer) {
@@ -254,6 +310,12 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             });
         }
     }
+
+    /**
+     * Method that should be called on every start of the game. Initializes most variables.
+     * <p>Canvas, width and height, starting coordinates and angles, and the first draw should be
+     * started here, only once.</p>
+     */
     private void firstDraw(){
         //setting the proper height of the canvas
         mCanvas = ourHolder.lockCanvas();
@@ -274,6 +336,10 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //first draw
         initialDraw= canvas.draw(ball,negativeBall,x,y, XY);
     }
+
+
+        // ---------------------------------- Ball Movement and Drawing ---------------------------- \\
+
     private void moveBall() {
             //need to create local because of a width and height problem. Fix later
             BallMovement positiveBallMovement = new BallMovement(width, height);
@@ -306,12 +372,19 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             canvas.drawGold(ball,negativeBall,goldBall,x,y, XY, goldX, goldY);
         }
     }
+
+            // --------------------------------- Game End ------------------------------------------ \\
+
     private void endGame(){
         if (gameover) {
+            //if an event happens that changes gameover to true, end the game
             GameOver gameover = new GameOver(ourHolder,mCanvas);
+            // check if we got a new high score
             newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
+            //display our score and if we got a new high score show a text to indicate that
             gameover.gameOver(score, newHighScore);
             try {
+                //delay before finishing the game
                 sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -326,7 +399,9 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
 
 
-    //used for handling the game's Runnable thread
+    // ----------------------------------- Handling Threads and Music -------------------- \\
+
+
     public void pause()
     {
         isRunning=false;

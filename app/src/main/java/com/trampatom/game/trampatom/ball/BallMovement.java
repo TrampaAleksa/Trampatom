@@ -3,6 +3,12 @@ package com.trampatom.game.trampatom.ball;
 
 import java.util.Random;
 
+
+/**
+ * This class should contain methods for handling all ball movement.
+ * <p>It should handle ball bouncing on screen edges, as well as directions of movement.
+ * Most methods will return an array containing an move array with new x, y coordinates</p>
+ */
 public class BallMovement {
     //used for determining in how many seconds will the red balls speed up
     private static final int RED_BALL_SPEED_UP_INTERVAL = 8;
@@ -13,6 +19,13 @@ public class BallMovement {
     Random random;
 
     //TODO inject ball width and height
+
+    /**
+     * Constructor that contains and gets the canvas's width adn height to
+     * use so that balls don't fall off screen
+     * @param width screen's width
+     * @param height screen's height
+     */
     public BallMovement(int width, int height) {
         this.width = width;
         this.height = height;

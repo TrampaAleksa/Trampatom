@@ -28,6 +28,8 @@ import static java.lang.Thread.sleep;
 
 public class Game2 extends AppCompatActivity implements View.OnTouchListener, Runnable{
 
+    // CURRENTLY UNUSED
+
     private static final long GAME_TIME = 60000;
     private static final int BALL_NUMBER= 3;
     private static final int BALL_SPEED=8;
