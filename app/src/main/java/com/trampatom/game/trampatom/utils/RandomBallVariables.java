@@ -6,9 +6,16 @@ import com.trampatom.game.trampatom.activity.MainActivity;
 
 import java.util.Random;
 
+
+/**
+ * <p>Important class containing methods used to get every random variable: angles, coordinates, ball type; </p>
+ * Also contains methods for checking at what quarter of the screen an object is,
+ * and methods for preventing sprite off screen bugs.
+ */
 public class RandomBallVariables {
     //used for converting an angle into radians
     private static final double RADIANS = 3.14/180;
+
     //used for checking if the ball is over a screen's edge
     private final static int OVER_LEFT = 1;
     private final static int OVER_TOP = 2;
@@ -21,6 +28,7 @@ public class RandomBallVariables {
     private final static int QUARTER_THREE = 3;
     private final static int QUARTER_FOUR = 4;
     private final static int QUARTER_UNKNOWN = 0;
+
         int y, x;
     //width and height of the device/canvas
     int width ;
@@ -30,6 +38,14 @@ public class RandomBallVariables {
     int ballHeight;
     Random random;
 
+    /**
+     * Constructor for inserting device width, height and ball width and height
+     * only once instead of on every method call
+     * @param width device width
+     * @param height canvas height
+     * @param ballWidth general ball width
+     * @param ballHeight general ball height
+     */
     public RandomBallVariables(int width, int height, int ballWidth, int ballHeight){
         this.width=width;
         this.height=height;
@@ -38,6 +54,11 @@ public class RandomBallVariables {
         random = new Random();
     }
 
+    /**
+     * Method that should get a new ball type : red, blue, green, yellow, purple or wave depending on what
+     * number it returns.
+     * @return a random int value that is used to get a new ball
+     */
     public int getRandomBallType(){
         int ballType;
         ballType= random.nextInt(21);
@@ -75,11 +96,16 @@ public class RandomBallVariables {
         double angle;
         Random number = new Random();
         randomAngle = number.nextInt(360);
+        //the angle has to be in radians if we are using sin or cos functions to determine movement
         angle= randomAngle * RADIANS;
 
         return angle;
     }
 
+    /**
+     * Method that should be used in survival game. Gets random coordinates for every red ball
+     * @return a set of coordinates for red balls: x1,x2,x3... xN, y1, y2 ,y3 ... yN
+     */
     public int[] randomnegativeBallsCoordinates(){
         int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 

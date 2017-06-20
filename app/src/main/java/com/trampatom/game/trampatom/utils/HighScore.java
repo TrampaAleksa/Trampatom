@@ -37,7 +37,7 @@ public class HighScore {
      */
     public boolean isHighScore(String game, int score){
                  int oldHighScore = getHighScore(game);
-        //If the new score is bigger than the high score, set a new high score
+        //If the new score is bigger than the high score, set a new high score / store it in a shared preference
         if(score>oldHighScore) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = preferences.edit();
@@ -61,11 +61,9 @@ public class HighScore {
                 tvHighScore.setText(Integer.toString(getHighScore(GAME_ONE_HIGH_SCORE_KEY)));
                 break;
             case 2:
+                //since there were three games this variable is now called THREE HIGH SCORE. should be renamed later
                 tvHighScore.setText(Integer.toString(getHighScore(GAME_THREE_HIGH_SCORE_KEY)));
                 break;
         }
-       //int highScore = getHighScore(game);
-
-        //tvHighScore.setText(Integer.toString(highScore));
     }
 }

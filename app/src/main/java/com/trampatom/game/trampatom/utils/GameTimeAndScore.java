@@ -28,13 +28,24 @@ public class GameTimeAndScore {
             tvTime.setText(time);
 
     }
+
+    /**
+     * Method for setting the current remaining time. Should be used in a timer
+     * @param millisUntilFinished current time remaining in milliseconds
+     * @return returns true if the tie remaining is equal to 1 millisecond (always false but can be changed if needed)
+     */
     public boolean setTimeRemaining(long millisUntilFinished){
         time=Long.toString(millisUntilFinished/1000);
         tvTime.setText(time);
+        //always false but if we change the value it could be true
         return millisUntilFinished == 1;
 
     }
 
+    /**
+     * Method that should be called whenever we want to set/update the current score
+     * @param score the current score that we want to set
+     */
     public void setScore(int score){
         scoreS = "SCORE: "+ Integer.toString(score);
         tvScore.setText(scoreS);

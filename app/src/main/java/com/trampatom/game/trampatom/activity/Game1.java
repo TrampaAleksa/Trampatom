@@ -18,6 +18,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.ball.BallMovement;
@@ -190,31 +193,37 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private void initiateBitmaps(){
         //initiate bitmaps
             waveBall = new Bitmap[7];
-            waveBall[0] = BitmapFactory.decodeResource(getResources(),R.drawable.wave1);
-            waveBall[1] = BitmapFactory.decodeResource(getResources(),R.drawable.wave2);
-            waveBall[2] = BitmapFactory.decodeResource(getResources(),R.drawable.wave3);
-            waveBall[3] = BitmapFactory.decodeResource(getResources(),R.drawable.wave4);
-            waveBall[4] = BitmapFactory.decodeResource(getResources(),R.drawable.wave5);
-            waveBall[5] = BitmapFactory.decodeResource(getResources(),R.drawable.wave6);
-            waveBall[6] = BitmapFactory.decodeResource(getResources(),R.drawable.wave7);
-            blueBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
-            redBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomcrvena);
-            greenBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzelena);
-            yellowBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzuta);
-            purpleBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomroze);
-            background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
-        //ball Height and Width
-            ballHeight= blueBall.getHeight()+keys.BALL_SIZE_ADAPT;
-            ballWidth= blueBall.getWidth()+keys.BALL_SIZE_ADAPT;
-        //resize all balls to the new ball width and height
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        //used to rescale bitmaps without creating a new bitmap
+            //options.inSampleSize = 4;
+        //configure the color patter so that the balls take less space
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+        //loading the bitmaps
+            waveBall[0] = BitmapFactory.decodeResource(getResources(), R.drawable.wave1, options);
+            waveBall[1] = BitmapFactory.decodeResource(getResources(), R.drawable.wave2, options);
+            waveBall[2] = BitmapFactory.decodeResource(getResources(), R.drawable.wave3, options);
+            waveBall[3] = BitmapFactory.decodeResource(getResources(), R.drawable.wave4, options);
+            waveBall[4] = BitmapFactory.decodeResource(getResources(), R.drawable.wave5, options);
+            waveBall[5] = BitmapFactory.decodeResource(getResources(), R.drawable.wave6, options);
+            waveBall[6] = BitmapFactory.decodeResource(getResources(), R.drawable.wave7, options);
+            blueBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomplava, options);
+            redBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomcrvena, options);
+            greenBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomzelena, options);
+            yellowBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomzuta, options);
+            purpleBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomroze, options);
+            background = BitmapFactory.decodeResource(getResources(), R.drawable.atompozadina, options);
+            //ball Height and Width
+            ballHeight = blueBall.getHeight() + keys.BALL_SIZE_ADAPT;
+            ballWidth = blueBall.getWidth() + keys.BALL_SIZE_ADAPT;
+            //resize all balls to the new ball width and height
             blueBall = Bitmap.createScaledBitmap(blueBall, ballWidth, ballHeight, true);
             redBall = Bitmap.createScaledBitmap(redBall, ballWidth, ballHeight, true);
             greenBall = Bitmap.createScaledBitmap(greenBall, ballWidth, ballHeight, true);
             yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
             purpleBall = Bitmap.createScaledBitmap(purpleBall, ballWidth, ballHeight, true);
-        for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
-            waveBall[i] =  Bitmap.createScaledBitmap(waveBall[i], ballWidth, ballHeight, true);
-        }
+            for (i = 0; i < keys.WAVE_BALL_NUMBER; i++) {
+                waveBall[i] = Bitmap.createScaledBitmap(waveBall[i], ballWidth, ballHeight, true);
+            }
     }
 
 
@@ -748,5 +757,28 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     protected void onPause() {
         super.onPause();
         pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //after leaving this game we need to clear the memory from the stored bitmaps
+        if(background!=null)
+        {
+            background.recycle();
+            background=null;
+            blueBall.recycle();
+            blueBall=null;
+            redBall.recycle();
+            redBall=null;
+            greenBall.recycle();
+            greenBall=null;
+            yellowBall.recycle();
+            yellowBall=null;
+            for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
+                waveBall[i].recycle();
+                waveBall[i] = null;
+            }
+        }
     }
 }
