@@ -66,8 +66,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
         //Balls and Background Bitmaps
                 Bitmap blueBall, redBall, greenBall, yellowBall, purpleBall;
-            //for moving the background
-                int backgroundMove = 0;
 
 
     // ------------------- Ball type variables ------------------------------------------ \\
@@ -125,6 +123,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             static int ballWidth, ballHeight;
         //used for displaying the score and setting new highScore at the end of the game
             int score, previousHighScore;
+        //used to determine how long we will play
+            int currentEnergyLevel;
         //used for ending the game when the time ends, congratulations if new high score
             boolean gameover, newHighScore;
 
@@ -172,6 +172,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             tvScore=(TextView) findViewById(R.id.tvScore);
             tvTime = (TextView) findViewById(R.id.tvTime);
             gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime);
+            currentEnergyLevel = keys.STARTING_ENERGY;
         //get device's width and height
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();
@@ -262,25 +263,31 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     public void timedActions() {
         //timer has to be started once, but it resets every time it finishes
         if (!startedTimer) {
+            startedTimer = true;
             //get a handler so that we can run the timer outside of the main ui thread
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    new CountDownTimer(keys.GAME_TIME, 250) {
+
+                    new CountDownTimer(keys.GAME_TIME, 1000) {
                         public void onTick(long millisUntilFinished) {
                             //seconds remaining and the starting time
                             int seconds =(int) millisUntilFinished/1000;
                             int totalTimerTime = (int) keys.GAME_TIME/1000;
                             //update the time with every tick
-                            gameTimeAndScore.setTimeRemaining(millisUntilFinished);
-                            startedTimer = true;
+                                // gameTimeAndScore.setTimeRemaining(millisUntilFinished);
+                            if(!gameover) {
+                                //until the game is finished keep lowering the energy levels by 300 every second
+                                currentEnergyLevel -= 300;
+                                gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
+                            }
                         }
 
                         public void onFinish() {
                             //when the timer finishes, end the game
-                            gameover = true;
+                                //gameover = true;
                             //uncomment if the timer has to be reset every time it reaches zero
-                            //startedTimer = false;
+                                startedTimer = false;
                         }
                     }.start();
                 }
@@ -329,7 +336,11 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
      * <p>All the move methods should be used here used here</p>
      */
     public void moveAndDraw(){
-        backgroundMove--;
+        if(currentEnergyLevel<=0) {
+            //after we run out of energy, end the game and set the energy to 0 in case it got into a negative value
+            gameover = true;
+            gameTimeAndScore.setEnergyRemaining(0);
+        }
         switch(currentBall)
         {
             case BALL_BLUE:
@@ -559,10 +570,16 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private void redBall(){
         //if we click the ball
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
+            //add some energy and update it in the energy text view
+            currentEnergyLevel -=100;
+            gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
             score -= 100;
             getNewBall();
         }
         else {
+            //add some energy and update it in the energy text view
+            currentEnergyLevel +=100;
+            gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
             score+=100;
             getNewBall();
         }
@@ -575,6 +592,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private void blueBall(){
         //if we clicked the ball should gain score
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)) {
+            //add some energy and update it in the energy text view
+            currentEnergyLevel +=100;
+            gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
             score += 100;
             getNewBall();
         }
@@ -600,6 +620,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
             }
             else {
+                //add some energy and update it in the energy text view
+                currentEnergyLevel +=500;
+                gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
                 score+=500;
                 getNewBall();
                 //reset the yellow ball to its first state for later use
@@ -618,6 +641,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
      */
     private void greenBall(){
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
+            //add some energy and update it in the energy text view
+            currentEnergyLevel +=400;
+            gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
             score+=400;
             getNewBall();
         }
@@ -672,6 +698,9 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 //reset to starting state
                 originalBallClicked = secondBallClicked = thirdBallClicked = false;
                 timesClickedPurple = keys.BALL_PURPLE_NO_CLICK;
+                //add some energy and update it in the energy text view
+                currentEnergyLevel +=500;
+                gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
                 score +=500;
                 getNewBall();
             }

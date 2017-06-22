@@ -1,6 +1,7 @@
 package com.trampatom.game.trampatom.utils;
 
 
+import android.content.Intent;
 import android.widget.TextView;
 
 /**
@@ -30,15 +31,12 @@ public class GameTimeAndScore {
     }
 
     /**
-     * Method for setting the current remaining time. Should be used in a timer
-     * @param millisUntilFinished current time remaining in milliseconds
-     * @return returns true if the tie remaining is equal to 1 millisecond (always false but can be changed if needed)
+     * Method for setting the current remaining energy. Should be used in a timer
+     * @param energy current energy remaining. if it reaches 0 we lose
      */
-    public boolean setTimeRemaining(long millisUntilFinished){
-        time=Long.toString(millisUntilFinished/1000);
+    public void setEnergyRemaining(int energy){
+        time= Integer.toString(energy);
         tvTime.setText(time);
-        //always false but if we change the value it could be true
-        return millisUntilFinished == 1;
 
     }
 

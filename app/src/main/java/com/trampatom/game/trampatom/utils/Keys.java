@@ -9,6 +9,7 @@ public class Keys {
 
         //time a game lasts in milliseconds
         public int GAME_TIME = 60000;
+        public int STARTING_ENERGY = 5000;
         public int BALL_SPEED = 8;
         //balls size correction
         public int BALL_SIZE_ADAPT = 18;
