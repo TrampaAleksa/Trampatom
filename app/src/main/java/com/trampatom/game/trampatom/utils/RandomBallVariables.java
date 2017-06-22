@@ -54,6 +54,7 @@ public class RandomBallVariables {
         random = new Random();
     }
 
+
     /**
      * Method that should get a new ball type : red, blue, green, yellow, purple or wave depending on what
      * number it returns.

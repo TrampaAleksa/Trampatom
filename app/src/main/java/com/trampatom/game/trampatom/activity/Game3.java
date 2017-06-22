@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.ClickedABall;
+import com.trampatom.game.trampatom.canvas.Background;
 import com.trampatom.game.trampatom.canvas.Canvas3;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
@@ -77,6 +78,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     Keys keys;
     BallMovement ballMovement;
     Random randomNumber;
+    Background stars;
 
 
     // ------------------- Arrays ------------------------------------------------------- \\
@@ -243,7 +245,6 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     @Override
     public void run() {
-        canvas = new Canvas3(ourHolder,mCanvas);
         while (isRunning) {
             //Do until you get the surface
             if (!ourHolder.getSurface().isValid())
@@ -322,6 +323,8 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         height = mCanvas.getHeight();
         ourHolder.unlockCanvasAndPost(mCanvas);
         //prevents drawing over screen
+        stars = new Background(ourHolder, mCanvas, width, height);
+        canvas = new Canvas3(ourHolder,mCanvas, stars);
         randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
         clickedABall= new ClickedABall(ballWidth, ballHeight);
         goldX = randomCoordinate.randomX();

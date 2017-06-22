@@ -26,6 +26,7 @@ import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.BallType;
 import com.trampatom.game.trampatom.ball.ClickedABall;
+import com.trampatom.game.trampatom.canvas.Background;
 import com.trampatom.game.trampatom.canvas.Canvas1;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
@@ -64,7 +65,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 double angle;
 
         //Balls and Background Bitmaps
-                Bitmap blueBall, redBall, greenBall, yellowBall, purpleBall, background;
+                Bitmap blueBall, redBall, greenBall, yellowBall, purpleBall;
             //for moving the background
                 int backgroundMove = 0;
 
@@ -96,6 +97,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         ClickedABall clickedABall;
         BallMovement ballMovement;
         Random greenRandom;
+        Background stars;
 
     // ------------------- Arrays ------------------------------------------------------- \\
 
@@ -211,7 +213,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             greenBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomzelena, options);
             yellowBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomzuta, options);
             purpleBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomroze, options);
-            background = BitmapFactory.decodeResource(getResources(), R.drawable.atompozadina, options);
             //ball Height and Width
             ballHeight = blueBall.getHeight() + keys.BALL_SIZE_ADAPT;
             ballWidth = blueBall.getWidth() + keys.BALL_SIZE_ADAPT;
@@ -231,13 +232,13 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     @Override
     public void run() {
-        canvas = new Canvas1(ourHolder,mCanvas, background);
         //used for defining random movements of green ball
         greenRandom = new Random();
         while (isRunning) {
             //Do until you get the surface
             if (!ourHolder.getSurface().isValid())
                 continue;
+
             //start the game time
             timedActions();
             //The initial draw
@@ -299,6 +300,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         ourHolder.unlockCanvasAndPost(mCanvas);
         // object instances
         randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
+        stars = new Background(ourHolder, mCanvas, width, height);
+        canvas = new Canvas1(ourHolder,mCanvas, stars);
         newBall = new BallType(randomCoordinate);
         clickedABall = new ClickedABall(ballWidth, ballHeight);
         ballMovement = new BallMovement(width, height);
@@ -313,7 +316,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
         purpleXY[keys.PURPLE_BALL_XY1+keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
         purpleAngles[keys.PURPLE_BALL_ANGLE_ONE]= randomCoordinate.randomX();
-        initialDraw= canvas.draw(blueBall,x,y, backgroundMove);
+        initialDraw= canvas.draw(blueBall,x,y);
+
     }
 
 
@@ -330,11 +334,11 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         {
             case BALL_BLUE:
                 moveBall();
-                canvas.draw(blueBall, x, y, backgroundMove);
+                canvas.draw(blueBall, x, y);
                 break;
             case BALL_RED:
                 moveBall();
-                canvas.draw(redBall, x, y, backgroundMove);
+                canvas.draw(redBall, x, y);
                 break;
             case BALL_YELLOW:
                 if(!changedSize) {
@@ -344,20 +348,20 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     changedSize=true;
                 }
                 moveYellowBall();
-                canvas.draw(yellowBall, x, y, backgroundMove);
+                canvas.draw(yellowBall, x, y);
                 break;
             case BALL_GREEN:
                 //this ball moves like crazy
                 moveGreenBall();
-                canvas.draw(greenBall, x, y, backgroundMove);
+                canvas.draw(greenBall, x, y);
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
-                canvas.drawPurple(purpleBall, purpleXY, timesClickedPurple, backgroundMove);
+                canvas.drawPurple(purpleBall, purpleXY, timesClickedPurple);
                 break;
             case BALL_WAVE:
                 moveWave();
-                canvas.drawWave(waveBall, waveXY, backgroundMove);
+                canvas.drawWave(waveBall, waveXY);
                 break;
         }
     }
@@ -762,11 +766,10 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopService(MainActivity.svc);
         //after leaving this game we need to clear the memory from the stored bitmaps
-        if(background!=null)
+        if(blueBall!=null)
         {
-            background.recycle();
-            background=null;
             blueBall.recycle();
             blueBall=null;
             redBall.recycle();

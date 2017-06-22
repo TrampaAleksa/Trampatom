@@ -37,7 +37,7 @@ public class MusicService extends Service {
 
     }
     public void onPause() {
-
+        player.pause();
     }
     @Override
     public void onDestroy() {

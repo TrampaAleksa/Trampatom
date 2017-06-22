@@ -23,6 +23,7 @@
 
         <service
             android:enabled="true"
+            android:stopWithTask="true"
             android:name=".MusicService" />
 
     </application>

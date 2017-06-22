@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
+import com.trampatom.game.trampatom.Model.Star;
 import com.trampatom.game.trampatom.activity.Game3;
 
 /**
@@ -15,6 +16,7 @@ public class Canvas3 {
         SurfaceHolder ourHolder;
         Canvas ourCanvas;
         int i=0;
+        Background background;
 
 
     /**
@@ -23,9 +25,10 @@ public class Canvas3 {
      * @param holder we need the holder for our canvas
      * @param canvas the canvas that we will draw on
      */
-        public Canvas3(SurfaceHolder holder, Canvas canvas) {
+        public Canvas3(SurfaceHolder holder, Canvas canvas, Background background) {
             this.ourCanvas = canvas;
             this.ourHolder = holder;
+            this.background = background;
         }
 
     /**
@@ -40,8 +43,7 @@ public class Canvas3 {
      */
     public boolean draw(Bitmap ball,Bitmap[] negativeBall, int x, int y, int[] XY){
         ourCanvas = ourHolder.lockCanvas();
-        ourCanvas.drawRGB(0, 0, 200);
-        // canvas.drawBitmap(background,0,0,null);
+        drawBackground();
         ourCanvas.drawBitmap(ball, x, y, null);
         for(i=0; i< Game3.BALL_NEGATIVE_NUMBER; i++) {
             ourCanvas.drawBitmap(negativeBall[i], XY[i], XY[i + Game3.BALL_NEGATIVE_NUMBER], null);
@@ -65,8 +67,7 @@ public class Canvas3 {
      */
     public boolean drawGold(Bitmap ball,Bitmap[] negativeBall,Bitmap goldBall, int x, int y, int[] XY, int goldX, int goldY){
         ourCanvas = ourHolder.lockCanvas();
-        ourCanvas.drawRGB(0, 0, 200);
-        // canvas.drawBitmap(background,0,0,null);
+        drawBackground();
         ourCanvas.drawBitmap(ball, x, y, null);
         ourCanvas.drawBitmap(goldBall, goldX, goldY, null);
         for(i=0; i< Game3.BALL_NEGATIVE_NUMBER; i++) {
@@ -74,6 +75,24 @@ public class Canvas3 {
         }
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;
+    }
+    /**
+     * Method used to draw a black canvas and an array of stars on random locations
+     */
+    private void drawBackground(){
+        ourCanvas.drawRGB(0, 0, 0);
+        //for (j = 0; j < 4; j++) {
+        for(i=0; i<background.NUMBER_OF_STARS;i++) {
+
+            Star currentStar = background.stars.get(i);
+            int starY = currentStar.getY();
+            //draw every star object contained within an array of stars that we passed
+            ourCanvas.drawCircle(currentStar.getX(), starY, currentStar.getRadius(), background.starPaint);
+            currentStar.setY(starY - 1);
+            if ((starY - 1) < -currentStar.getRadius())
+                currentStar.setY(ourCanvas.getHeight());
+            // }
+        }
     }
     }
 

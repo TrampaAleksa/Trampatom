@@ -1,10 +1,12 @@
 package com.trampatom.game.trampatom.activity;
 
+import android.content.ComponentCallbacks2;
 import android.content.Intent;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //used for muting/ unmuting music
     boolean soundOn;
     //used for starting music service
-    Intent svc;
+    static Intent svc;
     TextView tvHighScore, tvSelectedGame;
     HighScore highScore;
     SelectAGame selectAGame;
@@ -160,4 +162,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //stop the music after exitning the game
         stopService(svc);
     }
+
+
+   /* @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+            // Get called every-time when application went to background.
+            stopService(new Intent(this, MusicService.class));
+            System.exit(0);
+        }
+
+    }*/
+
 }
