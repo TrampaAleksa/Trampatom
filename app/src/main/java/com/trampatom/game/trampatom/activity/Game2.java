@@ -14,6 +14,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.trampatom.game.trampatom.R;
@@ -40,6 +41,7 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
         Canvas2 canvas;
         HighScore highScore;
         ClickedABall clickedABall;
+        ProgressBar energyProgress;
     //For the SurfaceView to work
         SurfaceHolder ourHolder;
         SurfaceView mSurfaceView;
@@ -102,7 +104,8 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
         //Current score and remaining time
             tvScore=(TextView) findViewById(R.id.tvScore);
             tvTime = (TextView) findViewById(R.id.tvTime);
-            gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime);
+            energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
+            gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime, energyProgress);
         //get device's width and height
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();

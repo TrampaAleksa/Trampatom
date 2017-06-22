@@ -3,6 +3,8 @@ package com.trampatom.game.trampatom.canvas;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
 import com.trampatom.game.trampatom.Model.Star;
@@ -10,18 +12,20 @@ import com.trampatom.game.trampatom.activity.Game1;
 
 /**
  * Class containing methods for working with Game 1 canvas,
- * mostly drawing every element.
+ * mostly used for drawing every element and displaying score.
  */
 public class Canvas1 {
 
     private static final int BALL_PURPLE_NO_CLICK = 1;
     private static final int WAVE_BALL_NUMBER = 7;
 
-    int i,j;
+    int i;
+    int score;
     SurfaceHolder ourHolder;
     Canvas ourCanvas;
-   // Bitmap background;
     Background background;
+    //paint used for score
+    Paint paint;
 
     /**
      * Constructor that should be used to get instance of the canvas and a background
@@ -33,10 +37,12 @@ public class Canvas1 {
     public Canvas1(SurfaceHolder holder, Canvas canvas, Background background){
         this.ourCanvas=canvas;
         this.ourHolder=holder;
-       // this.background = background;
-        //for later use, unfinished code
-        //backgroundHeight = background.getHeight();
         this.background = background;
+        //default paint for drawing score
+        paint = new Paint();
+        paint.setColor(Color.CYAN);
+        paint.setTextSize(38);
+        paint.setTextAlign(Paint.Align.CENTER);
     }
 
     /**
@@ -46,7 +52,8 @@ public class Canvas1 {
      * @param y the new y coordinate
      * @return always returns false
      */
-    public boolean draw(Bitmap ball,int x, int y){
+    public boolean draw(Bitmap ball,int x, int y, int score){
+        this.score = score;
         ourCanvas=ourHolder.lockCanvas();
         drawBackground();
         ourCanvas.drawBitmap(ball, x, y, null);
@@ -63,8 +70,8 @@ public class Canvas1 {
      * @param timesClicked parameter used to check if we clicked the first purple ball.
      *                Is int to simplify changing the code later if needed to handle more balls
      */
-    public void drawPurple(Bitmap ball, int [] purpleXY, int timesClicked){
-
+    public void drawPurple(Bitmap ball, int [] purpleXY, int timesClicked, int score){
+        this.score = score;
         if(timesClicked == BALL_PURPLE_NO_CLICK) {
             ourCanvas = ourHolder.lockCanvas();
             drawBackground();
@@ -86,7 +93,8 @@ public class Canvas1 {
      * @param waveBall a set of bitmaps each containing a ball bitmap of different color
      * @param waveXY coordinate sets of every ball
      */
-    public void drawWave(Bitmap[] waveBall, int[] waveXY){
+    public void drawWave(Bitmap[] waveBall, int[] waveXY, int score){
+        this.score = score;
         ourCanvas = ourHolder.lockCanvas();
         drawBackground();
         //TODO refactor to not draw the balls we already clicked by parsing an int instead of an i
@@ -97,11 +105,11 @@ public class Canvas1 {
     }
 
     /**
-     * Method used to draw a black canvas and an array of stars on random locations
+     * Method used to draw a black canvas and an array of stars on random locations, and used for displaying
+     * the current score in top center
      */
     private void drawBackground(){
         ourCanvas.drawRGB(0, 0, 0);
-        //for (j = 0; j < 4; j++) {
         for(i=0; i<background.NUMBER_OF_STARS;i++) {
 
                 Star currentStar = background.stars.get(i);
@@ -111,7 +119,8 @@ public class Canvas1 {
                 currentStar.setY(starY - 1);
                 if ((starY - 1) < -currentStar.getRadius())
                     currentStar.setY(ourCanvas.getHeight());
-           // }
         }
+        //draw the current score
+        ourCanvas.drawText(Integer.toString(score), ourCanvas.getWidth()/2, 50, paint);
     }
 }

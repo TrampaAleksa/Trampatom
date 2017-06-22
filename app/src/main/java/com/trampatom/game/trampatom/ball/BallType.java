@@ -28,7 +28,6 @@ public class BallType {
      * Method for getting a new ball
      * @return a ball object to be used to extract the ball coordinates, angle and type.
      */
-//TODO finish using Ball class to get every ball type
     public Ball getNewBall(){
         //define a list with a set of information about the specific ball
         Ball ball= new Ball();

@@ -16,6 +16,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.trampatom.game.trampatom.R;
@@ -34,7 +35,7 @@ import java.util.Random;
 import static java.lang.Thread.sleep;
 
 public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchListener{
-
+    //TODO remove progress bar in this game and display spare life for better UX
 
     private static final int BALL_SPEED= 8;
     public static final int BALL_NEGATIVE_NUMBER = 7;
@@ -99,6 +100,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     // ------------------- Game Variables ----------------------------------------------- \\
 
     TextView tvScore, tvTime;
+    ProgressBar energyProgress;
     int width, height, j,i;
     //every ball should have the same width and height
     int ballWidth, ballHeight;
@@ -145,7 +147,8 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //Current score and remaining time
             tvScore=(TextView) findViewById(R.id.tvScore);
             tvTime = (TextView) findViewById(R.id.tvTime);
-            gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime);
+            energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
+            gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime, energyProgress);
         //get device's width and height
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();

@@ -16,6 +16,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -38,6 +39,9 @@ import java.util.Random;
 import com.trampatom.game.trampatom.utils.Keys;
 import static java.lang.Thread.sleep;
 
+/**
+ * Class used to run the Classic game mode. It uses energy that you get from balls to keep the game running
+ */
 public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchListener{
 
     //RED - don't click on the ball ; BLUE - click on the ball
@@ -117,12 +121,15 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     // ------------------- Game Variables ----------------------------------------------- \\
 
+    //TODO remove these text views since tey are no longer used
             TextView tvScore, tvTime;
+        //Progress bar used to display remaining energy; If we are without energy we lose the game
+            ProgressBar energyProgress;
             int width, height;
         //every ball should have the same width and height
             static int ballWidth, ballHeight;
         //used for displaying the score and setting new highScore at the end of the game
-            int score, previousHighScore;
+            int score=0, previousHighScore;
         //used to determine how long we will play
             int currentEnergyLevel;
         //used for ending the game when the time ends, congratulations if new high score
@@ -168,10 +175,11 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
             ourHolder = mSurfaceView.getHolder();
             mSurfaceView.setOnTouchListener(this);
-        //Current score and remaining time
+        //Current score and remaining energy
             tvScore=(TextView) findViewById(R.id.tvScore);
             tvTime = (TextView) findViewById(R.id.tvTime);
-            gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime);
+            energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
+            gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime, energyProgress);
             currentEnergyLevel = keys.STARTING_ENERGY;
         //get device's width and height
             width= MainActivity.getWidth();
@@ -186,7 +194,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         currentBall= BALL_BLUE;
         initialDraw=true;
     }
-    // TODO make method for initiating all bitmaps
 
     /**
      * Method for decoding every Bitmap into memory and
@@ -240,6 +247,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             if (!ourHolder.getSurface().isValid())
                 continue;
 
+            //constantly update the energy bar to display remaining energy
+            gameTimeAndScore.updateEnergyBar(currentEnergyLevel);
             //start the game time
             timedActions();
             //The initial draw
@@ -269,17 +278,14 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 @Override
                 public void run() {
 
-                    new CountDownTimer(keys.GAME_TIME, 1000) {
+                    new CountDownTimer(keys.GAME_TIME, 100) {
                         public void onTick(long millisUntilFinished) {
                             //seconds remaining and the starting time
                             int seconds =(int) millisUntilFinished/1000;
                             int totalTimerTime = (int) keys.GAME_TIME/1000;
-                            //update the time with every tick
-                                // gameTimeAndScore.setTimeRemaining(millisUntilFinished);
                             if(!gameover) {
-                                //until the game is finished keep lowering the energy levels by 300 every second
-                                currentEnergyLevel -= 300;
-                                gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
+                                //until the game is finished keep lowering the energy levels
+                                currentEnergyLevel -= keys.ENERGY_DECREASE;
                             }
                         }
 
@@ -323,7 +329,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
         purpleXY[keys.PURPLE_BALL_XY1+keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
         purpleAngles[keys.PURPLE_BALL_ANGLE_ONE]= randomCoordinate.randomX();
-        initialDraw= canvas.draw(blueBall,x,y);
+        initialDraw= canvas.draw(blueBall,x,y, score);
 
     }
 
@@ -339,17 +345,17 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         if(currentEnergyLevel<=0) {
             //after we run out of energy, end the game and set the energy to 0 in case it got into a negative value
             gameover = true;
-            gameTimeAndScore.setEnergyRemaining(0);
+            //gameTimeAndScore.setEnergyRemaining(0);
         }
         switch(currentBall)
         {
             case BALL_BLUE:
                 moveBall();
-                canvas.draw(blueBall, x, y);
+                canvas.draw(blueBall, x, y, score);
                 break;
             case BALL_RED:
                 moveBall();
-                canvas.draw(redBall, x, y);
+                canvas.draw(redBall, x, y, score);
                 break;
             case BALL_YELLOW:
                 if(!changedSize) {
@@ -359,20 +365,20 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                     changedSize=true;
                 }
                 moveYellowBall();
-                canvas.draw(yellowBall, x, y);
+                canvas.draw(yellowBall, x, y, score);
                 break;
             case BALL_GREEN:
                 //this ball moves like crazy
                 moveGreenBall();
-                canvas.draw(greenBall, x, y);
+                canvas.draw(greenBall, x, y, score);
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
-                canvas.drawPurple(purpleBall, purpleXY, timesClickedPurple);
+                canvas.drawPurple(purpleBall, purpleXY, timesClickedPurple, score);
                 break;
             case BALL_WAVE:
                 moveWave();
-                canvas.drawWave(waveBall, waveXY);
+                canvas.drawWave(waveBall, waveXY, score);
                 break;
         }
     }
@@ -565,21 +571,21 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     /**
      *<p> Method for handling red ball actions.</p>
-     * The red ball should reduce score if we touch it, and increase score if we don't touch it
+     * The red ball should reduce score if we touch it, and increase score if we don't touch it. Gives us energy
      */
     private void redBall(){
         //if we click the ball
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
             //add some energy and update it in the energy text view
             currentEnergyLevel -=100;
-            gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
+            //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
             score -= 100;
             getNewBall();
         }
         else {
             //add some energy and update it in the energy text view
             currentEnergyLevel +=100;
-            gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
+            //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
             score+=100;
             getNewBall();
         }
@@ -587,14 +593,14 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     /**
      * <p> Method for handling red ball actions.</p>
-     * Blue ball is classic, we get score by touching it
+     * Blue ball is classic, we get score by touching it. Gives us energy
      */
     private void blueBall(){
         //if we clicked the ball should gain score
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)) {
             //add some energy and update it in the energy text view
             currentEnergyLevel +=100;
-            gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
+           // gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
             score += 100;
             getNewBall();
         }
@@ -604,7 +610,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
      * <p>Method for handling yellow ball actions.</p>
      * <p>The yellow ball should move really slow at first and speed up with
      * every click. It's size decreases also with every click</p>
-     * After we have clicked it a certain amount of times, it should give us score
+     * After we have clicked it a certain amount of times, it should give us score and energy
      */
     private void yellowBall(){
 
@@ -622,7 +628,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             else {
                 //add some energy and update it in the energy text view
                 currentEnergyLevel +=500;
-                gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
+                //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
                 score+=500;
                 getNewBall();
                 //reset the yellow ball to its first state for later use
@@ -637,13 +643,13 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     /**
      * <p>Method for handling green ball actions.</p>
-     * The green ball should simply give us score when clicked, gives more score than blue ball
+     * The green ball should simply give us score when clicked, gives more score than blue ball and energy
      */
     private void greenBall(){
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
             //add some energy and update it in the energy text view
             currentEnergyLevel +=400;
-            gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
+            //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
             score+=400;
             getNewBall();
         }
@@ -655,7 +661,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
      *  <p>After we click it for the first time it should get random angles for every ball and then start moving them.</p>
      *  <p>Movement is handled in the main game loop with the movePurpleBall method</p>
      *  <p>After we click every ball it should disappear from the screen.</p>
-     *  Score after we clicked all three balls
+     *  Score after we clicked all three balls and gain energy.
      */
     private void purpleBall() {
         if (timesClickedPurple == keys.BALL_PURPLE_NO_CLICK) {
@@ -700,7 +706,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 timesClickedPurple = keys.BALL_PURPLE_NO_CLICK;
                 //add some energy and update it in the energy text view
                 currentEnergyLevel +=500;
-                gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
+                //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
                 score +=500;
                 getNewBall();
             }
@@ -713,7 +719,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
      * <p>Should register what ball we clicked and if we clicked the current ball it will disappear making the next
      * ball in line the current ball.</p>
      * <p>On initial draw the current ball should be the first ball, and after we click all balls,
-     * we score and reset the current ball.</p>
+     * we score, gain energy and reset the current ball.</p>
      */
     private void waveBall(){
     //TODO multiple click ball types should update score with every click
@@ -723,7 +729,8 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             waveXY[currentWaveBall] = -ballWidth;
             // next ball should be clicked
             currentWaveBall ++;
-            //gain more and more score the more balls you click
+            //gain more and more score and energy the more balls you click
+            currentEnergyLevel += currentBall*10;
             score += currentBall*10;
             if(currentWaveBall == keys.WAVE_BALL_NUMBER){
                 // to round up the gain; with *10 you gain 420 score total
