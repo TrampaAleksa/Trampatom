@@ -3,6 +3,8 @@ package com.trampatom.game.trampatom.canvas;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
 import com.trampatom.game.trampatom.Model.Star;
@@ -17,6 +19,8 @@ public class Canvas3 {
         Canvas ourCanvas;
         int i=0;
         Background background;
+        Paint paint;
+        int score;
 
 
     /**
@@ -29,6 +33,11 @@ public class Canvas3 {
             this.ourCanvas = canvas;
             this.ourHolder = holder;
             this.background = background;
+            //default paint for drawing score
+            paint = new Paint();
+            paint.setColor(Color.CYAN);
+            paint.setTextSize(38);
+            paint.setTextAlign(Paint.Align.CENTER);
         }
 
     /**
@@ -41,7 +50,8 @@ public class Canvas3 {
      * @param XY set of coordinates for the negative balls
      * @return always returns false
      */
-    public boolean draw(Bitmap ball,Bitmap[] negativeBall, int x, int y, int[] XY){
+    public boolean draw(Bitmap ball,Bitmap[] negativeBall, int x, int y, int[] XY, int score){
+        this.score = score;
         ourCanvas = ourHolder.lockCanvas();
         drawBackground();
         ourCanvas.drawBitmap(ball, x, y, null);
@@ -65,7 +75,8 @@ public class Canvas3 {
      * @param goldY y coordinate of the gold ball
      * @return always returns false
      */
-    public boolean drawGold(Bitmap ball,Bitmap[] negativeBall,Bitmap goldBall, int x, int y, int[] XY, int goldX, int goldY){
+    public boolean drawGold(Bitmap ball,Bitmap[] negativeBall,Bitmap goldBall, int x, int y, int[] XY, int goldX, int goldY, int score){
+        this.score = score;
         ourCanvas = ourHolder.lockCanvas();
         drawBackground();
         ourCanvas.drawBitmap(ball, x, y, null);
@@ -93,6 +104,8 @@ public class Canvas3 {
                 currentStar.setY(ourCanvas.getHeight());
             // }
         }
+        //draw the current score
+        ourCanvas.drawText(Integer.toString(score), ourCanvas.getWidth()/2, 50, paint);
     }
     }
 

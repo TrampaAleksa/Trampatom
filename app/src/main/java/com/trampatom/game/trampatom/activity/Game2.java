@@ -101,9 +101,7 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
             ourHolder = mSurfaceView.getHolder();
             mSurfaceView.setOnTouchListener(this);
 
-        //Current score and remaining time
-            tvScore=(TextView) findViewById(R.id.tvScore);
-            tvTime = (TextView) findViewById(R.id.tvTime);
+
             energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
             gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime, energyProgress);
         //get device's width and height

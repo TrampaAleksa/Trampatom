@@ -83,5 +83,6 @@ public class Keys {
         public int RED_SPEED_UP_TIMER = 10000;
     //negative ball
         public int BALL_NEGATIVE_NUMBER = 7;
-
+    //max time between clicks
+        public int SURVIVAL_CLICK_TIMER = 5000;
 }

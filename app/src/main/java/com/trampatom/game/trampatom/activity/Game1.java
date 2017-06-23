@@ -175,9 +175,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
             ourHolder = mSurfaceView.getHolder();
             mSurfaceView.setOnTouchListener(this);
-        //Current score and remaining energy
-            tvScore=(TextView) findViewById(R.id.tvScore);
-            tvTime = (TextView) findViewById(R.id.tvTime);
+        //progress bar and remaining energy
             energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
             gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime, energyProgress);
             currentEnergyLevel = keys.STARTING_ENERGY;
@@ -747,9 +745,6 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
      * Method used for getting a new ball and setting a score
      */
     private void getNewBall() {
-        //set the score from the previous ball
-        scoreS = "Score: " + score;
-        tvScore.setText(scoreS);
         //get a new ball with new coordinates and angle of movement
         b = newBall.getNewBall();
         x= b.getX();

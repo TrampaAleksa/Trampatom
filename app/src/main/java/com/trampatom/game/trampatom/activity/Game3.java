@@ -99,8 +99,6 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     // ------------------- Game Variables ----------------------------------------------- \\
 
-    TextView tvScore, tvTime;
-    ProgressBar energyProgress;
     int width, height, j,i;
     //every ball should have the same width and height
     int ballWidth, ballHeight;
@@ -108,6 +106,10 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     int score, previousHighScore;
     //used for ending the game when the time ends, congratulations if new high score
     boolean gameover, newHighScore;
+    //Progress bar used to display remaining energy; If we are without energy we lose the game
+    ProgressBar remainingTime;
+    //used for determining how much tme we have left in the progress bar
+    int remainingClickTime=5000;
 
     // ------------------- Surface View ------------------------------------------------- \\
 
@@ -118,7 +120,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     Thread ourThread = null;
     boolean isRunning=true;
     //used for drawing the first ball , used to start the timer once
-    boolean initialDraw, startedTimer;
+    boolean initialDraw, startedTimer, startedBallTimer=false;
 
     // ---------------------------------------------------------------------------------- \\
 
@@ -144,11 +146,9 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
             ourHolder = mSurfaceView.getHolder();
             mSurfaceView.setOnTouchListener(this);
-        //Current score and remaining time
-            tvScore=(TextView) findViewById(R.id.tvScore);
-            tvTime = (TextView) findViewById(R.id.tvTime);
-            energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
-            gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime, energyProgress);
+        //set up the time between clicks
+            remainingTime = (ProgressBar) findViewById(R.id.pbEnergy) ;
+            gameTimeAndScore = new GameTimeAndScore(remainingTime);
         //get device's width and height
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();
@@ -203,12 +203,13 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     private void clickedPositive(){
         //check if you clicked positive ball
         if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
+            //after we clicked this ball the progress bar is reset
+            remainingClickTime = keys.SURVIVAL_CLICK_TIMER;
             //get score and a new ball
             score+=100;
             angle =  randomCoordinate.randomAngle();
             x = randomCoordinate.randomX();
             y = randomCoordinate.randomY();
-            gameTimeAndScore.setScore(score);
         }
     }
 
@@ -277,6 +278,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
      * periodically change the speed of red balls making the game harder.</p>
      */
     public void timedActions() {
+        final int totalTimerTime = (int) keys.GOLD_BALL_TIMER/1000;
         //timer has to be started once, but it resets every time it finishes
         if (!startedTimer) {
             if(randomCoordinate != null) {
@@ -288,10 +290,13 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
+
+                    if(!startedBallTimer){
+                        positiveBallTimer();
+                    }
                     new CountDownTimer(keys.GOLD_BALL_TIMER, 250) {
                         public void onTick(long millisUntilFinished) {
                             int seconds =(int) millisUntilFinished/1000;
-                            int totalTimerTime = (int) keys.GOLD_BALL_TIMER/1000;
                             //increase red balls speed in a certain interval
                             redBallSpeed = ballMovement.redBallsSpeedUp(redBallSpeed, seconds);
                             //5 seconds after the timer restarts, draw the gold ball
@@ -313,6 +318,29 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 }
             });
         }
+    }
+
+    private void positiveBallTimer(){
+
+                new CountDownTimer(keys.SURVIVAL_CLICK_TIMER, 50) {
+                    public void onTick(long millisUntilFinished) {
+                        //Every time the timer ticks reduce the progress bar a bit
+                        //if a certain time passes and a positive ball isn't clicked, the game ends
+                        remainingClickTime -= 50;
+                        gameTimeAndScore.updateTimeBar(remainingClickTime);
+                        if(remainingClickTime <=0){
+                            //if we run out of time to click the ball, end the game
+                            gameover = true;
+                        }
+                        startedTimer = true;
+                    }
+
+                    public void onFinish() {
+                        //after the timer reaches zero, it will be reset
+                        startedTimer = false;
+                    }
+                }.start();
+
     }
 
     /**
@@ -340,7 +368,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         y=randomCoordinate.randomY();
         XY=randomCoordinate.randomnegativeBallsCoordinates();
         //first draw
-        initialDraw= canvas.draw(ball,negativeBall,x,y, XY);
+        initialDraw= canvas.draw(ball,negativeBall,x,y, XY, score);
     }
 
 
@@ -373,9 +401,9 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     }
     private void goldDraw(){
         if(!drawGoldBall)
-            canvas.draw(ball,negativeBall,x,y, XY);
+            canvas.draw(ball,negativeBall,x,y, XY, score);
         if(drawGoldBall){
-            canvas.drawGold(ball,negativeBall,goldBall,x,y, XY, goldX, goldY);
+            canvas.drawGold(ball,negativeBall,goldBall,x,y, XY, goldX, goldY, score);
         }
     }
 
