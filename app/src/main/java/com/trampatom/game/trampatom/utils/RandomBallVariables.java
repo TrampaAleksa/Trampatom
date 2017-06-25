@@ -1,8 +1,7 @@
 package com.trampatom.game.trampatom.utils;
 
 
-import com.trampatom.game.trampatom.activity.Game3;
-import com.trampatom.game.trampatom.activity.MainActivity;
+import com.trampatom.game.trampatom.activity.GameSurvivalActivity;
 
 import java.util.Random;
 
@@ -111,9 +110,9 @@ public class RandomBallVariables {
         int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
         //draw the first ball
-        for(int i=0; i< Game3.BALL_NEGATIVE_NUMBER; i++){
+        for(int i = 0; i< GameSurvivalActivity.BALL_NEGATIVE_NUMBER; i++){
             XY[i] = randomX();
-            XY[i+Game3.BALL_NEGATIVE_NUMBER] = randomY();
+            XY[i+ GameSurvivalActivity.BALL_NEGATIVE_NUMBER] = randomY();
         }
 
         // int[] XY = {x1,x2,x3,y1,y2,y3...};

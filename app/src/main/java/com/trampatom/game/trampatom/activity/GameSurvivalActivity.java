@@ -17,13 +17,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.canvas.Background;
-import com.trampatom.game.trampatom.canvas.Canvas3;
+import com.trampatom.game.trampatom.canvas.CanvasGameSurvival;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
@@ -34,7 +33,7 @@ import java.util.Random;
 
 import static java.lang.Thread.sleep;
 
-public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchListener{
+public class GameSurvivalActivity extends AppCompatActivity implements Runnable, View.OnTouchListener{
     //TODO remove progress bar in this game and display spare life for better UX
 
     private static final int BALL_SPEED= 8;
@@ -76,7 +75,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
 
     GameTimeAndScore gameTimeAndScore;
     RandomBallVariables randomCoordinate;
-    Canvas3 canvas;
+    CanvasGameSurvival canvas;
     HighScore highScore;
     ClickedABall clickedABall;
     Keys keys;
@@ -365,7 +364,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         ourHolder.unlockCanvasAndPost(mCanvas);
         //prevents drawing over screen
         stars = new Background(ourHolder, mCanvas, width, height);
-        canvas = new Canvas3(ourHolder,mCanvas, stars);
+        canvas = new CanvasGameSurvival(ourHolder,mCanvas, stars);
         randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
         clickedABall= new ClickedABall(ballWidth, ballHeight);
         goldX = randomCoordinate.randomX();

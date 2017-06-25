@@ -17,9 +17,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.Game1"/>
+        <activity android:name=".activity.GameClassicActivity"/>
         <activity android:name=".activity.Game2"/>
-        <activity android:name=".activity.Game3"/>
+        <activity android:name=".activity.GameSurvivalActivity"/>
+        <activity android:name=".activity.ShopActivity"/>
 
         <service
             android:enabled="true"

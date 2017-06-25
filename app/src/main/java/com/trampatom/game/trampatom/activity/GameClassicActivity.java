@@ -19,16 +19,13 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.BallType;
 import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.canvas.Background;
-import com.trampatom.game.trampatom.canvas.Canvas1;
+import com.trampatom.game.trampatom.canvas.CanvasGameClassic;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
@@ -42,7 +39,7 @@ import static java.lang.Thread.sleep;
 /**
  * Class used to run the Classic game mode. It uses energy that you get from balls to keep the game running
  */
-public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchListener{
+public class GameClassicActivity extends AppCompatActivity implements Runnable, View.OnTouchListener{
 
     //RED - don't click on the ball ; BLUE - click on the ball
     //GREEN - super crazy ball ; YELLOW - click it a few times
@@ -93,7 +90,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         Keys keys;
         GameTimeAndScore gameTimeAndScore;
         RandomBallVariables randomCoordinate;
-        Canvas1 canvas;
+        CanvasGameClassic canvas;
         HighScore highScore;
         BallType newBall;
         ClickedABall clickedABall;
@@ -312,7 +309,7 @@ public class Game1 extends AppCompatActivity implements Runnable, View.OnTouchLi
         // object instances
         randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
         stars = new Background(ourHolder, mCanvas, width, height);
-        canvas = new Canvas1(ourHolder,mCanvas, stars);
+        canvas = new CanvasGameClassic(ourHolder,mCanvas, stars);
         newBall = new BallType(randomCoordinate);
         clickedABall = new ClickedABall(ballWidth, ballHeight);
         ballMovement = new BallMovement(width, height);

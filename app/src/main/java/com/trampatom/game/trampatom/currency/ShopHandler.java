@@ -10,6 +10,9 @@ package com.trampatom.game.trampatom.currency;
  * <p>Passive power-ups: Yellow atom -> energy related ; Purple atom -> Ball related</p>
  */
 
-public class ShopSystem {
+public class ShopHandler {
+
+
+
 
 }

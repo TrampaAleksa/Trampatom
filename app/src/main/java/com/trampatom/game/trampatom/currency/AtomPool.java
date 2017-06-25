@@ -8,6 +8,7 @@ import com.trampatom.game.trampatom.utils.Keys;
 
 /**
  * Important class that should contain all the methods used for handling in-game currency -> atoms
+ * (getting and setting currency with shared preferences)
  * <p>Shop currency is based on Atoms and their types.</p>
  * <p>Blue atoms are used for transforming into different atoms, since they are the most often occurring atom.</p>
  * <p>Other atoms are used to get some power-ups. </p>
@@ -81,5 +82,15 @@ public class AtomPool {
         editor.putInt(keys.KEY_YELLOW_CURRENCY, addArray[3]+atomPool[3]);
         editor.putInt(keys.KEY_PURPLE_CURRENCY, addArray[4]+atomPool[4]);
         editor.apply();
+    }
+
+    /**
+     * Method that should be used to retrieve an array of categories to be used to handle the shop better
+     * @return indexes/ category : 0 - RED ; 1 - GREEN ; 2 - YELLOW ; 3 - PURPLE
+     */
+    public int[] getCategories(){
+
+        int[] categories = {keys.CATEGORY_RED, keys.CATEGORY_GREEN, keys.CATEGORY_YELLOW, keys.CATEGORY_PURPLE};
+        return categories;
     }
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ivAtomBlue"
+        android:background="@drawable/atomplava"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_below="@+id/ivAtomBlue"
+        android:id="@+id/tvAtomNumberBlue"
+        android:layout_width="wrap_content"
+        android:text="@string/shop_atom_number_def_value"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:layout_below="@+id/tvAtomNumberBlue"
+        android:id="@+id/ivAtomRed"
+        android:background="@drawable/atomcrvena"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tvAtomNumberRed"
+        android:layout_below="@+id/ivAtomRed"
+        android:text="@string/shop_atom_number_def_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:layout_below="@+id/tvAtomNumberRed"
+        android:id="@+id/ivAtomGreen"
+        android:background="@drawable/atomzelena"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+
+        android:layout_below="@+id/ivAtomGreen"
+        android:id="@+id/tvAtomNumberGreen"
+        android:text="@string/shop_atom_number_def_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:layout_below="@+id/tvAtomNumberGreen"
+        android:id="@+id/ivAtomYellow"
+        android:background="@drawable/atomzuta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_below="@+id/ivAtomYellow"
+        android:id="@+id/tvAtomNumberYellow"
+        android:text="@string/shop_atom_number_def_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:layout_below="@+id/tvAtomNumberYellow"
+        android:id="@+id/ivAtomPurple"
+        android:background="@drawable/atomroze"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_below="@+id/ivAtomPurple"
+        android:id="@+id/tvAtomNumberPurple"
+        android:text="@string/shop_atom_number_def_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

@@ -8,13 +8,12 @@ import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
 import com.trampatom.game.trampatom.Model.Star;
-import com.trampatom.game.trampatom.activity.Game1;
 
 /**
  * Class containing methods for working with Game 1 canvas,
  * mostly used for drawing every element and displaying score.
  */
-public class Canvas1 {
+public class CanvasGameClassic {
 
     private static final int BALL_PURPLE_NO_CLICK = 1;
     private static final int WAVE_BALL_NUMBER = 7;
@@ -34,7 +33,7 @@ public class Canvas1 {
      * @param canvas the canvas that we will draw on
      * @param background the background that will be drawn and should be moving
      */
-    public Canvas1(SurfaceHolder holder, Canvas canvas, Background background){
+    public CanvasGameClassic(SurfaceHolder holder, Canvas canvas, Background background){
         this.ourCanvas=canvas;
         this.ourHolder=holder;
         this.background = background;

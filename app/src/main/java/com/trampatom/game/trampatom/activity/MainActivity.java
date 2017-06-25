@@ -1,21 +1,16 @@
 package com.trampatom.game.trampatom.activity;
 
-import android.content.ComponentCallbacks2;
 import android.content.Intent;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.trampatom.game.trampatom.MusicService;
 import com.trampatom.game.trampatom.R;
@@ -136,11 +131,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void launchGame(){
         if(selectedGame==1) {
-            Intent start = new Intent(this, Game1.class);
+            Intent start = new Intent(this, GameClassicActivity.class);
             startActivity(start);
         }
         if(selectedGame==2){
-            Intent start = new Intent(this, Game3.class);
+            Intent start = new Intent(this, GameSurvivalActivity.class);
             startActivity(start);
         }
         if(selectedGame==3){

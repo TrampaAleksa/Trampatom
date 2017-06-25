@@ -8,13 +8,13 @@ import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
 import com.trampatom.game.trampatom.Model.Star;
-import com.trampatom.game.trampatom.activity.Game3;
+import com.trampatom.game.trampatom.activity.GameSurvivalActivity;
 
 /**
  * Class containing methods for working with Survival game canvas,
  * mostly drawing every element.
  */
-public class Canvas3 {
+public class CanvasGameSurvival {
         SurfaceHolder ourHolder;
         Canvas ourCanvas;
         int i=0;
@@ -29,7 +29,7 @@ public class Canvas3 {
      * @param holder we need the holder for our canvas
      * @param canvas the canvas that we will draw on
      */
-        public Canvas3(SurfaceHolder holder, Canvas canvas, Background background) {
+        public CanvasGameSurvival(SurfaceHolder holder, Canvas canvas, Background background) {
             this.ourCanvas = canvas;
             this.ourHolder = holder;
             this.background = background;
@@ -55,8 +55,8 @@ public class Canvas3 {
         ourCanvas = ourHolder.lockCanvas();
         drawBackground();
         ourCanvas.drawBitmap(ball, x, y, null);
-        for(i=0; i< Game3.BALL_NEGATIVE_NUMBER; i++) {
-            ourCanvas.drawBitmap(negativeBall[i], XY[i], XY[i + Game3.BALL_NEGATIVE_NUMBER], null);
+        for(i=0; i< GameSurvivalActivity.BALL_NEGATIVE_NUMBER; i++) {
+            ourCanvas.drawBitmap(negativeBall[i], XY[i], XY[i + GameSurvivalActivity.BALL_NEGATIVE_NUMBER], null);
         }
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;
@@ -81,8 +81,8 @@ public class Canvas3 {
         drawBackground();
         ourCanvas.drawBitmap(ball, x, y, null);
         ourCanvas.drawBitmap(goldBall, goldX, goldY, null);
-        for(i=0; i< Game3.BALL_NEGATIVE_NUMBER; i++) {
-            ourCanvas.drawBitmap(negativeBall[i], XY[i], XY[i + Game3.BALL_NEGATIVE_NUMBER], null);
+        for(i=0; i< GameSurvivalActivity.BALL_NEGATIVE_NUMBER; i++) {
+            ourCanvas.drawBitmap(negativeBall[i], XY[i], XY[i + GameSurvivalActivity.BALL_NEGATIVE_NUMBER], null);
         }
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;

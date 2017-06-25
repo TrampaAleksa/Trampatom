@@ -3,4 +3,5 @@
     <string name="main_activity_start">START</string>
     <string name="game_score">Score:</string>
     <string name="game_time">60</string>
+    <string name="shop_atom_number_def_value">0</string>
 </resources>

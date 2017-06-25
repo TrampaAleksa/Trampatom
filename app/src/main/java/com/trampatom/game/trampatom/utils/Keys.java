@@ -101,4 +101,9 @@ public class Keys {
         public String KEY_GREEN_CURRENCY = "green currency";
         public String KEY_YELLOW_CURRENCY = "yellow currency";
         public String KEY_PURPLE_CURRENCY = "purple currency";
+        //keys for getting a specific category for shop purposes
+        public int CATEGORY_RED = 1;
+        public int CATEGORY_GREEN = 2;
+        public int CATEGORY_YELLOW = 3;
+        public int CATEGORY_PURPLE = 4;
 }
