@@ -5,6 +5,9 @@ package com.trampatom.game.trampatom.utils;
  * Important class used for storing every value that will not be changed during game runtime. Constants
  */
 public class Keys {
+
+// FIRST GAME
+
     // -------------------------------------- Game Functionality ------------------------------------ \\
 
         //time a game lasts in milliseconds
@@ -85,4 +88,17 @@ public class Keys {
         public int BALL_NEGATIVE_NUMBER = 7;
     //max time between clicks
         public int SURVIVAL_CLICK_TIMER = 5000;
+
+
+//POWER-UPS
+
+    // --------------------------------- Currency ----------------------------------------------- \\
+
+            // -------------------------- Main currency variables ------------------------ \\
+        //keys for getting and setting currency with shared preferences
+        public String KEY_BLUE_CURRENCY = "blue currency";
+        public String KEY_RED_CURRENCY = "red currency";
+        public String KEY_GREEN_CURRENCY = "green currency";
+        public String KEY_YELLOW_CURRENCY = "yellow currency";
+        public String KEY_PURPLE_CURRENCY = "purple currency";
 }

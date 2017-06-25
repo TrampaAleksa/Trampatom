@@ -46,6 +46,9 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             Bitmap ball;
             Bitmap[] negativeBall;
             Bitmap goldBall;
+            Bitmap lifeBall;
+            //bitmap used to store blue ball while we have a spare life
+            Bitmap helpBall;
 
         //coordinates of the currently drawn ball, coordinates where we clicked
             int x, clickedX;
@@ -120,7 +123,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
     Thread ourThread = null;
     boolean isRunning=true;
     //used for drawing the first ball , used to start the timer once
-    boolean initialDraw, startedTimer, startedBallTimer=false;
+    boolean initialDraw, startedTimer;
 
     // ---------------------------------------------------------------------------------- \\
 
@@ -155,6 +158,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         //sizes of red balls, this will get random sizes for every red ball
             for(i=0 ; i<BALL_NEGATIVE_NUMBER; i++) {randomSize[i] = randomNumber.nextInt(55);}
         //Bitmaps
+            lifeBall = BitmapFactory.decodeResource(getResources(),R.drawable.atomzelena);
             ball= BitmapFactory.decodeResource(getResources(),R.drawable.atomplava);
             goldBall =BitmapFactory.decodeResource(getResources(),R.drawable.atomzuta);
             ballHeight=ball.getHeight()+15;
@@ -165,10 +169,10 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             negativeBall[i]= BitmapFactory.decodeResource(getResources(), R.drawable.atomcrvena);
             negativeBall[i]=Bitmap.createScaledBitmap(negativeBall[i],negWidth[i], negHeight[i], true);
         }
+            // resize the balls in a desired size since they are initially small
             ball=Bitmap.createScaledBitmap(ball,ballWidth, ballHeight, true);
+            lifeBall=Bitmap.createScaledBitmap(lifeBall,ballWidth, ballHeight, true);
             goldBall=Bitmap.createScaledBitmap(goldBall,ballWidth, ballHeight, true);
-            //background = BitmapFactory.decodeResource(getResources(),R.drawable.atompozadina);
-            //background = Bitmap.createScaledBitmap(background, width, deviceHeight, true);
         //Obtaining the highScore
             highScore = new HighScore(this);
             previousHighScore=highScore.getHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY);
@@ -223,8 +227,11 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         for(j=0; j<BALL_NEGATIVE_NUMBER; j++){
         if(clickedABall.negativeBallClicked(XY[j], XY[j+BALL_NEGATIVE_NUMBER], clickedX, clickedY, negWidth[j], negHeight[j])) {
             //if you had a life lose it, but don't lose the game
-            if(gotLife)
+            if(gotLife) {
+                //lose a life and set the ball back to blue signalling that we lost a life
                 gotLife = false;
+                ball = helpBall;
+            }
             else
             gameover = true;
             }
@@ -241,6 +248,9 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             gotLife = true;
             //remove the ball from screen
             goldX = goldY = 0- ballWidth;
+            //make the blue ball appear green signalling that we have a spare life
+            helpBall = ball;
+            ball = lifeBall;
         }
     }
 
@@ -281,6 +291,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         final int totalTimerTime = (int) keys.GOLD_BALL_TIMER/1000;
         //timer has to be started once, but it resets every time it finishes
         if (!startedTimer) {
+            startedTimer = true;
             if(randomCoordinate != null) {
                 //in case we haven't clicked the ball get new coordinates in every timer cycle
                 goldX = randomCoordinate.randomX();
@@ -291,10 +302,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
                 @Override
                 public void run() {
 
-                    if(!startedBallTimer){
-                        positiveBallTimer();
-                    }
-                    new CountDownTimer(keys.GOLD_BALL_TIMER, 250) {
+                    new CountDownTimer(keys.GOLD_BALL_TIMER, 50) {
                         public void onTick(long millisUntilFinished) {
                             int seconds =(int) millisUntilFinished/1000;
                             //increase red balls speed in a certain interval
@@ -307,7 +315,16 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
                                     drawGoldBall = true;
                                 } else drawGoldBall = false;
                             }
-                            startedTimer = true;
+
+                            //Every time the timer ticks reduce the progress bar a bit
+                            //if a certain time passes and a positive ball isn't clicked, the game ends
+                            remainingClickTime -= 50;
+                            gameTimeAndScore.updateTimeBar(remainingClickTime);
+                            if(remainingClickTime <=0){
+                                //if we run out of time to click the ball, end the game
+                                gameover = true;
+                            }
+
                         }
 
                         public void onFinish() {
@@ -320,19 +337,12 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
         }
     }
 
-    private void positiveBallTimer(){
 
+    private void positiveBallTimer(){
                 new CountDownTimer(keys.SURVIVAL_CLICK_TIMER, 50) {
                     public void onTick(long millisUntilFinished) {
-                        //Every time the timer ticks reduce the progress bar a bit
-                        //if a certain time passes and a positive ball isn't clicked, the game ends
-                        remainingClickTime -= 50;
-                        gameTimeAndScore.updateTimeBar(remainingClickTime);
-                        if(remainingClickTime <=0){
-                            //if we run out of time to click the ball, end the game
-                            gameover = true;
-                        }
-                        startedTimer = true;
+
+
                     }
 
                     public void onFinish() {
@@ -416,6 +426,7 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             // check if we got a new high score
             newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
             //display our score and if we got a new high score show a text to indicate that
+            gameTimeAndScore.updateTimeBar(0);
             gameover.gameOver(score, newHighScore);
             try {
                 //delay before finishing the game
@@ -426,10 +437,6 @@ public class Game3 extends AppCompatActivity implements Runnable, View.OnTouchLi
             finish();
         }
     }
-
-
-
-
 
 
 
