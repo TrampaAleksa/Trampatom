@@ -27,6 +27,7 @@ import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.canvas.Background;
 import com.trampatom.game.trampatom.canvas.CanvasGameClassic;
 import com.trampatom.game.trampatom.canvas.GameOver;
+import com.trampatom.game.trampatom.currency.AtomPool;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
@@ -97,6 +98,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         BallMovement ballMovement;
         Random greenRandom;
         Background stars;
+        AtomPool atomPool;
 
     // ------------------- Arrays ------------------------------------------------------- \\
 
@@ -132,6 +134,15 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //used for ending the game when the time ends, congratulations if new high score
             boolean gameover, newHighScore;
 
+
+    // -------------------------------- Power Up and Shop ---------------------------------- \\
+
+        //For adding atoms to the Atom pool at end of game
+            //contains 5 elements, blue, red, green, yellow and purple atoms to be filled during game
+            int[] poolArray = {0,0,0,0,0};
+
+
+
     // ------------------- Surface View ------------------------------------------------- \\
 
         //For the SurfaceView to work
@@ -162,6 +173,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     private void init() {
         keys = new Keys();
+        atomPool = new AtomPool(this);
         //some initial ball set-up's
             //sets the required times to click a yellow ball and its speed
             timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
@@ -491,6 +503,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             newHighScore=highScore.isHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY, score);
             //display our score and if we got a new high score show a text to indicate that
             gameover.gameOver(score, newHighScore);
+            //add the atoms we collected during the game to the atom pool
+            atomPool.addAtoms(poolArray);
             try {
                 //delay before finishing the game
                 sleep(3000);
@@ -565,6 +579,23 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
 
     /**
+     * <p> Method for handling red ball actions.</p>
+     * Blue ball is classic, we get score by touching it. Gives us energy
+     */
+    private void blueBall(){
+        //if we clicked the ball should gain score
+        if(clickedABall.ballClicked(x,y,clickedX,clickedY)) {
+            //add some energy and update it in the energy text view
+            currentEnergyLevel +=100;
+            // gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
+            score += 100;
+            //add the atom to the atom pool
+            poolArray[0]++;
+            getNewBall();
+        }
+    }
+
+    /**
      *<p> Method for handling red ball actions.</p>
      * The red ball should reduce score if we touch it, and increase score if we don't touch it. Gives us energy
      */
@@ -575,6 +606,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             currentEnergyLevel -=100;
             //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
             score -= 100;
+            //add the atom to the atom pool, even if we scored negative the atom is added to the pool
+            poolArray[1]++;
             getNewBall();
         }
         else {
@@ -582,21 +615,24 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             currentEnergyLevel +=100;
             //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
             score+=100;
+            //add the atom to the atom pool
+            poolArray[1]++;
             getNewBall();
         }
     }
 
     /**
-     * <p> Method for handling red ball actions.</p>
-     * Blue ball is classic, we get score by touching it. Gives us energy
+     * <p>Method for handling green ball actions.</p>
+     * The green ball should simply give us score when clicked, gives more score than blue ball and energy
      */
-    private void blueBall(){
-        //if we clicked the ball should gain score
-        if(clickedABall.ballClicked(x,y,clickedX,clickedY)) {
+    private void greenBall(){
+        if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
             //add some energy and update it in the energy text view
-            currentEnergyLevel +=100;
-           // gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
-            score += 100;
+            currentEnergyLevel +=400;
+            //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
+            score+=400;
+            //add the atom to the atom pool
+            poolArray[2]++;
             getNewBall();
         }
     }
@@ -625,6 +661,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 currentEnergyLevel +=500;
                 //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
                 score+=500;
+                //add the atom to the atom pool
+                poolArray[3]++;
                 getNewBall();
                 //reset the yellow ball to its first state for later use
                 timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
@@ -633,20 +671,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 yellowBallSpeed=keys.BALL_YELLOW_INITIAL_SPEED;
                 changedSize=false;
             }
-        }
-    }
-
-    /**
-     * <p>Method for handling green ball actions.</p>
-     * The green ball should simply give us score when clicked, gives more score than blue ball and energy
-     */
-    private void greenBall(){
-        if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
-            //add some energy and update it in the energy text view
-            currentEnergyLevel +=400;
-            //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
-            score+=400;
-            getNewBall();
         }
     }
 
@@ -672,6 +696,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 purpleXY[keys.PURPLE_BALL_XY2+keys.PURPLE_BALL_NUMBER] = purpleXY[keys.PURPLE_BALL_NUMBER];
                 purpleXY[keys.PURPLE_BALL_XY3] = purpleXY[keys.PURPLE_BALL_XY1];
                 purpleXY[keys.PURPLE_BALL_XY3+keys.PURPLE_BALL_NUMBER] = purpleXY[keys.PURPLE_BALL_NUMBER];
+
+                //add the atom to the atom pool
+                poolArray[4]++;
             }
         }
         //if we clicked on one of the split balls remove them from the screen
@@ -681,18 +708,27 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 purpleXY[keys.PURPLE_BALL_NUMBER]=0-ballHeight;
                 //don't draw this ball
                 originalBallClicked=true;
+
+                //add the atom to the atom pool
+                poolArray[4]++;
             }
             if(clickedABall.ballClicked(purpleXY[keys.PURPLE_BALL_XY2],purpleXY[keys.PURPLE_BALL_XY2+keys.PURPLE_BALL_NUMBER],clickedX,clickedY)){
                 purpleXY[keys.PURPLE_BALL_XY2]=0-ballWidth;
                 purpleXY[keys.PURPLE_BALL_XY2+keys.PURPLE_BALL_NUMBER]=0-ballHeight;
                 //don't draw this ball
                 secondBallClicked=true;
+
+                //add the atom to the atom pool
+                poolArray[4]++;
             }
             if(clickedABall.ballClicked(purpleXY[keys.PURPLE_BALL_XY3],purpleXY[keys.PURPLE_BALL_XY3+keys.PURPLE_BALL_NUMBER],clickedX,clickedY)){
                 purpleXY[keys.PURPLE_BALL_XY3]=0-ballWidth;
                 purpleXY[keys.PURPLE_BALL_XY3+keys.PURPLE_BALL_NUMBER]=0-ballHeight;
                 //don't draw this ball
                 thirdBallClicked=true;
+
+                //add the atom to the atom pool
+                poolArray[4]++;
             }
             //if we clicked all three, score and get a new ball
             if(originalBallClicked && secondBallClicked && thirdBallClicked){
@@ -717,7 +753,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * we score, gain energy and reset the current ball.</p>
      */
     private void waveBall(){
-    //TODO multiple click ball types should update score with every click
         //if we click the correct ball in the sequence remove it and get score
         if(clickedABall.ballClicked(waveXY[currentWaveBall], waveXY[currentWaveBall+keys.WAVE_BALL_NUMBER], clickedX, clickedY)){
             //remove this ball from the screen and don't move it
@@ -727,6 +762,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //gain more and more score and energy the more balls you click
             currentEnergyLevel += currentBall*10;
             score += currentBall*10;
+            //adds a random atom to the pool every time we click a wave ball
+            poolArray[greenRandom.nextInt(4)]++;
             if(currentWaveBall == keys.WAVE_BALL_NUMBER){
                 // to round up the gain; with *10 you gain 420 score total
                 score -=20;

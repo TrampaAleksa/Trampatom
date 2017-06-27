@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Button start = (Button) findViewById(R.id.bStart);
             start.setText("START");
             start.setOnClickListener(this);
+            Button shop = (Button) findViewById(R.id.bShop);
+            shop.setOnClickListener(this);
             ImageButton next = (ImageButton) findViewById(R.id.bNext);
             next.setOnClickListener(this);
             ImageButton previous = (ImageButton) findViewById(R.id.bPrev);
@@ -122,6 +124,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.ibBack:
                 (findViewById(R.id.includedLayout)).setVisibility(View.GONE);
+                break;
+            case R.id.bShop:
+                Intent start = new Intent(this, ShopActivity.class);
+                startActivity(start);
                 break;
         }
     }

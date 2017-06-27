@@ -1,6 +1,10 @@
 package com.trampatom.game.trampatom.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -23,6 +27,8 @@ public class ShopActivity extends AppCompatActivity{
     //classes used to run the shop
     AtomPool atomPool;
     ShopHandler shopHandler;
+    private ViewPager mViewPager;
+   // private CategoryPagerAdapter adapterViewPager;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -42,6 +48,39 @@ public class ShopActivity extends AppCompatActivity{
 
         //Classes
         atomPool = new AtomPool(this);
-        shopHandler = new ShopHandler();
+        shopHandler = new ShopHandler(atomPool);
+        shopHandler.initializeAtomNumbersDisplay(
+                tvNumberAtomsBlue,
+                tvNumberAtomsRed,
+                tvNumberAtomsGreen,
+                tvNumberAtomsYellow,
+                tvNumberAtomsPurple);
+
+        shopHandler.setAtomPoolValues();
     }
+
+
+
+   /* public class CategoryPagerAdapter extends FragmentStatePagerAdapter {
+
+        public CategoryPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return ArticlesFragment.getInstance(position);
+        }
+
+        @Override
+        public int getCount() {
+            return Category.CATEGORY_COUNT;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return Category.tabTitles[position];
+        }
+    }*/
+
 }

@@ -42,7 +42,8 @@ public class AtomPool {
 
 
         //get the number of every atom we had from a shared Preference
-        int [] array = {preferences.getInt(keys.KEY_BLUE_CURRENCY, 0),
+        int [] array = {
+                preferences.getInt(keys.KEY_BLUE_CURRENCY, 0),
                 preferences.getInt(keys.KEY_RED_CURRENCY, 0),
                 preferences.getInt(keys.KEY_GREEN_CURRENCY,0),
                 preferences.getInt(keys.KEY_YELLOW_CURRENCY, 0),
@@ -69,11 +70,11 @@ public class AtomPool {
      * the currency pool/ total atom count to be used later
      * @param addArray in mid game an array is filled with every atom type we clicked.
      *                 indexes: 0 - blue ; 1 - red ; 2 - green ; 3 - yellow ; 4 - purple
-     * @param atomPool current pool that we have should be passed so that we add our additional
-     *                 atoms to the existing pool
      */
-    public void addAtoms( int[] addArray, int[] atomPool){
-
+    public void addAtoms( int[] addArray){
+        //Current pool that we have so that we add our additional atoms to the existing pool
+        int[] atomPool = {0,0,0,0,0};
+        atomPool = getAtoms();
 
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(keys.KEY_BLUE_CURRENCY, addArray[0]+atomPool[0]);
