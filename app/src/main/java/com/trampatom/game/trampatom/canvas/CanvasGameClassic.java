@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
+import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.Model.Star;
 
 /**
@@ -25,6 +26,9 @@ public class CanvasGameClassic {
     Background background;
     //paint used for score
     Paint paint;
+
+    int x,y;
+    Bitmap ball;
 
     /**
      * Constructor that should be used to get instance of the canvas and a background
@@ -101,6 +105,27 @@ public class CanvasGameClassic {
             ourCanvas.drawBitmap(waveBall[i], waveXY[i], waveXY[i+WAVE_BALL_NUMBER], null);
         }
         ourHolder.unlockCanvasAndPost(ourCanvas);
+    }
+
+
+    /**
+     * method used for drawing balls depending on the type of the ball.
+     * @param ball ball object containing coordinates and other values used to draw it correctly
+     * @param flag
+     * @param score
+     * @return
+     */
+   public boolean draw(Ball ball, int flag, int score){
+
+        this.score = score;
+        ourCanvas=ourHolder.lockCanvas();
+        drawBackground();
+        //draw the ball that we passed
+       if(ball.getBallColor() != null)
+        ourCanvas.drawBitmap(ball.getBallColor(), ball.getX(), ball.getY(), null);
+        ourHolder.unlockCanvasAndPost(ourCanvas);
+        return false;
+
     }
 
     /**

@@ -73,7 +73,7 @@ public class ShopActivity extends AppCompatActivity{
 
 
     /**
-     * Inner class used to get the right ategory of the shop based on the selected one using an adapter
+     * Inner class used to get the right category of the shop based on the selected one using an adapter
      */
     public static class MyPagerAdapter extends FragmentPagerAdapter {
         private static int NUM_ITEMS = 4;

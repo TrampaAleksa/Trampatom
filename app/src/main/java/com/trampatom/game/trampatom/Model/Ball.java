@@ -1,5 +1,7 @@
 package com.trampatom.game.trampatom.Model;
 
+import android.graphics.Bitmap;
+
 /**
  * Class containing getters and setters for a lot of ball related stuff
  */
@@ -13,6 +15,50 @@ public class Ball {
     int y;
     int ballType;
     double angle;
+    int moveX, moveY;
+    int ballHeight, ballWidth;
+
+    public int getBallHeight() {
+        return ballHeight;
+    }
+
+    public void setBallHeight(int ballHeight) {
+        this.ballHeight = ballHeight;
+    }
+
+    public int getBallWidth() {
+        return ballWidth;
+    }
+
+    public void setBallWidth(int ballWidth) {
+        this.ballWidth = ballWidth;
+    }
+
+    public int getMoveX() {
+        return moveX;
+    }
+
+    public void setMoveX(int moveX) {
+        this.moveX = moveX;
+    }
+
+    public int getMoveY() {
+        return moveY;
+    }
+
+    public void setMoveY(int moveY) {
+        this.moveY = moveY;
+    }
+
+    public Bitmap getBallColor() {
+        return ballColor;
+    }
+
+    public void setBallColor(Bitmap ballColor) {
+        this.ballColor = ballColor;
+    }
+
+    Bitmap ballColor;
 
     public int getX() {
         return x;

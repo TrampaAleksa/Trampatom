@@ -11,16 +11,16 @@ import java.util.List;
  * Class that should be used to handle ball types for game 1.
  * Contains methods for getting a new ball, and should contain ball action methods
  */
-public class BallType {
+public class BallHandler {
     public static final int GOLD_BALL_DRAW = 1;
     public static final int GOLD_BALL_DONT_DRAW = 0;
     private RandomBallVariables randomBallVariables;
 
     /**
-     * Constructor for BallType. We should pass in an instance of RandomBallVariables.
+     * Constructor for BallHandler. We should pass in an instance of RandomBallVariables.
      * This is used to get random coordinates, angles and new ball types.
      */
-    public BallType(RandomBallVariables randomBallVariables){
+    public BallHandler(RandomBallVariables randomBallVariables){
         this.randomBallVariables = randomBallVariables;
     }
 
@@ -38,6 +38,7 @@ public class BallType {
         y = randomBallVariables.randomY();
         ballType = randomBallVariables.getRandomBallType();
         angle = randomBallVariables.randomAngle();
+
 
         ball.setX(x);
         ball.setY(y);
