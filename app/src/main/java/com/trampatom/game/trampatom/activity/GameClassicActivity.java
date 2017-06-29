@@ -104,6 +104,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     // ------------------- Arrays ------------------------------------------------------- \\
 
         Ball[] multipleBalls = {null,null,null,null,null,null,null};
+        Ball[] purpleBallObjects = {null, null, null};
     //array for moving the ball
             int i;
             int[] moveArray= {0,0,0,0};
@@ -200,8 +201,13 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         initialDraw=true;
         //initiate different ball objects here
             for(i = 0; i< keys.WAVE_BALL_NUMBER; i++){
-
                 multipleBalls[i] = new Ball();
+            }
+            for(i=0; i<keys.PURPLE_BALL_NUMBER; i++){
+                purpleBallObjects[i] = new Ball();
+                purpleBallObjects[i].setBallColor(purpleBall);
+                purpleBallObjects[i].setBallWidth(ballWidth);
+                purpleBallObjects[i].setBallHeight(ballHeight);
             }
     }
 
@@ -390,7 +396,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
-                canvas.drawPurple(purpleBall, purpleXY, timesClickedPurple, score);
+                //canvas.drawPurple(purpleBall, purpleXY, timesClickedPurple, score);
+                canvas.drawPurple(purpleBallObjects,-1, score, timesClicked);
                 break;
             case BALL_WAVE:
                 moveWave();
@@ -441,12 +448,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //depending on if we clicked the first purple ball we will move only one ball or all three balls
         for(i=0; i<ballPurpleNumber; i++){
-            moveArray = ballMovement.moveBall(purpleXY[i],purpleXY[i+keys.PURPLE_BALL_NUMBER],
-                    ballWidth, ballHeight, purpleMoveXY[i], purpleMoveXY[i+keys.PURPLE_BALL_NUMBER], purpleAngles[i], keys.DEFAULT_BALL_SPEED);
-            purpleXY[i]= moveArray[keys.NEW_BALL_X_COORDINATE];
-            purpleXY[i+keys.PURPLE_BALL_NUMBER] = moveArray[keys.NEW_BALL_Y_COORDINATE];
-            purpleMoveXY[i] = moveArray[keys.NEW_BALL_MOVEX_VALUE];
-            purpleMoveXY[i+keys.PURPLE_BALL_NUMBER] = moveArray[keys.NEW_BALL_MOVEY_VALUE];
+            purpleBallObjects[i] = ballMovement.moveBall(purpleBallObjects[i]);
         }
         //draw three balls when they are clicked
         if(timesClickedPurple==keys.BALL_PURPLE_ONE_CLICK) {
@@ -454,12 +456,15 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     ballPurpleNumber = keys.PURPLE_BALL_NUMBER;
                 //remove the balls that were clicked from the screen and stop moving them
                 if (originalBallClicked)
-                    purpleXY[keys.PURPLE_BALL_XY1] = purpleXY[keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
+                    purpleBallObjects[0].setX(-ballWidth-10);
+                   // purpleXY[keys.PURPLE_BALL_XY1] = purpleXY[keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
                 if (secondBallClicked) {
-                    purpleXY[keys.PURPLE_BALL_XY2] = purpleXY[keys.PURPLE_BALL_XY2 + keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
+                    purpleBallObjects[1].setX(-ballWidth-10);
+                   // purpleXY[keys.PURPLE_BALL_XY2] = purpleXY[keys.PURPLE_BALL_XY2 + keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
                 }
                 if (thirdBallClicked) {
-                    purpleXY[keys.PURPLE_BALL_XY3] = purpleXY[keys.PURPLE_BALL_XY3 + keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
+                    purpleBallObjects[2].setX(-ballWidth-10);
+                    //purpleXY[keys.PURPLE_BALL_XY3] = purpleXY[keys.PURPLE_BALL_XY3 + keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
                 }
         }
     }
@@ -670,49 +675,47 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void purpleBall() {
         if (timesClickedPurple == keys.BALL_PURPLE_NO_CLICK) {
-            //if we clicked on the first ball
-            if (clickedABall.ballClicked(purpleXY[keys.PURPLE_BALL_XY1], purpleXY[keys.PURPLE_BALL_NUMBER], clickedX, clickedY)) {
+            //if we clicked on the first/ original ball
+            if (clickedABall.ballClicked(purpleBallObjects[0].getX(), purpleBallObjects[0].getY(), clickedX, clickedY)) {
                 //used to determine how many balls to draw
                 timesClickedPurple = keys.BALL_PURPLE_ONE_CLICK;
                 //get new angles and set every ball to start moving from the sae spot
-                purpleAngles[keys.PURPLE_BALL_ANGLE_ONE] = randomCoordinate.randomAngle();
-                purpleAngles[keys.PURPLE_BALL_ANGLE_TWO] = randomCoordinate.randomAngle();
-                purpleAngles[keys.PURPLE_BALL_ANGLE_THREE] = randomCoordinate.randomAngle();
-                purpleXY[keys.PURPLE_BALL_XY2] = purpleXY[keys.PURPLE_BALL_XY1];
-                purpleXY[keys.PURPLE_BALL_XY2+keys.PURPLE_BALL_NUMBER] = purpleXY[keys.PURPLE_BALL_NUMBER];
-                purpleXY[keys.PURPLE_BALL_XY3] = purpleXY[keys.PURPLE_BALL_XY1];
-                purpleXY[keys.PURPLE_BALL_XY3+keys.PURPLE_BALL_NUMBER] = purpleXY[keys.PURPLE_BALL_NUMBER];
-
+                purpleBallObjects[0].setAngle(randomCoordinate.randomAngle());
+                purpleBallObjects[1].setAngle(randomCoordinate.randomAngle());
+                purpleBallObjects[2].setAngle(randomCoordinate.randomAngle());
+                //set th balls to start splitting from the clicked ball
+                purpleBallObjects[1].setX(purpleBallObjects[0].getX());
+                purpleBallObjects[1].setY(purpleBallObjects[0].getY());
+                purpleBallObjects[2].setX(purpleBallObjects[0].getX());
+                purpleBallObjects[2].setY(purpleBallObjects[0].getY());
                 //add the atom to the atom pool
                 poolArray[4]++;
             }
         }
         //if we clicked on one of the split balls remove them from the screen
         else  {
-            if(clickedABall.ballClicked(purpleXY[0],purpleXY[keys.PURPLE_BALL_NUMBER],clickedX,clickedY)){
-                purpleXY[keys.PURPLE_BALL_XY1]=0-ballWidth;
-                purpleXY[keys.PURPLE_BALL_NUMBER]=0-ballHeight;
+            if(clickedABall.ballClicked(purpleBallObjects[0].getX(), purpleBallObjects[0].getY(), clickedX, clickedY)){
+                purpleBallObjects[0].setX(-purpleBallObjects[0].getBallWidth());
+                purpleBallObjects[0].setY(-purpleBallObjects[0].getBallHeight());
                 //don't draw this ball
                 originalBallClicked=true;
-
                 //add the atom to the atom pool
                 poolArray[4]++;
             }
-            if(clickedABall.ballClicked(purpleXY[keys.PURPLE_BALL_XY2],purpleXY[keys.PURPLE_BALL_XY2+keys.PURPLE_BALL_NUMBER],clickedX,clickedY)){
-                purpleXY[keys.PURPLE_BALL_XY2]=0-ballWidth;
-                purpleXY[keys.PURPLE_BALL_XY2+keys.PURPLE_BALL_NUMBER]=0-ballHeight;
+            if(clickedABall.ballClicked(purpleBallObjects[1].getX(), purpleBallObjects[1].getY(), clickedX, clickedY)){
                 //don't draw this ball
                 secondBallClicked=true;
-
+                purpleBallObjects[0].setX(-purpleBallObjects[0].getBallWidth());
+                purpleBallObjects[0].setY(-purpleBallObjects[0].getBallHeight());
                 //add the atom to the atom pool
                 poolArray[4]++;
             }
-            if(clickedABall.ballClicked(purpleXY[keys.PURPLE_BALL_XY3],purpleXY[keys.PURPLE_BALL_XY3+keys.PURPLE_BALL_NUMBER],clickedX,clickedY)){
-                purpleXY[keys.PURPLE_BALL_XY3]=0-ballWidth;
-                purpleXY[keys.PURPLE_BALL_XY3+keys.PURPLE_BALL_NUMBER]=0-ballHeight;
+            if(clickedABall.ballClicked(purpleBallObjects[2].getX(), purpleBallObjects[2].getY(), clickedX, clickedY)){
+
                 //don't draw this ball
                 thirdBallClicked=true;
-
+                purpleBallObjects[2].setX(-purpleBallObjects[2].getBallWidth());
+                purpleBallObjects[2].setY(-purpleBallObjects[2].getBallHeight());
                 //add the atom to the atom pool
                 poolArray[4]++;
             }
@@ -772,15 +775,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         ballType = ballObject.getBallType();
         setBallObjectByType(ballType);
         angle = ballObject.getAngle();
-
-        //we need to get a new purple ball for next time it appears
-        purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
-        purpleXY[keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
-        purpleAngles[keys.PURPLE_BALL_ANGLE_ONE] = randomCoordinate.randomAngle();
     }
 
     /**
-     * helper method used to load the right bitmap into the ball based on its type
+     * helper method used to load the right bitmap into the ball based on its type.
+     * <p>IMPORTANT: every ball NEEDS to have its speed and color specified or it will not move or be drawn</p>
      * @param ballType the value that determines what type the ball is
      */
     private void setBallObjectByType(int ballType){
@@ -802,8 +801,22 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             ballObject.setBallSpeed(keys.GREEN_BALL_SPEED);
         }
         if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
-            ballObject.setBallColor(purpleBall);
-            initialDrawType = BALL_PURPLE;
+            //initiate the first ball only and set the other balls to be off screen
+            purpleBallObjects[0].setX(randomCoordinate.randomX());
+            purpleBallObjects[0].setY(randomCoordinate.randomY());
+            purpleBallObjects[1].setX(-ballWidth);
+            purpleBallObjects[1].setY(-ballHeight);
+            purpleBallObjects[2].setX(-ballWidth);
+            purpleBallObjects[2].setY(-ballHeight);
+            purpleBallObjects[0].setAngle(randomCoordinate.randomAngle());
+            for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
+                //set the speeds of the balls and the move variable
+                purpleBallObjects[i].setBallSpeed(keys.DEFAULT_BALL_SPEED);
+                purpleBallObjects[i].setMoveX(1);
+                purpleBallObjects[i].setMoveY(1);
+
+            }
+
         }
         if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
             initialDrawType = BALL_WAVE;

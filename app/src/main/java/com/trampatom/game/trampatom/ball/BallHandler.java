@@ -60,4 +60,38 @@ public class BallHandler {
         int[] XY = {randomBallVariables.randomX(),randomBallVariables.randomY()};
         return XY;
     }
+
+    public Ball[] clickedPurple(Ball[] purpleBallObjects, int flag){
+
+        switch(flag){
+            //we clicked the original ball first time, set all three balls to split from the clicked ball
+            case 0:
+                purpleBallObjects[0].setAngle(randomBallVariables.randomAngle());
+                purpleBallObjects[1].setAngle(randomBallVariables.randomAngle());
+                purpleBallObjects[2].setAngle(randomBallVariables.randomAngle());
+                purpleBallObjects[1].setX(purpleBallObjects[0].getX());
+                purpleBallObjects[1].setY(purpleBallObjects[0].getY());
+                purpleBallObjects[2].setX(purpleBallObjects[0].getX());
+                purpleBallObjects[2].setY(purpleBallObjects[0].getY());
+                break;
+            //we clicked the original ball
+            case 1:
+                purpleBallObjects[0].setX(-purpleBallObjects[0].getBallWidth());
+                purpleBallObjects[0].setY(-purpleBallObjects[0].getBallHeight());
+                break;
+            //we clicked the second ball
+            case 2:
+                purpleBallObjects[0].setX(-purpleBallObjects[0].getBallWidth());
+                purpleBallObjects[0].setY(-purpleBallObjects[0].getBallHeight());
+                break;
+            //we clicked the third ball
+            case 3:
+                purpleBallObjects[2].setX(-purpleBallObjects[2].getBallWidth());
+                purpleBallObjects[2].setY(-purpleBallObjects[2].getBallHeight());
+                break;
+
+        }
+
+        return purpleBallObjects;
+    }
 }
