@@ -73,7 +73,7 @@ public class CanvasGameClassic {
      * @param timesClicked parameter used to check if we clicked the first purple ball.
      *                Is int to simplify changing the code later if needed to handle more balls
      */
-    public void drawPurple(Bitmap ball, int [] purpleXY, int timesClicked, int score){
+    public boolean drawPurple(Bitmap ball, int [] purpleXY, int timesClicked, int score){
         this.score = score;
         if(timesClicked == BALL_PURPLE_NO_CLICK) {
             ourCanvas = ourHolder.lockCanvas();
@@ -89,6 +89,7 @@ public class CanvasGameClassic {
             ourCanvas.drawBitmap(ball, purpleXY[2], purpleXY[5], null);
             ourHolder.unlockCanvasAndPost(ourCanvas);
         }
+        return false;
     }
 
     /**
@@ -107,6 +108,24 @@ public class CanvasGameClassic {
         ourHolder.unlockCanvasAndPost(ourCanvas);
     }
 
+    /**
+     * Method for drawing the wave ball type
+     * @param multipleBalls an array of ball objects to be drawn
+     * @param score the current score to be shown
+     * @param drawnBalls number indicating how many balls we have clicked, so that we don't draw those balls
+     */
+    public boolean drawWave(Ball[] multipleBalls,int flag, int score,int drawnBalls){
+        this.score = score;
+        ourCanvas = ourHolder.lockCanvas();
+        drawBackground();
+        //TODO refactor to not draw the balls we already clicked by parsing an int instead of an i
+        for(i=drawnBalls; i<WAVE_BALL_NUMBER; i++) {
+            //ourCanvas.drawBitmap(waveBall[i], waveXY[i], waveXY[i+WAVE_BALL_NUMBER], null);
+            ourCanvas.drawBitmap(multipleBalls[i].getBallColor(), multipleBalls[i].getX(), multipleBalls[i].getY(), null );
+        }
+        ourHolder.unlockCanvasAndPost(ourCanvas);
+        return false;
+    }
 
     /**
      * method used for drawing balls depending on the type of the ball.

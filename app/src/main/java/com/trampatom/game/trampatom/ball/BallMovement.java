@@ -152,8 +152,45 @@ public class BallMovement {
             // too far left
         }
 
+
         int helpArray[] = {x,y,moveX,moveY};
         return helpArray;
+    }
+
+
+    /**
+     * Method that uses a passed ball object to manipulate its coordinates and move it.
+     * @param ballObject the ball object we want to move, waves will move horizontally
+     * @return the now moved ball
+     */
+    public Ball moveWave(Ball ballObject){
+
+        x = ballObject.getX();
+        y = ballObject.getY();
+        moveX = ballObject.getMoveX();
+        moveY = ballObject.getMoveY();
+        ballWidth = ballObject.getBallWidth();
+        ballHeight = ballObject.getBallHeight();
+        ballSpeed = ballObject.getBallSpeed();
+
+        // wave moves just in x coordinate but y could be used later
+        x += moveX*ballSpeed;
+
+        //if the ball is off screen change its direction
+        if(x > width-ballWidth) {
+            x = width-ballWidth;
+            moveX = -moveX;
+            // too far right
+        }
+        if(x < 0) {
+            x = 0;
+            moveX = -moveX;
+            // too far left
+        }
+
+        ballObject.setX(x); ballObject.setY(y);
+        ballObject.setMoveX(moveX); ballObject.setMoveY(moveY);
+        return ballObject;
     }
 
     /**
