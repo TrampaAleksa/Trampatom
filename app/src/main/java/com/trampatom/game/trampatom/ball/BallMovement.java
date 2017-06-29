@@ -2,6 +2,7 @@ package com.trampatom.game.trampatom.ball;
 
 
 import com.trampatom.game.trampatom.Model.Ball;
+import com.trampatom.game.trampatom.utils.Keys;
 
 import java.util.Random;
 
@@ -19,6 +20,7 @@ public class BallMovement {
     int width;
     int height;
     Random random;
+    int changeAngleGreen;
     int x, y, moveX, moveY;
     double angle;
     int ballWidth, ballHeight;
@@ -84,6 +86,57 @@ public class BallMovement {
         ballObject.setMoveX(moveX); ballObject.setMoveY(moveY);
         return ballObject;
     }
+    /**
+     * Method that uses a passed ball object to manipulate its coordinates and move it.
+     * @param ballObject the ball object we want to move
+     * @return the now moved ball
+     */
+    public Ball moveGreenBall(Ball ballObject){
+        //gets a random number and if its below 20 change the angle
+        changeAngleGreen = random.nextInt(Keys.GREEN_BALL_ANGLE_CHANGE_CHANCE);
+        if(changeAngleGreen<=20){
+            ballObject.setAngle((random.nextInt(360))*(3.14/180));
+        }
+        x = ballObject.getX();
+        y = ballObject.getY();
+        moveX = ballObject.getMoveX();
+        moveY = ballObject.getMoveY();
+        angle = ballObject.getAngle();
+        ballWidth = ballObject.getBallWidth();
+        ballHeight = ballObject.getBallHeight();
+        ballSpeed = ballObject.getBallSpeed();
+
+
+        x += moveX*ballSpeed * Math.sin(angle);
+        y += moveY*ballSpeed * Math.cos(angle);
+
+        //if the ball is off screen change its direction
+        if(x > width-ballWidth) {
+            x = width-ballWidth;
+            moveX = -moveX;
+            // too far right
+        }
+        if(y > height-ballHeight) {
+            y = height-ballHeight;
+            moveY = -moveY;
+            // too far bottom
+        }
+        if(x < 0) {
+            x = 0;
+            moveX = -moveX;
+            // too far left
+        }
+        if(y < 0) {
+            y = 0;
+            moveY = -moveY;
+            // too far top
+        }
+
+        ballObject.setX(x); ballObject.setY(y);
+        ballObject.setMoveX(moveX); ballObject.setMoveY(moveY);
+        return ballObject;
+    }
+
 
     /**
      * Method used for moving a ball

@@ -27,9 +27,6 @@ public class CanvasGameClassic {
     //paint used for score
     Paint paint;
 
-    int x,y;
-    Bitmap ball;
-
     /**
      * Constructor that should be used to get instance of the canvas and a background
      * so that we don't pass them as parameters every time
@@ -49,47 +46,23 @@ public class CanvasGameClassic {
     }
 
     /**
-     * Method for drawing a new ball at new coordinates
-     * @param ball the ball to draw
-     * @param x the new x coordinate
-     * @param y the new y coordinate
-     * @return always returns false
+     * method used for drawing balls depending on the type of the ball.
+     * @param ball ball object containing coordinates and other values used to draw it correctly
+     * @param flag
+     * @param score
+     * @return
      */
-    public boolean draw(Bitmap ball,int x, int y, int score){
+    public boolean draw(Ball ball, int flag, int score){
+
         this.score = score;
         ourCanvas=ourHolder.lockCanvas();
         drawBackground();
-        ourCanvas.drawBitmap(ball, x, y, null);
+        //draw the ball that we passed
+        if(ball.getBallColor() != null)
+            ourCanvas.drawBitmap(ball.getBallColor(), ball.getX(), ball.getY(), null);
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;
-    }
 
-
-    /**
-     * Method for drawing purple balls. It handles drawing only one ball until we clicked it.
-     * Should draw three balls if we clicked the first one.
-     * @param ball the bitmap to be drawing, in this case a purple ball
-     * @param purpleXY set of coordinates for the balls
-     * @param timesClicked parameter used to check if we clicked the first purple ball.
-     *                Is int to simplify changing the code later if needed to handle more balls
-     */
-    public boolean drawPurple(Bitmap ball, int [] purpleXY, int timesClicked, int score){
-        this.score = score;
-        if(timesClicked == BALL_PURPLE_NO_CLICK) {
-            ourCanvas = ourHolder.lockCanvas();
-            drawBackground();
-            ourCanvas.drawBitmap(ball, purpleXY[0], purpleXY[3], null);
-            ourHolder.unlockCanvasAndPost(ourCanvas);
-        }
-        else {
-            ourCanvas = ourHolder.lockCanvas();
-            drawBackground();
-            ourCanvas.drawBitmap(ball, purpleXY[0], purpleXY[3], null);
-            ourCanvas.drawBitmap(ball, purpleXY[1], purpleXY[4], null);
-            ourCanvas.drawBitmap(ball, purpleXY[2], purpleXY[5], null);
-            ourHolder.unlockCanvasAndPost(ourCanvas);
-        }
-        return false;
     }
 
     /**
@@ -119,21 +92,6 @@ public class CanvasGameClassic {
         return false;
     }
 
-    /**
-     * Method for drawing every wave ball. Even the ones offscreen because of code efficiency.
-     * @param waveBall a set of bitmaps each containing a ball bitmap of different color
-     * @param waveXY coordinate sets of every ball
-     */
-    public void drawWave(Bitmap[] waveBall, int[] waveXY, int score){
-        this.score = score;
-        ourCanvas = ourHolder.lockCanvas();
-        drawBackground();
-        //TODO refactor to not draw the balls we already clicked by parsing an int instead of an i
-        for(i=0; i<WAVE_BALL_NUMBER; i++) {
-            ourCanvas.drawBitmap(waveBall[i], waveXY[i], waveXY[i+WAVE_BALL_NUMBER], null);
-        }
-        ourHolder.unlockCanvasAndPost(ourCanvas);
-    }
 
     /**
      * Method for drawing the wave ball type
@@ -152,26 +110,6 @@ public class CanvasGameClassic {
         }
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;
-    }
-
-    /**
-     * method used for drawing balls depending on the type of the ball.
-     * @param ball ball object containing coordinates and other values used to draw it correctly
-     * @param flag
-     * @param score
-     * @return
-     */
-   public boolean draw(Ball ball, int flag, int score){
-
-        this.score = score;
-        ourCanvas=ourHolder.lockCanvas();
-        drawBackground();
-        //draw the ball that we passed
-       if(ball.getBallColor() != null)
-        ourCanvas.drawBitmap(ball.getBallColor(), ball.getX(), ball.getY(), null);
-        ourHolder.unlockCanvasAndPost(ourCanvas);
-        return false;
-
     }
 
     /**

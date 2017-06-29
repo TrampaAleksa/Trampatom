@@ -58,20 +58,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //determines what ball will be/is currently drawn
                 int ballType=4, currentBall;
         //coordinates of the currently drawn ball, coordinates where we clicked
-                int x, clickedX;
-                int y, clickedY;
-                double angle;
-
+                int  clickedX;
+                int  clickedY;
         //Balls and Background Bitmaps
                 Bitmap blueBall, redBall, greenBall, yellowBall, purpleBall;
 
 
     // ------------------- Ball type variables ------------------------------------------ \\
-        //used to determine what drawing method to initially use to avoid errors
-        int initialDrawType =1;
-        //used for green ball
-            // for determining wether or not to change greens angle
-            int changeAngleGreen;
+
         //used for yellow ball;
                 int timesClicked;
                 int yellowBallSpeed;
@@ -101,19 +95,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         AtomPool atomPool;
         Ball ballObject;
         BallHandler ballHandler;
+
+
     // ------------------- Arrays ------------------------------------------------------- \\
 
         Ball[] multipleBalls = {null,null,null,null,null,null,null};
         Ball[] purpleBallObjects = {null, null, null};
     //array for moving the ball
             int i;
-            int[] moveArray= {0,0,0,0};
-        //arrays for purple ball
-            // x1,x2,x3,y1,y2,y3
-            int [] purpleXY = {0,0,0,0,0,0};
-            double [] purpleAngles= {0,0,0};
-        // for moving direction
-            int [] purpleMoveXY= {1,1,1,1,1,1};
         //array for wave balls
             Bitmap[] waveBall;
 
@@ -396,7 +385,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
-                //canvas.drawPurple(purpleBall, purpleXY, timesClickedPurple, score);
                 canvas.drawPurple(purpleBallObjects,-1, score, timesClicked);
                 break;
             case BALL_WAVE:
@@ -420,9 +408,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * Yellow balls reduce in size and increase its speed on every click
      */
     private void moveYellowBall(){
-        // yellow ball speed will increase every time we click the ball
         ballObject = ballMovement.moveBall(ballObject);
-
     }
     /**
      * <p>Method for moving green ball by changing its x and y coordinates.</p>
@@ -430,13 +416,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * This ball has a random chance to change its angle.
      */
     private void moveGreenBall(){
-        //gets a random number and if its below 20 change the angle
-        changeAngleGreen = greenRandom.nextInt(keys.GREEN_BALL_ANGLE_CHANGE_CHANCE);
-        if(changeAngleGreen<=20){
-            ballObject.setAngle(randomCoordinate.randomAngle());
-        }
-        ballObject = ballMovement.moveBall(ballObject);
-
+        ballObject = ballMovement.moveGreenBall(ballObject);
     }
     /**
      * <p>Method for moving purple balls by changing every pair of x and y coordinates at the same time.</p>
@@ -457,14 +437,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 //remove the balls that were clicked from the screen and stop moving them
                 if (originalBallClicked)
                     purpleBallObjects[0].setX(-ballWidth-10);
-                   // purpleXY[keys.PURPLE_BALL_XY1] = purpleXY[keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
+
                 if (secondBallClicked) {
                     purpleBallObjects[1].setX(-ballWidth-10);
-                   // purpleXY[keys.PURPLE_BALL_XY2] = purpleXY[keys.PURPLE_BALL_XY2 + keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
                 }
                 if (thirdBallClicked) {
                     purpleBallObjects[2].setX(-ballWidth-10);
-                    //purpleXY[keys.PURPLE_BALL_XY3] = purpleXY[keys.PURPLE_BALL_XY3 + keys.PURPLE_BALL_NUMBER] = 0 - ballWidth - 10;
                 }
         }
     }
@@ -721,12 +699,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             }
             //if we clicked all three, score and get a new ball
             if(originalBallClicked && secondBallClicked && thirdBallClicked){
+                ballPurpleNumber = keys.BALL_PURPLE_NO_CLICK;
                 //reset to starting state
                 originalBallClicked = secondBallClicked = thirdBallClicked = false;
                 timesClickedPurple = keys.BALL_PURPLE_NO_CLICK;
                 //add some energy and update it in the energy text view
                 currentEnergyLevel +=500;
-                //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
                 score +=500;
                 getNewBall();
             }
@@ -770,11 +748,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void getNewBall() {
         //get a new ball with new coordinates and angle of movement
         ballObject = ballHandler.getNewBall(ballObject);
-        x= ballObject.getX();
-        y= ballObject.getY();
         ballType = ballObject.getBallType();
         setBallObjectByType(ballType);
-        angle = ballObject.getAngle();
     }
 
     /**
@@ -819,7 +794,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         }
         if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
-            initialDrawType = BALL_WAVE;
             for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
                 //reset wave balls for next time it appears
                 multipleBalls[i].setX(0);

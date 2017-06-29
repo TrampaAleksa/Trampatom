@@ -86,6 +86,36 @@ public class AtomPool {
     }
 
     /**
+     * Method used to trade blue atoms for any other atom type depending on what category we selected
+     * @param selectedCategory the category we will trade blues into
+     */
+    public int[] transferBlueAtoms(int selectedCategory, int[] atomPool){
+
+        // if we have blue atoms, trade them
+        if(atomPool[0]>0) {
+            atomPool[0]--;
+            // 0 - red ; 1 - green ; 2 - yellow ; 3 - purple
+            switch (selectedCategory) {
+
+                case 0:
+                    atomPool[1]++;
+                    break;
+                case 1:
+                    atomPool[2]++;
+                    break;
+                case 2:
+                    atomPool[3]++;
+                    break;
+                case 3:
+                    atomPool[4]++;
+                    break;
+            }
+        }
+        return atomPool;
+    }
+
+
+    /**
      * Method that should be used to retrieve an array of categories to be used to handle the shop better
      * @return indexes/ category : 0 - RED ; 1 - GREEN ; 2 - YELLOW ; 3 - PURPLE
      */

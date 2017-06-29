@@ -69,7 +69,7 @@ public class Keys {
 
             // ------------------------------- Green balls --------------------------------- \\
 
-                public int GREEN_BALL_ANGLE_CHANGE_CHANCE = 350;
+               static public int GREEN_BALL_ANGLE_CHANGE_CHANCE = 350;
                 public int GREEN_BALL_SPEED = 16;
 
             // ------------------------------- Green balls --------------------------------- \\
