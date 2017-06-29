@@ -17,6 +17,15 @@ public class Ball {
     double angle;
     int moveX, moveY;
     int ballHeight, ballWidth;
+    int ballSpeed;
+
+    public int getBallSpeed() {
+        return ballSpeed;
+    }
+
+    public void setBallSpeed(int ballSpeed) {
+        this.ballSpeed = ballSpeed;
+    }
 
     public int getBallHeight() {
         return ballHeight;

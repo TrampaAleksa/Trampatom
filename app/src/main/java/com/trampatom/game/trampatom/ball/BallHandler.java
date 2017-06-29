@@ -12,6 +12,10 @@ import java.util.List;
  * Contains methods for getting a new ball, and should contain ball action methods
  */
 public class BallHandler {
+
+    int x,y,ballType;
+    double angle;
+
     public static final int GOLD_BALL_DRAW = 1;
     public static final int GOLD_BALL_DONT_DRAW = 0;
     private RandomBallVariables randomBallVariables;
@@ -25,15 +29,14 @@ public class BallHandler {
     }
 
     /**
-     * Method for getting a new ball
-     * @return a ball object to be used to extract the ball coordinates, angle and type.
+     * Method for "getting a new ball" by changing some parameters of the previous one
+     * @return a ball object to be used.
      */
-    public Ball getNewBall(){
+    public Ball getNewBall(Ball ball){
         //define a list with a set of information about the specific ball
-        Ball ball= new Ball();
+        //Ball ball= new Ball();
         //the variables to fill the new ball with
-        int x,y,ballType;
-        double angle;
+
         x= randomBallVariables.randomX();
         y = randomBallVariables.randomY();
         ballType = randomBallVariables.getRandomBallType();
@@ -44,7 +47,7 @@ public class BallHandler {
         ball.setY(y);
         ball.setBallType(ballType);
         ball.setAngle(angle);
-
+        ball.setMoveX(1);  ball.setMoveY(1);
         return ball;
     }
 

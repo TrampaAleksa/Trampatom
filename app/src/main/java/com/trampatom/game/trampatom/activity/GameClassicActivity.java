@@ -71,7 +71,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
 
     // ------------------- Ball type variables ------------------------------------------ \\
-
+        //used for green ball
+            // for determining wether or not to change greens angle
+            int changeAngleGreen;
         //used for yellow ball;
                 int timesClicked;
                 int yellowBallSpeed;
@@ -327,24 +329,29 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //get a new ball object when starting the game
         ballHandler = new BallHandler(randomCoordinate);
         ballObject = new Ball();
-        ballObject = ballHandler.getNewBall();
-        ballObject.setBallColor(blueBall);
-
         newBall = new BallHandler(randomCoordinate);
+
+        ballObject.setBallWidth(ballWidth);
+        ballObject.setBallHeight(ballHeight);
+        getNewBall();
+        //ballObject.setBallColor(blueBall);
+
+
         clickedABall = new ClickedABall(ballWidth, ballHeight);
         ballMovement = new BallMovement(width, height);
         //used for the first ball
-        angle=randomCoordinate.randomAngle();
+        /*angle=randomCoordinate.randomAngle();
         x=randomCoordinate.randomX();
-        y=randomCoordinate.randomY();
+        y=randomCoordinate.randomY();*/
+        //initialize the wave balls so they are at a distance
         waveXY[keys.WAVE_BALL_NUMBER]= ballHeight*2;
         for(i=1; i<keys.WAVE_BALL_NUMBER; i++){
             waveXY[i+keys.WAVE_BALL_NUMBER]= waveXY[i+keys.WAVE_BALL_NUMBER-1]+ ballHeight+10;
         }
-        purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
+        /*purpleXY[keys.PURPLE_BALL_XY1]= randomCoordinate.randomX();
         purpleXY[keys.PURPLE_BALL_XY1+keys.PURPLE_BALL_NUMBER]= randomCoordinate.randomY();
-        purpleAngles[keys.PURPLE_BALL_ANGLE_ONE]= randomCoordinate.randomX();
-        initialDraw= canvas.draw(blueBall,x,y, score);
+        purpleAngles[keys.PURPLE_BALL_ANGLE_ONE]= randomCoordinate.randomX();*/
+        initialDraw= canvas.draw(ballObject, -1, score);
 
     }
 
@@ -410,14 +417,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * These balls should move at a constant speed and don't change their angle
      */
     private void moveBall() {
-       moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, keys.BALL_SPEED);
-        //get a move array and set new coordinates to the current ball
-        x= moveArray[keys.NEW_BALL_X_COORDINATE];
-        y = moveArray[keys.NEW_BALL_Y_COORDINATE];
-        moveX = moveArray[keys.NEW_BALL_MOVEX_VALUE];
-        moveY = moveArray[keys.NEW_BALL_MOVEY_VALUE];
-        ballObject.setX(moveArray[keys.NEW_BALL_X_COORDINATE]);
-        ballObject.setY(moveArray[keys.NEW_BALL_Y_COORDINATE]);
+        ballObject = ballMovement.moveBall(ballObject);
     }
     /**
      * <p>Method for moving yellow balls.</p>
@@ -425,16 +425,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * Yellow balls reduce in size and increase its speed on every click
      */
     private void moveYellowBall(){
-        //get a move array and set new coordinates to the current ball,
         // yellow ball speed will increase every time we click the ball
-       // moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, yellowBallSpeed);
-        moveArray = ballMovement.moveBall(x,y,ballObject.getBallWidth(), ballObject.getBallHeight(), moveX, moveY, angle, yellowBallSpeed);
-        x= moveArray[keys.NEW_BALL_X_COORDINATE];
-        y = moveArray[keys.NEW_BALL_Y_COORDINATE];
-        ballObject.setX(moveArray[keys.NEW_BALL_X_COORDINATE]);
-        ballObject.setY(moveArray[keys.NEW_BALL_Y_COORDINATE]);
-        moveX = moveArray[keys.NEW_BALL_MOVEX_VALUE];
-        moveY = moveArray[keys.NEW_BALL_MOVEY_VALUE];
+        ballObject = ballMovement.moveBall(ballObject);
+
     }
     /**
      * <p>Method for moving green ball by changing its x and y coordinates.</p>
@@ -443,17 +436,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void moveGreenBall(){
         //gets a random number and if its below 20 change the angle
-        int changeAngleGreen = greenRandom.nextInt(keys.GREEN_BALL_ANGLE_CHANGE_CHANCE);
+        changeAngleGreen = greenRandom.nextInt(keys.GREEN_BALL_ANGLE_CHANGE_CHANCE);
         if(changeAngleGreen<=20){
-            angle= randomCoordinate.randomAngle();
+            ballObject.setAngle(randomCoordinate.randomAngle());
         }
-        moveArray = ballMovement.moveBall(x,y,ballWidth, ballHeight, moveX, moveY, angle, keys.GREEN_BALL_SPEED);
-        x= moveArray[keys.NEW_BALL_X_COORDINATE];
-        y = moveArray[keys.NEW_BALL_Y_COORDINATE];
-        ballObject.setX(moveArray[keys.NEW_BALL_X_COORDINATE]);
-        ballObject.setY(moveArray[keys.NEW_BALL_Y_COORDINATE]);
-        moveX = moveArray[keys.NEW_BALL_MOVEX_VALUE];
-        moveY = moveArray[keys.NEW_BALL_MOVEY_VALUE];
+        ballObject = ballMovement.moveBall(ballObject);
 
     }
     /**
@@ -467,7 +454,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //depending on if we clicked the first purple ball we will move only one ball or all three balls
         for(i=0; i<ballPurpleNumber; i++){
             moveArray = ballMovement.moveBall(purpleXY[i],purpleXY[i+keys.PURPLE_BALL_NUMBER],
-                    ballWidth, ballHeight, purpleMoveXY[i], purpleMoveXY[i+keys.PURPLE_BALL_NUMBER], purpleAngles[i], keys.BALL_SPEED);
+                    ballWidth, ballHeight, purpleMoveXY[i], purpleMoveXY[i+keys.PURPLE_BALL_NUMBER], purpleAngles[i], keys.DEFAULT_BALL_SPEED);
             purpleXY[i]= moveArray[keys.NEW_BALL_X_COORDINATE];
             purpleXY[i+keys.PURPLE_BALL_NUMBER] = moveArray[keys.NEW_BALL_Y_COORDINATE];
             purpleMoveXY[i] = moveArray[keys.NEW_BALL_MOVEX_VALUE];
@@ -500,7 +487,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //every ball before the current ball will not be moved or drawn
         for(i=currentWaveBall; i<keys.WAVE_BALL_NUMBER; i++){
             moveArray = ballMovement.moveWave(waveXY[i], waveXY[i+keys.WAVE_BALL_NUMBER],
-                    ballWidth, moveWaveXY[i], moveWaveXY[i+keys.WAVE_BALL_NUMBER],keys.BALL_SPEED+i);
+                    ballWidth, moveWaveXY[i], moveWaveXY[i+keys.WAVE_BALL_NUMBER],keys.DEFAULT_BALL_SPEED +i);
             waveXY[i]= moveArray[keys.NEW_BALL_X_COORDINATE];
             waveXY[i+keys.WAVE_BALL_NUMBER] = moveArray[keys.NEW_BALL_Y_COORDINATE];
             moveWaveXY[i] = moveArray[keys.NEW_BALL_MOVEX_VALUE];
@@ -606,7 +593,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void blueBall(){
         //if we clicked the ball should gain score
-        if(clickedABall.ballClicked(x,y,clickedX,clickedY)) {
+        if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)) {
             //add some energy and update it in the energy text view
             currentEnergyLevel +=100;
             // gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
@@ -623,7 +610,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void redBall(){
         //if we click the ball
-        if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
+        if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)){
             //add some energy and update it in the energy text view
             currentEnergyLevel -=100;
             //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
@@ -648,7 +635,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * The green ball should simply give us score when clicked, gives more score than blue ball and energy
      */
     private void greenBall(){
-        if(clickedABall.ballClicked(x,y,clickedX,clickedY)){
+        if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)){
             //add some energy and update it in the energy text view
             currentEnergyLevel +=400;
             //gameTimeAndScore.setEnergyRemaining(currentEnergyLevel);
@@ -668,7 +655,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void yellowBall(){
 
         //every time the ball is clicked decrease its size and increase speed
-        if(clickedABall.ballClicked(x,y,clickedX,clickedY)) {
+        if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)) {
             if (timesClicked > 0) {
                 timesClicked--;
                 //every time we click it, reduce its size and increase its speed
@@ -803,12 +790,13 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void getNewBall() {
         //get a new ball with new coordinates and angle of movement
-        b = newBall.getNewBall();
-        ballObject = ballHandler.getNewBall();
+        b = newBall.getNewBall(ballObject);
+        ballObject = ballHandler.getNewBall(ballObject);
         x= b.getX();
         y= b.getY();
         ballType = b.getBallType();
-        setBallBitmap(ballType);
+        ballType = ballObject.getBallType();
+        setBallObjectByType(ballType);
         angle = b.getAngle();
 
 
@@ -828,9 +816,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * helper method used to load the right bitmap into the ball based on its type
      * @param ballType the value that determines what type the ball is
      */
-    private void setBallBitmap(int ballType){
-
-        // set the ball to be the color of the appropriate ball type
+    private void setBallObjectByType(int ballType){
+            ballObject.setBallSpeed(keys.DEFAULT_BALL_SPEED);
+        // set the ball to be the color of the appropriate ball type and set its speed
         if(ballType<=keys.TYPE_BALL_RED_CHANCE){
             ballObject.setBallColor(redBall);
         }
@@ -839,9 +827,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         }
         if(ballType>keys.TYPE_BALL_BLUE_CHANCE && ballType<=keys.TYPE_BALL_YELLOW_CHANCE){
             ballObject.setBallColor(yellowBall);
+            ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(), ballWidth + keys.YELLOW_BALL_INITIAL_SIZE, ballHeight+ keys.YELLOW_BALL_INITIAL_SIZE, true));
+            ballObject.setBallSpeed(keys.BALL_YELLOW_INITIAL_SPEED);
         }
         if(ballType>keys.TYPE_BALL_YELLOW_CHANCE && ballType<=keys.TYPE_BALL_GREEN_CHANCE){
             ballObject.setBallColor(greenBall);
+            ballObject.setBallSpeed(keys.GREEN_BALL_SPEED);
         }
         if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
             ballObject.setBallColor(purpleBall);

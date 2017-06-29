@@ -15,7 +15,7 @@ public class Keys {
         // starting energy and the speed at witch the energy decreases
         public int STARTING_ENERGY = 5000;
         public int ENERGY_DECREASE = 30;
-        public int BALL_SPEED = 8;
+        public int DEFAULT_BALL_SPEED = 8;
         //balls size correction
         public int BALL_SIZE_ADAPT = 18;
 
