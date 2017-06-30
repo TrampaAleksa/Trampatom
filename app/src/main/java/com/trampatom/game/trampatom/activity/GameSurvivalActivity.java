@@ -4,6 +4,7 @@ package com.trampatom.game.trampatom.activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -28,13 +29,13 @@ import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.Keys;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
+import com.trampatom.game.trampatom.utils.SoundsAndEffects;
 
 import java.util.Random;
 
 import static java.lang.Thread.sleep;
 
 public class GameSurvivalActivity extends AppCompatActivity implements Runnable, View.OnTouchListener{
-    //TODO remove progress bar in this game and display spare life for better UX
 
     private static final int BALL_SPEED= 8;
     public static final int BALL_NEGATIVE_NUMBER = 7;
@@ -82,6 +83,8 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
     BallMovement ballMovement;
     Random randomNumber;
     Background stars;
+    SoundsAndEffects soundsAndEffects;
+    SoundPool soundPool;
 
 
     // ------------------- Arrays ------------------------------------------------------- \\
@@ -91,7 +94,6 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
     int[] negWidth={0,0,0,0,0,0,0};
     int[] negHeight={0,0,0,0,0,0,0};
     //14 coordinates ; 7 red balls
-    //TODO use lists / arrays to get coordinates
     int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     //Used to move neg balls in a cirtain direction
     int[] negMoveX={1,1,1,1,1,1,1};
@@ -133,27 +135,40 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.game);
+        setContentView(R.layout.survival);
         init();
     }
 
     // --------------------------------------- Initialization ------------------------------ \\
 
     private void init() {
-        //Classes
+        //CLASSES
             keys = new Keys();
             ballMovement = new BallMovement(width, height);
             randomNumber = new Random();
-        //set up the SurfaceView
+
+        //SOUND
+            soundsAndEffects = new SoundsAndEffects(this);
+            soundPool = soundsAndEffects.getGameSurvivalSounds();
+
+        //SURFACE VIEW
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
             ourHolder = mSurfaceView.getHolder();
             mSurfaceView.setOnTouchListener(this);
-        //set up the time between clicks
+
+        //GAME
             remainingTime = (ProgressBar) findViewById(R.id.pbEnergy) ;
             gameTimeAndScore = new GameTimeAndScore(remainingTime);
         //get device's width and height
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();
+        //Obtaining the highScore
+            highScore = new HighScore(this);
+            previousHighScore=highScore.getHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY);
+            newHighScore=false;
+
+            initialDraw=true;
+        //BALLS
         //sizes of red balls, this will get random sizes for every red ball
             for(i=0 ; i<BALL_NEGATIVE_NUMBER; i++) {randomSize[i] = randomNumber.nextInt(55);}
         //Bitmaps
@@ -172,12 +187,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             ball=Bitmap.createScaledBitmap(ball,ballWidth, ballHeight, true);
             lifeBall=Bitmap.createScaledBitmap(lifeBall,ballWidth, ballHeight, true);
             goldBall=Bitmap.createScaledBitmap(goldBall,ballWidth, ballHeight, true);
-        //Obtaining the highScore
-            highScore = new HighScore(this);
-            previousHighScore=highScore.getHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY);
-            newHighScore=false;
 
-            initialDraw=true;
     }
 
 
@@ -213,6 +223,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             angle =  randomCoordinate.randomAngle();
             x = randomCoordinate.randomX();
             y = randomCoordinate.randomY();
+            soundPool.play(soundsAndEffects.soundClickedId,1,1,0,0,1);
         }
     }
 
@@ -234,6 +245,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             else
             gameover = true;
             }
+            soundPool.play(soundsAndEffects.soundClickedId,1,1,0,0,1);
         }
     }
     /**
@@ -250,6 +262,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             //make the blue ball appear green signalling that we have a spare life
             helpBall = ball;
             ball = lifeBall;
+            soundPool.play(soundsAndEffects.soundClickedId,1,1,0,0,1);
         }
     }
 
@@ -337,21 +350,6 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
     }
 
 
-    private void positiveBallTimer(){
-                new CountDownTimer(keys.SURVIVAL_CLICK_TIMER, 50) {
-                    public void onTick(long millisUntilFinished) {
-
-
-                    }
-
-                    public void onFinish() {
-                        //after the timer reaches zero, it will be reset
-                        startedTimer = false;
-                    }
-                }.start();
-
-    }
-
     /**
      * Method that should be called on every start of the game. Initializes most variables.
      * <p>Canvas, width and height, starting coordinates and angles, and the first draw should be
@@ -422,6 +420,8 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
         if (gameover) {
             //if an event happens that changes gameover to true, end the game
             GameOver gameover = new GameOver(ourHolder,mCanvas);
+            //play a sound indicating that the game is over
+            soundPool.play(soundsAndEffects.soundGameOverId,1,1,0,0,1);
             // check if we got a new high score
             newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
             //display our score and if we got a new high score show a text to indicate that
@@ -472,6 +472,10 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
         pause();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        soundsAndEffects.releaseSoundPool(soundPool);
+    }
 }
 

@@ -19,6 +19,16 @@ public class Ball {
     int ballHeight, ballWidth;
     int ballSpeed;
 
+    public int getSoundId() {
+        return soundId;
+    }
+
+    public void setSoundId(int soundId) {
+        this.soundId = soundId;
+    }
+
+    int soundId;
+
     public int getBallSpeed() {
         return ballSpeed;
     }

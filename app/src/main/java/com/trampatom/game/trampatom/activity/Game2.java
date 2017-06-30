@@ -85,7 +85,6 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
         init();
         new CountDownTimer(GAME_TIME, 250) {
             public void onTick(long millisUntilFinished) {
-                gameTimeAndScore.setTimeAndScore(millisUntilFinished, score);
             }
             public void onFinish() {
                 //finish the game when the timer ends
@@ -103,7 +102,7 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
 
 
             energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
-            gameTimeAndScore = new GameTimeAndScore(tvScore, tvTime, energyProgress);
+            gameTimeAndScore = new GameTimeAndScore(energyProgress);
         //get device's width and height
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();

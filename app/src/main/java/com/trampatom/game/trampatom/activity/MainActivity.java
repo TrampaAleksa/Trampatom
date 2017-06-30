@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             soundOn=true;
         //music
             svc=new Intent(this, MusicService.class);
-            startService(svc);
+            //startService(svc);
     }
 
     @Override

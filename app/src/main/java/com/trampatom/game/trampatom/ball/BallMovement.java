@@ -26,7 +26,6 @@ public class BallMovement {
     int ballWidth, ballHeight;
     int ballSpeed;
 
-    //TODO inject ball width and height
 
     /**
      * Constructor that contains and gets the canvas's width adn height to

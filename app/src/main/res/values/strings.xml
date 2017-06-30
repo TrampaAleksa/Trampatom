@@ -4,4 +4,6 @@
     <string name="game_score">Score:</string>
     <string name="game_time">60</string>
     <string name="shop_atom_number_def_value">0</string>
+    <string name="classic_power_up_1">Power up 1</string>
+    <string name="classic_power_up_2">Power up 2</string>
 </resources>

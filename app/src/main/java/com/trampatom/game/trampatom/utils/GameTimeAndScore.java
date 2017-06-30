@@ -15,24 +15,7 @@ public class GameTimeAndScore {
     //TODO remove unneeded methods
     private static final int BALL_GOLD_DURATION = 3;
     private String time,scoreS;
-    private TextView tvScore, tvTime;
     private ProgressBar energyProgress;
-    public GameTimeAndScore(TextView tvScore, TextView tvTime, ProgressBar energyProgress){
-        this.tvScore = tvScore;
-        this.tvTime= tvTime;
-        energyProgress.setMax(5000);
-        this.energyProgress = energyProgress;
-    }
-
-    /**
-     * Class constructor used to work with games not using a progress bar
-     * @param tvScore text view that should be used for displaying score
-     * @param tvTime text view that should be used for displaying time
-     */
-    public GameTimeAndScore(TextView tvScore, TextView tvTime){
-        this.tvScore = tvScore;
-        this.tvTime= tvTime;
-    }
 
     /**
      * Constructor that should be used for survival game since it uses only a progress bar
@@ -42,30 +25,6 @@ public class GameTimeAndScore {
         this.energyProgress = energyProgress;
     }
 
-    /**
-     *Method used for setting the current time and score
-     * @param millisUntilFinished how many seconds are left
-     * @param score pass the current score to be displayed
-     */
-    public void setTimeAndScore(long millisUntilFinished, int score){
-        time=Long.toString(millisUntilFinished/1000);
-        scoreS=Integer.toString(score);
-        tvScore.setText("SCORE: "+scoreS);
-         if(millisUntilFinished==1)
-            tvTime.setText(time);
-
-    }
-
-    /**
-     * Method for setting the current remaining energy. Should be used in a timer
-     * @param energy current energy remaining. if it reaches 0 we lose
-     */
-    public void setEnergyRemaining(int energy){
-        //TODO fix potencial error regaring running on different thread
-        time= Integer.toString(energy);
-        tvTime.setText(time);
-
-    }
 
     /**
      * Method that should be used to update the state of the energy bar to the current level of energy.
@@ -92,15 +51,6 @@ public class GameTimeAndScore {
         } else{
             energyProgress.setProgress(time);
         }
-    }
-
-    /**
-     * Method that should be called whenever we want to set/update the current score
-     * @param score the current score that we want to set
-     */
-    public void setScore(int score){
-        scoreS = "SCORE: "+ Integer.toString(score);
-        tvScore.setText(scoreS);
     }
 
 }
