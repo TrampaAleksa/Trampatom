@@ -26,6 +26,11 @@ public class Keys {
         public int NEW_BALL_MOVEX_VALUE = 2;
         public int NEW_BALL_MOVEY_VALUE = 3;
 
+    // -------------------------------------- Power Ups ------------------------------------ \\
+
+        // default coolDown of the power up that has a coolDown in seconds
+        public int POWER_UP_COOLDOWN = 3;
+
     // ----------------------------------------- Ball Types ------------------------------------------ \\
 
 
@@ -72,7 +77,7 @@ public class Keys {
                static public int GREEN_BALL_ANGLE_CHANGE_CHANCE = 350;
                 public int GREEN_BALL_SPEED = 16;
 
-            // ------------------------------- Green balls --------------------------------- \\
+            // ------------------------------- Wave balls --------------------------------- \\
 
                 public int WAVE_BALL_NUMBER = 7;
 
@@ -95,6 +100,7 @@ public class Keys {
     // --------------------------------- Currency ----------------------------------------------- \\
 
             // -------------------------- Main currency variables ------------------------ \\
+
         //keys for getting and setting currency with shared preferences
         public String KEY_BLUE_CURRENCY = "blue currency";
         public String KEY_RED_CURRENCY = "red currency";
@@ -106,4 +112,28 @@ public class Keys {
         public int CATEGORY_GREEN = 2;
         public int CATEGORY_YELLOW = 3;
         public int CATEGORY_PURPLE = 4;
+
+
+    // ----------------------------------- Flags -------------------------------------------- \\
+
+        //red
+        public int FLAG_RED_FREEZE_BALLS = 1;
+        public int FLAG_RED_BIG_ENERGY_BONUS = 2;
+        public int FLAG_RED_LIMITING_SQUARE = 3;
+        public int FLAG_RED_UNKNOWN2 = 4;
+        //green
+        public int FLAG_GREEN_SLOW_DOWN_BALLS = 5;
+        public int FLAG_GREEN_SMALL_ENERGY_BONUS = 6;
+        public int FLAG_GREEN_INCREASE_BALL_SIZE = 7;
+        public int FLAG_GREEN_UNKNOWN2 = 8;
+        //purple
+        public int FLAG_PURPLE_BIGGER_BALLS = 9;
+        public int FLAG_PURPLE_UNKNOWN2 = 10;
+        public int FLAG_PURPLE_UNKNOWN3 = 11;
+        public int FLAG_PURPLE_UNKNOWN4 = 12;
+        //yellow
+        public int FLAG_YELLOW_UNKNOWN = 13;
+        public int FLAG_YELLOW_UNKNOWN2 = 14;
+        public int FLAG_YELLOW_UNKNOWN3 = 15;
+        public int FLAG_YELLOW_UNKNOWN4 = 16;
 }

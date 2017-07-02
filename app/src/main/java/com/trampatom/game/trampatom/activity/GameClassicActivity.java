@@ -19,7 +19,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.R;
@@ -42,7 +41,8 @@ import com.trampatom.game.trampatom.utils.SoundsAndEffects;
 import static java.lang.Thread.sleep;
 
 /**
- * Class used to run the Classic game mode. It uses energy that you get from balls to keep the game running
+ * Class used to run the Classic game mode. It uses energy that you get from balls to keep the game running.
+ * Whenever changing any ball's properties, probablly change code in: move method, draw method, new ball method
  */
 public class GameClassicActivity extends AppCompatActivity implements Runnable, View.OnTouchListener, View.OnClickListener{
 
@@ -143,6 +143,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //For managing weather or not we can activate any of the power ups(in cooldown or used)
             boolean usedConsumable = false;
             boolean onCooldown = false;
+            // the duration of every coolDown, timer used to help determine when the coolDown expired
+            int coolDown, coolDownTimer=0;
 
 
     // ------------------- Surface View ------------------------------------------------- \\
@@ -200,6 +202,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             bPowerUp2 = (Button) findViewById(R.id.bPowerUp2);
             bPowerUp1.setOnClickListener(this);
             bPowerUp2.setOnClickListener(this);
+            coolDown = keys.POWER_UP_COOLDOWN;
 
         // OTHER
         //get device's width and height
@@ -223,7 +226,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             currentBall= BALL_BLUE;
             initialDraw=true;
         //initiate different ball objects here
-            for(i = 0; i< keys.WAVE_BALL_NUMBER; i++){
+          /*  for(i = 0; i< keys.WAVE_BALL_NUMBER; i++){
                 multipleBalls[i] = new Ball();
             }
             for(i=0; i<keys.PURPLE_BALL_NUMBER; i++){
@@ -231,7 +234,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 purpleBallObjects[i].setBallColor(purpleBall);
                 purpleBallObjects[i].setBallWidth(ballWidth);
                 purpleBallObjects[i].setBallHeight(ballHeight);
-            }
+            }*/
     }
 
     /**
@@ -324,6 +327,18 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                             //int seconds =(int) millisUntilFinished/1000;
                             //int totalTimerTime = (int) keys.GAME_TIME/1000;
 
+                            //if power up is on coolDown count down until it's expired, then reset the countdown
+                            if(onCooldown ){
+
+                                if(coolDown >  (coolDownTimer)/1000){
+                                    // has to increment equally to the millis interval of ticks
+                                    coolDownTimer += 100;
+                                }
+                                else{
+                                    onCooldown = false;
+                                    coolDownTimer = 0;
+                                }
+                            }
                             if(!gameover) {
                                 if (currentEnergyLevel < keys.STARTING_ENERGY/4 && !lowEnergy){
                                     soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
@@ -361,20 +376,17 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         stars = new Background(ourHolder, mCanvas, width, height);
         canvas = new CanvasGameClassic(ourHolder,mCanvas, stars);
 
-        //get a new ball object when starting the game
-        ballHandler = new BallHandler(randomCoordinate);
-        ballObject = new Ball();
-        //set a default width and height
-        ballObject.setBallWidth(ballWidth);
-        ballObject.setBallHeight(ballHeight);
-        for(i=0; i<keys.WAVE_BALL_NUMBER; i++) {
-            multipleBalls[i].setBallWidth(ballWidth);
-            multipleBalls[i].setBallHeight(ballHeight);
+        //get every ball object when starting a game
+        ballHandler = new BallHandler(randomCoordinate, keys, ballWidth, ballHeight);
+        ballObject = ballHandler.getFirstBallObject();
+        purpleBallObjects = ballHandler.getFirstBallObjectArray(keys.PURPLE_BALL_NUMBER);
+        multipleBalls = ballHandler.getFirstBallObjectArray(keys.WAVE_BALL_NUMBER);
+        //the colors of purple and wave don't have to be be changed so initiate them once
+        for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
+            multipleBalls[i].setBallColor(waveBall[i]);
         }
-        //initialize the wave balls so they are at a distance
-        multipleBalls[0].setY(ballHeight*2);
-        for(i=1; i<keys.WAVE_BALL_NUMBER; i++){
-            multipleBalls[i].setY(multipleBalls[i-1].getY()+ ballHeight+ 10);
+        for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
+            purpleBallObjects[i].setBallColor(purpleBall);
         }
         getNewBall();
 
@@ -572,13 +584,26 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         switch(v.getId()){
 
             case R.id.bPowerUp1:
-
+                //if the power up isn't in coolDown, activate it
+                if(!onCooldown){
+                    // DO SOMETHING
+                    ballObject.setBallSpeed(ballObject.getBallSpeed()+3);
+                    //put the power up on coolDown, coolDown managed in timedActions method
+                    onCooldown = true;
+                }
                 break;
             case R.id.bPowerUp2:
 
+                if(!usedConsumable) {
+                    //DO SOMETHING
+                    ballObject.setBallSpeed(ballObject.getBallSpeed()-10);
+                    usedConsumable = true;
+                }
                 break;
         }
     }
+
+
         // ------------------------------ Ball Actions --------------------------------- \\
 
     /**
@@ -764,6 +789,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             }
             //if we clicked all three, score and get a new ball
             if(originalBallClicked && secondBallClicked && thirdBallClicked){
+                purpleBallObjects[1].setX(-ballWidth);
+                purpleBallObjects[1].setY(-ballHeight);
+                purpleBallObjects[2].setX(-ballWidth);
+                purpleBallObjects[2].setY(-ballHeight);
+
                 ballPurpleNumber = keys.BALL_PURPLE_NO_CLICK;
                 //reset to starting state
                 originalBallClicked = secondBallClicked = thirdBallClicked = false;
@@ -787,17 +817,17 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void waveBall(){
         //if we click the correct ball in the sequence remove it and get score
         if(clickedABall.ballClicked(multipleBalls[currentWaveBall].getX(), multipleBalls[currentWaveBall].getY(), clickedX, clickedY)){
-            //remove this ball from the screen and don't move it
-            multipleBalls[currentWaveBall].setX(- ballWidth);
-            // next ball should be clicked
-            currentWaveBall ++;
+
             //gain more and more score and energy the more balls you click
             currentEnergyLevel += currentWaveBall*10;
             score += currentWaveBall*10;
             //adds a random atom to the pool every time we click a wave ball
             poolArray[random.nextInt(4)]++;
             soundPool.play(multipleBalls[0].getSoundId(),1,1,0,0,1);
+            // next ball should be clicked
+            currentWaveBall ++;
             if(currentWaveBall == keys.WAVE_BALL_NUMBER){
+                currentWaveBall = 0;
                 // to round up the gain; with *10 you gain 420 score total
                 score -=20;
                 getNewBall();
@@ -813,8 +843,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void getNewBall() {
         //get a new ball with new coordinates and angle of movement
-        ballObject = ballHandler.getNewBall(ballObject);
-        ballType = ballObject.getBallType();
+
+        ballType = ballHandler.getNewBallType();
         setBallObjectByType(ballType);
     }
 
@@ -824,55 +854,57 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * @param ballType the value that determines what type the ball is
      */
     private void setBallObjectByType(int ballType){
-            ballObject.setBallSpeed(keys.DEFAULT_BALL_SPEED);
-        // set the ball to be the color of the appropriate ball type and set its speed
+         ballObject.setBallSpeed(keys.DEFAULT_BALL_SPEED);
+        // BLUE BALL
         if(ballType<=keys.TYPE_BALL_RED_CHANCE){
+            ballObject = ballHandler.getNewBallObject(ballObject);
             ballObject.setBallColor(redBall);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
+
+        // RED BALL
         if(ballType>keys.TYPE_BALL_RED_CHANCE && ballType<=keys.TYPE_BALL_BLUE_CHANCE){
+            ballObject = ballHandler.getNewBallObject(ballObject);
             ballObject.setBallColor(blueBall);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
+
+        // YELLOW BALL
         if(ballType>keys.TYPE_BALL_BLUE_CHANCE && ballType<=keys.TYPE_BALL_YELLOW_CHANCE){
+            ballObject = ballHandler.getNewBallObject(ballObject);
             ballObject.setBallColor(yellowBall);
-            ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(), ballWidth + keys.YELLOW_BALL_INITIAL_SIZE, ballHeight+ keys.YELLOW_BALL_INITIAL_SIZE, true));
+            ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(),
+                    ballWidth + keys.YELLOW_BALL_INITIAL_SIZE, ballHeight+ keys.YELLOW_BALL_INITIAL_SIZE, true));
             ballObject.setBallSpeed(keys.BALL_YELLOW_INITIAL_SPEED);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
+
+        // GREEN BALL
         if(ballType>keys.TYPE_BALL_YELLOW_CHANCE && ballType<=keys.TYPE_BALL_GREEN_CHANCE){
+            ballObject = ballHandler.getNewBallObject(ballObject);
             ballObject.setBallColor(greenBall);
             ballObject.setBallSpeed(keys.GREEN_BALL_SPEED);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
+
+        // PURPLE BALL
         if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
-            //TODO create method for getting new purple and wave balls
-            //initiate the first ball only and set the other balls to be off screen
-            purpleBallObjects[0].setX(randomCoordinate.randomX());
-            purpleBallObjects[0].setY(randomCoordinate.randomY());
-            purpleBallObjects[1].setX(-ballWidth);
-            purpleBallObjects[1].setY(-ballHeight);
-            purpleBallObjects[2].setX(-ballWidth);
-            purpleBallObjects[2].setY(-ballHeight);
-            purpleBallObjects[0].setAngle(randomCoordinate.randomAngle());
+            purpleBallObjects = ballHandler.getNewBallObjectArray(keys.PURPLE_BALL_NUMBER,purpleBallObjects);
+
             for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
-                //set the speeds of the balls and the move variable
+                //set the speeds of the balls
                 purpleBallObjects[i].setBallSpeed(keys.DEFAULT_BALL_SPEED);
-                purpleBallObjects[i].setMoveX(1);
-                purpleBallObjects[i].setMoveY(1);
                 purpleBallObjects[i].setSoundId(soundsAndEffects.soundClickedId);
 
             }
 
         }
+
+        //WAVE BALL
         if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
+            multipleBalls = ballHandler.getNewBallObjectArray(keys.WAVE_BALL_NUMBER,multipleBalls);
+            currentWaveBall = 0;
             for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
-                //reset wave balls for next time it appears
-                multipleBalls[i].setX(0);
-                multipleBalls[i].setMoveX(1); multipleBalls[i].setMoveY(1);
-                currentWaveBall = 0;
-                multipleBalls[i].setBallColor(waveBall[i]);
-                //every next ball moves faster
                 multipleBalls[i].setBallSpeed(keys.DEFAULT_BALL_SPEED+i);
                 multipleBalls[i].setSoundId(soundsAndEffects.soundClickedId);
             }

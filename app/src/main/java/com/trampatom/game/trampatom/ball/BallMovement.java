@@ -8,8 +8,8 @@ import java.util.Random;
 
 
 /**
- * This class should contain methods for handling all ball movement.
- * <p>It should handle ball bouncing on screen edges, as well as directions of movement.
+ * This class should contain methods for handling all mBall movement.
+ * <p>It should handle mBall bouncing on screen edges, as well as directions of movement.
  * Most methods will return an array containing an move array with new x, y coordinates</p>
  */
 public class BallMovement {
@@ -41,9 +41,9 @@ public class BallMovement {
 
 
     /**
-     * Method that uses a passed ball object to manipulate its coordinates and move it.
-     * @param ballObject the ball object we want to move
-     * @return the now moved ball
+     * Method that uses a passed mBall object to manipulate its coordinates and move it.
+     * @param ballObject the mBall object we want to move
+     * @return the now moved mBall
      */
     public Ball moveBall(Ball ballObject){
          x = ballObject.getX();
@@ -59,7 +59,7 @@ public class BallMovement {
         x += moveX*ballSpeed * Math.sin(angle);
         y += moveY*ballSpeed * Math.cos(angle);
 
-        //if the ball is off screen change its direction
+        //if the mBall is off screen change its direction
         if(x > width-ballWidth) {
             x = width-ballWidth;
             moveX = -moveX;
@@ -86,9 +86,9 @@ public class BallMovement {
         return ballObject;
     }
     /**
-     * Method that uses a passed ball object to manipulate its coordinates and move it.
-     * @param ballObject the ball object we want to move
-     * @return the now moved ball
+     * Method that uses a passed mBall object to manipulate its coordinates and move it.
+     * @param ballObject the mBall object we want to move
+     * @return the now moved mBall
      */
     public Ball moveGreenBall(Ball ballObject){
         //gets a random number and if its below 20 change the angle
@@ -109,7 +109,7 @@ public class BallMovement {
         x += moveX*ballSpeed * Math.sin(angle);
         y += moveY*ballSpeed * Math.cos(angle);
 
-        //if the ball is off screen change its direction
+        //if the mBall is off screen change its direction
         if(x > width-ballWidth) {
             x = width-ballWidth;
             moveX = -moveX;
@@ -138,22 +138,22 @@ public class BallMovement {
 
 
     /**
-     * Method used for moving a ball
-     * @param x x coordinate of the ball
-     * @param y y coordinate of the ball
-     * @param ballWidth width of the ball we are currently moving
-     * @param ballHeight height of the ball we are currently moving
-     * @param moveX used for ball bouncing, always 1 or -1
-     * @param moveY used for ball bouncing, always 1 or -1
-     * @param angle angle at witch the ball moves
-     * @param ballSpeed speed of the ball
+     * Method used for moving a mBall
+     * @param x x coordinate of the mBall
+     * @param y y coordinate of the mBall
+     * @param ballWidth width of the mBall we are currently moving
+     * @param ballHeight height of the mBall we are currently moving
+     * @param moveX used for mBall bouncing, always 1 or -1
+     * @param moveY used for mBall bouncing, always 1 or -1
+     * @param angle angle at witch the mBall moves
+     * @param ballSpeed speed of the mBall
      * @return returns an integer array that holds x,y, moveX, moveY values
      */
     public int[] moveBall(int x, int y ,int ballWidth, int ballHeight, int moveX, int moveY, double angle,int ballSpeed){
         x += moveX*ballSpeed * Math.sin(angle);
         y += moveY*ballSpeed * Math.cos(angle);
 
-        //if the ball is off screen change its direction
+        //if the mBall is off screen change its direction
         if(x > width-ballWidth) {
             x = width-ballWidth;
             moveX = -moveX;
@@ -185,14 +185,14 @@ public class BallMovement {
      * @param y current y coordinate
      * @param moveX direction of movement
      * @param moveY direcion of y movement
-     * @param ballSpeed ball speed
+     * @param ballSpeed mBall speed
      * @return x , y , moveX, moveY
      */
     public int[] moveWave(int x, int y ,int ballWidth, int moveX, int moveY,int ballSpeed){
         // wave moves just in x coordinate but y could be used later
         x += moveX*ballSpeed;
 
-        //if the ball is off screen change its direction
+        //if the mBall is off screen change its direction
         if(x > width-ballWidth) {
             x = width-ballWidth;
             moveX = -moveX;
@@ -211,9 +211,9 @@ public class BallMovement {
 
 
     /**
-     * Method that uses a passed ball object to manipulate its coordinates and move it.
-     * @param ballObject the ball object we want to move, waves will move horizontally
-     * @return the now moved ball
+     * Method that uses a passed mBall object to manipulate its coordinates and move it.
+     * @param ballObject the mBall object we want to move, waves will move horizontally
+     * @return the now moved mBall
      */
     public Ball moveWave(Ball ballObject){
 
@@ -228,7 +228,7 @@ public class BallMovement {
         // wave moves just in x coordinate but y could be used later
         x += moveX*ballSpeed;
 
-        //if the ball is off screen change its direction
+        //if the mBall is off screen change its direction
         if(x > width-ballWidth) {
             x = width-ballWidth;
             moveX = -moveX;
@@ -273,7 +273,7 @@ public class BallMovement {
         x += moveX*ballSpeed * Math.sin(angle);
         y += moveY*ballSpeed * Math.cos(angle);
 
-        //if the ball is off screen change its direction
+        //if the mBall is off screen change its direction
         if(x > width-ballWidth) {
             x = width-ballWidth;
             moveX = -moveX;

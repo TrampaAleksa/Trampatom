@@ -18,8 +18,8 @@ public class WaveBall {
 
 
     /**
-     * Method for doing something when a wave ball is clicked
-     * @param score the score worth of that ball + current score
+     * Method for doing something when a wave mBall is clicked
+     * @param score the score worth of that mBall + current score
      * @return array with new coordinates and score
      */
     public int[] clickedWaveBall(int score){
