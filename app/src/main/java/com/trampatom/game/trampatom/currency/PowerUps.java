@@ -1,5 +1,6 @@
 package com.trampatom.game.trampatom.currency;
 
+import android.graphics.Bitmap;
 import android.widget.ProgressBar;
 
 import com.trampatom.game.trampatom.Model.Ball;
@@ -83,8 +84,12 @@ public class PowerUps {
         //GREEN
                 case Keys.FLAG_GREEN_INCREASE_BALL_SIZE:
 
-                    ballObject.setBallWidth(ballObject.getBallWidth()+15);
-                    ballObject.setBallHeight(ballObject.getBallHeight()+15);
+                    ballObject.setBallWidth(ballObject.getBallWidth()+keys.POWER_UP_BALL_SIZE_INCREASE);
+                    ballObject.setBallHeight(ballObject.getBallHeight()+keys.POWER_UP_BALL_SIZE_INCREASE);
+                    ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(),
+                            ballObject.getBallWidth(),ballObject.getBallHeight(),false));
+                    ballObject.setActiveChangesSize(true);
+
                     break;
                 case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
                     ballObject.setBallSpeed(ballObject.getBallSpeed()-3);
@@ -203,8 +208,12 @@ public class PowerUps {
             //GREEN
             case Keys.FLAG_GREEN_INCREASE_BALL_SIZE:
 
-                ballObject.setBallWidth(ballObject.getBallWidth()+15);
-                ballObject.setBallHeight(ballObject.getBallHeight()+15);
+                ballObject.setBallWidth(ballObject.getBallWidth()-keys.POWER_UP_BALL_SIZE_INCREASE);
+                ballObject.setBallHeight(ballObject.getBallHeight()-keys.POWER_UP_BALL_SIZE_INCREASE);
+                    ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(),
+                            ballObject.getBallWidth(), ballObject.getBallHeight(), false));
+                    ballObject.setActiveChangesSize(false);
+
                 break;
             case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
                 ballObject.setBallSpeed(ballObject.getBallSpeed()-3);

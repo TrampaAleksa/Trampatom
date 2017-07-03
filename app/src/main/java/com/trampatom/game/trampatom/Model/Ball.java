@@ -21,6 +21,16 @@ public class Ball {
 
     boolean activeChangesSpeed;
 
+    public boolean isActiveChangesSize() {
+        return activeChangesSize;
+    }
+
+    public void setActiveChangesSize(boolean activeChangesSize) {
+        this.activeChangesSize = activeChangesSize;
+    }
+
+    boolean activeChangesSize;
+
     public boolean isActiveChangesSpeed() {
         return activeChangesSpeed;
     }

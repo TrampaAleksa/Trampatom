@@ -1,6 +1,8 @@
 package com.trampatom.game.trampatom.ball;
 
 
+import android.graphics.Bitmap;
+
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.activity.GameClassicActivity;
 import com.trampatom.game.trampatom.utils.Keys;
@@ -13,6 +15,8 @@ import com.trampatom.game.trampatom.utils.RandomBallVariables;
 public class BallHandler {
     //TODO Arrays for balls refactoring in far future
 
+    private Bitmap redBall,  blueBall,  greenBall,  yellowBall,  purpleBall; Bitmap[] waveBall;
+
     int i;
     int x,y,ballType;
     double angle;
@@ -23,8 +27,6 @@ public class BallHandler {
     Ball[] purpleBalls = {null,null,null};
     Ball[] waveBalls = {null,null,null,null,null,null,null};
 
-
-    public static final int GOLD_BALL_DRAW = 1;
     public static final int GOLD_BALL_DONT_DRAW = 0;
     private RandomBallVariables randomBallVariables;
     //TODO adequate java docs
@@ -54,11 +56,31 @@ public class BallHandler {
     }
 
     /**
-     * Method for getting the ball. It should be used to get a ball object witch is later manipulated with.
-     * Only one ball object should be used at a time unless in special cases
+     * Since we will manipulate with ball types during the game, we have to pass every bitmap so that we can set it inside the handler
+     * Theese bitmaps will later be used to change the balls sizes and colors depending on a power up or type of the ball
+     */
+    public void parseBallBitmaps(Bitmap redBall, Bitmap blueBall, Bitmap greenBall, Bitmap yellowBall, Bitmap purpleBall, Bitmap[] waveBall){
+        this.redBall = redBall;
+        this.blueBall = blueBall;
+        this.greenBall = greenBall;
+        this.yellowBall = yellowBall;
+        this.purpleBall = purpleBall;
+        this.waveBall = waveBall;
+    }
+
+    /**
+     * Method used to get the first ball object with all of its attributes for later manipulating. Use this method to initialize
+     * the first ball object in a game.
+     * <p>
+     *     Attributes contained in the first ball: default width/height, power up statuses to false(used to help with power up logic)
+     *     , initial coordinates and angle, and the move direction attributes(moveX, moveY) .
+     * </p>
      * @return a ball object to be used.
      */
     public Ball getFirstBallObject(){
+        //set the parameters used to check if a power up is active to false at the start
+        mBall.setActiveChangesSpeed(false);
+        mBall.setActiveChangesSize(false);
 
         // set the first mBall object
         mBall.setX(randomBallVariables.randomX());
@@ -86,6 +108,21 @@ public class BallHandler {
         //adequate speed for that ball type
         if(!ball.isActiveChangesSpeed()){
             ball = setBallSpeedByType(currentBallType, ball);
+        }
+
+        //if the size of the ball should be changed with a power up, increase its size by an amount
+        //if it shouldn't be increased, just get the ball in teh regular way
+        if(!ball.isActiveChangesSize()){
+            ball.setBallWidth(ballWidth);
+            ball.setBallHeight(ballHeight);
+            ball = setBallColorByType(currentBallType, ball);
+        }
+        else{
+            ball = setBallColorByType(currentBallType, ball);
+            ball.setBallWidth(ballWidth+keys.POWER_UP_BALL_SIZE_INCREASE);
+            ball.setBallHeight(ballHeight+keys.POWER_UP_BALL_SIZE_INCREASE);
+            ball.setBallColor(Bitmap.createScaledBitmap(ball.getBallColor(),
+                    ball.getBallWidth(),ball.getBallHeight(),false));
         }
 
         // set the first mBall object
@@ -255,5 +292,33 @@ public class BallHandler {
                 ball.setBallSpeed(keys.DEFAULT_BALL_SPEED);
         }
         return ball;
+    }
+
+    private Ball setBallColorByType(int currentBallType, Ball ball){
+
+        if(currentBallType == GameClassicActivity.BALL_RED){
+            ball.setBallColor(redBall);
+        }
+
+        // RED BALL
+        if(currentBallType == GameClassicActivity.BALL_BLUE){
+            ball.setBallColor(blueBall);
+
+        }
+
+        // YELLOW BALL
+        if(currentBallType == GameClassicActivity.BALL_YELLOW){
+            ball.setBallColor(yellowBall);
+            ball.setBallColor(Bitmap.createScaledBitmap(ball.getBallColor(),
+                    ballWidth + keys.YELLOW_BALL_INITIAL_SIZE, ballHeight+ keys.YELLOW_BALL_INITIAL_SIZE, true));
+        }
+
+        // GREEN BALL
+        if(currentBallType == GameClassicActivity.BALL_GREEN){
+            ball.setBallColor(greenBall);
+
+        }
+        return ball;
+
     }
 }

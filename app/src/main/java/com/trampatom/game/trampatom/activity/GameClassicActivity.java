@@ -249,6 +249,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //configure the color patter so that the balls take less space
             options.inPreferredConfig = Bitmap.Config.RGB_565;
         //loading the bitmaps
+        // TODO change so that the bitmaps are decoded inside Ball Handler, to prevent parsing every ball there
+
             waveBall[0] = BitmapFactory.decodeResource(getResources(), R.drawable.wave1, options);
             waveBall[1] = BitmapFactory.decodeResource(getResources(), R.drawable.wave2, options);
             waveBall[2] = BitmapFactory.decodeResource(getResources(), R.drawable.wave3, options);
@@ -336,12 +338,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
                                     onCooldown = false;
                                     coolDownTimer = 0;
-                                   // ballObject.setMoveX(1);
-                                    //ballObject.setMoveY(1);
-                                    //ballObject.setBallSpeed(keys.DEFAULT_BALL_SPEED);
-                                    ballObject = powerUps.resetBallState(ballObject, Keys.FLAG_RED_FREEZE_BALLS, currentBallType);
-                                    purpleBallObjects = ballHandler.resetBallArrayState(purpleBallObjects,keys.PURPLE_BALL_NUMBER);
-                                    multipleBalls = ballHandler.resetBallArrayState(multipleBalls,keys.WAVE_BALL_NUMBER);
+                                    //reset the ball objects after the power up expires
+                                    ballObject = powerUps.resetBallState(ballObject, Keys.FLAG_GREEN_INCREASE_BALL_SIZE, currentBallType);
+                                    //purpleBallObjects = ballHandler.resetBallArrayState(purpleBallObjects,keys.PURPLE_BALL_NUMBER);
+                                    //multipleBalls = ballHandler.resetBallArrayState(multipleBalls,keys.WAVE_BALL_NUMBER);
                                 }
                             }
                             if(!gameover) {
@@ -383,6 +383,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //get every ball object when starting a game
         ballHandler = new BallHandler(randomCoordinate, keys, ballWidth, ballHeight);
+        ballHandler.parseBallBitmaps(redBall, blueBall, greenBall , yellowBall , purpleBall, waveBall);
         ballObject = ballHandler.getFirstBallObject();
         purpleBallObjects = ballHandler.getFirstBallObjectArray(keys.PURPLE_BALL_NUMBER);
         multipleBalls = ballHandler.getFirstBallObjectArray(keys.WAVE_BALL_NUMBER);
@@ -592,13 +593,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 //if the power up isn't in coolDown, activate it
                 if(!onCooldown){
                     // DO SOMETHING
-                    ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, Keys.FLAG_RED_FREEZE_BALLS);
-                    //ballObject.setMoveX(0);
-                    //ballObject.setMoveY(0);
-                    purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, Keys.FLAG_RED_FREEZE_BALLS,keys.PURPLE_BALL_NUMBER);
-                    multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, Keys.FLAG_RED_FREEZE_BALLS,keys.WAVE_BALL_NUMBER);
-                   // ballObject.setBallSpeed(ballObject.getBallSpeed()+3);
-                    //put the power up on coolDown, coolDown managed in timedActions method
+                    ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, Keys.FLAG_GREEN_INCREASE_BALL_SIZE);
+                    //purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, Keys.FLAG_RED_FREEZE_BALLS,keys.PURPLE_BALL_NUMBER);
+                   // multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, Keys.FLAG_RED_FREEZE_BALLS,keys.WAVE_BALL_NUMBER);
+                    //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
                     onCooldown = true;
                 }
                 break;
@@ -719,7 +717,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 ballObject.setBallWidth(ballObject.getBallWidth() - keys.BALL_YELLOW_SIZE_DECREASE);
                 ballObject.setBallHeight(ballObject.getBallHeight() - keys.BALL_YELLOW_SIZE_DECREASE);
                 ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(), ballObject.getBallWidth(), ballObject.getBallHeight(), true));
-                if(!ballObject.isActiveChangesSpeed())
+                if(ballObject.isActiveChangesSpeed())
                 ballObject.setBallSpeed(ballObject.getBallSpeed() + keys.BALL_YELLOW_SPEED_INCREASE);
 
             }
@@ -866,22 +864,23 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void setBallObjectByType(){
         // BLUE BALL
         if(currentBallType == BALL_RED){
-            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setBallColor(redBall);
+            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
 
         // RED BALL
         if(currentBallType == BALL_BLUE){
-            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setBallColor(blueBall);
+
+            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
 
         // YELLOW BALL
         if(currentBallType == BALL_YELLOW){
-            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setBallColor(yellowBall);
+            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(),
                     ballWidth + keys.YELLOW_BALL_INITIAL_SIZE, ballHeight+ keys.YELLOW_BALL_INITIAL_SIZE, true));
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
@@ -889,8 +888,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         // GREEN BALL
         if(currentBallType == BALL_GREEN){
-            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setBallColor(greenBall);
+            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
 

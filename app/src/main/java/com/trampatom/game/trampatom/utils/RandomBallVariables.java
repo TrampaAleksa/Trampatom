@@ -61,7 +61,7 @@ public class RandomBallVariables {
      */
     public int getRandomBallType(){
         int ballType;
-        ballType= random.nextInt(21);
+        ballType= random.nextInt(15);
         return ballType;
     }
 

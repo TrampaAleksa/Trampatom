@@ -126,4 +126,7 @@ public class Keys {
         public static final int FLAG_YELLOW_UNKNOWN2 = 14;
         public static final int FLAG_YELLOW_UNKNOWN3 = 15;
         public static final int FLAG_YELLOW_UNKNOWN4 = 16;
+
+
+    public int POWER_UP_BALL_SIZE_INCREASE = 30;
 }
