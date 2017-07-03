@@ -19,6 +19,16 @@ public class Ball {
     int ballHeight, ballWidth;
     int ballSpeed;
 
+    boolean activeChangesSpeed;
+
+    public boolean isActiveChangesSpeed() {
+        return activeChangesSpeed;
+    }
+
+    public void setActiveChangesSpeed(boolean activeChangesSpeed) {
+        this.activeChangesSpeed = activeChangesSpeed;
+    }
+
     public int getSoundId() {
         return soundId;
     }

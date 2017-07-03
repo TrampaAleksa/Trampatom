@@ -145,7 +145,7 @@ public class BallMovement {
      * @param ballHeight height of the mBall we are currently moving
      * @param moveX used for mBall bouncing, always 1 or -1
      * @param moveY used for mBall bouncing, always 1 or -1
-     * @param angle angle at witch the mBall moves
+     * @param angle angle at witch the mBall moves in radians
      * @param ballSpeed speed of the mBall
      * @return returns an integer array that holds x,y, moveX, moveY values
      */

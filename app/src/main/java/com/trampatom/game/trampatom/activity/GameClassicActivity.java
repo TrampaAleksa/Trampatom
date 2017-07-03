@@ -29,6 +29,7 @@ import com.trampatom.game.trampatom.canvas.Background;
 import com.trampatom.game.trampatom.canvas.CanvasGameClassic;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.currency.AtomPool;
+import com.trampatom.game.trampatom.currency.PowerUps;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
@@ -71,6 +72,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // ------------------- Ball type variables ------------------------------------------ \\
 
+        int currentBallType;
         //used for yellow ball;
                 int timesClicked;
                 int yellowBallSpeed;
@@ -102,6 +104,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         BallHandler ballHandler;
         SoundsAndEffects soundsAndEffects;
         SoundPool soundPool;
+        PowerUps powerUps;
+        ProgressBar energyProgress;
 
 
     // ------------------- Arrays ------------------------------------------------------- \\
@@ -116,8 +120,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // ------------------- Game Variables ----------------------------------------------- \\
 
-        //Progress bar used to display remaining energy; If we are without energy we lose the game
-            ProgressBar energyProgress;
+
         //width and height of the canvas
             int width, height;
         //every ball should have the same width and height, but we can change this if needed
@@ -140,11 +143,13 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             int[] poolArray = {0,0,0,0,0};
         //For activating the power ups. One button has a cooldown the other one is a "one time use only"
             Button bPowerUp1, bPowerUp2;
+            int selectedPowerUp1, selectedPowerUp2;
         //For managing weather or not we can activate any of the power ups(in cooldown or used)
             boolean usedConsumable = false;
             boolean onCooldown = false;
             // the duration of every coolDown, timer used to help determine when the coolDown expired
             int coolDown, coolDownTimer=0;
+
 
 
     // ------------------- Surface View ------------------------------------------------- \\
@@ -197,7 +202,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
             gameTimeAndScore = new GameTimeAndScore(energyProgress);
             currentEnergyLevel = keys.STARTING_ENERGY;
-            //buttons
+
+        //buttons
             bPowerUp1 = (Button) findViewById(R.id.bPowerUp1);
             bPowerUp2 = (Button) findViewById(R.id.bPowerUp2);
             bPowerUp1.setOnClickListener(this);
@@ -210,6 +216,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             height = MainActivity.getHeight();
         //set and resize all the bitmaps
             initiateBitmaps();
+
+        powerUps = new PowerUps(energyProgress,keys, ballWidth, ballHeight);
 
         //HIGH SCORE
             highScore = new HighScore(this);
@@ -225,16 +233,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //the first ball is always blue;
             currentBall= BALL_BLUE;
             initialDraw=true;
-        //initiate different ball objects here
-          /*  for(i = 0; i< keys.WAVE_BALL_NUMBER; i++){
-                multipleBalls[i] = new Ball();
-            }
-            for(i=0; i<keys.PURPLE_BALL_NUMBER; i++){
-                purpleBallObjects[i] = new Ball();
-                purpleBallObjects[i].setBallColor(purpleBall);
-                purpleBallObjects[i].setBallWidth(ballWidth);
-                purpleBallObjects[i].setBallHeight(ballHeight);
-            }*/
     }
 
     /**
@@ -335,8 +333,15 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                                     coolDownTimer += 100;
                                 }
                                 else{
+
                                     onCooldown = false;
                                     coolDownTimer = 0;
+                                   // ballObject.setMoveX(1);
+                                    //ballObject.setMoveY(1);
+                                    //ballObject.setBallSpeed(keys.DEFAULT_BALL_SPEED);
+                                    ballObject = powerUps.resetBallState(ballObject, Keys.FLAG_RED_FREEZE_BALLS, currentBallType);
+                                    purpleBallObjects = ballHandler.resetBallArrayState(purpleBallObjects,keys.PURPLE_BALL_NUMBER);
+                                    multipleBalls = ballHandler.resetBallArrayState(multipleBalls,keys.WAVE_BALL_NUMBER);
                                 }
                             }
                             if(!gameover) {
@@ -553,24 +558,24 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //get coordinates where we touched
             clickedX = (int) event.getX();
             clickedY = (int) event.getY();
-
+            currentBallType = setCurrentBall(ballType);
             //if we click on the ball do something depending on the ball type
-                if(ballType<=keys.TYPE_BALL_RED_CHANCE){
+                if(currentBallType == BALL_RED){
                     redBall();
                 }
-                if(ballType>keys.TYPE_BALL_RED_CHANCE && ballType<=keys.TYPE_BALL_BLUE_CHANCE){
+                if(currentBallType == BALL_BLUE){
                     blueBall();
                 }
-                if(ballType>keys.TYPE_BALL_BLUE_CHANCE && ballType<=keys.TYPE_BALL_YELLOW_CHANCE){
+                if(currentBallType == BALL_YELLOW){
                     yellowBall();
                 }
-                if(ballType>keys.TYPE_BALL_YELLOW_CHANCE && ballType<=keys.TYPE_BALL_GREEN_CHANCE){
+                if(currentBallType == BALL_GREEN){
                     greenBall();
                 }
-                if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
+                if(currentBallType == BALL_PURPLE){
                     purpleBall();
                 }
-                if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
+                if(currentBallType == BALL_WAVE){
                     waveBall();
                 }
             setCurrentBall(ballType);
@@ -587,7 +592,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 //if the power up isn't in coolDown, activate it
                 if(!onCooldown){
                     // DO SOMETHING
-                    ballObject.setBallSpeed(ballObject.getBallSpeed()+3);
+                    ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, Keys.FLAG_RED_FREEZE_BALLS);
+                    //ballObject.setMoveX(0);
+                    //ballObject.setMoveY(0);
+                    purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, Keys.FLAG_RED_FREEZE_BALLS,keys.PURPLE_BALL_NUMBER);
+                    multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, Keys.FLAG_RED_FREEZE_BALLS,keys.WAVE_BALL_NUMBER);
+                   // ballObject.setBallSpeed(ballObject.getBallSpeed()+3);
                     //put the power up on coolDown, coolDown managed in timedActions method
                     onCooldown = true;
                 }
@@ -596,7 +606,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
                 if(!usedConsumable) {
                     //DO SOMETHING
-                    ballObject.setBallSpeed(ballObject.getBallSpeed()-10);
+
                     usedConsumable = true;
                 }
                 break;
@@ -610,7 +620,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * used to set the ball type to be drawn
      * <p>@param ballType used to determine what color to draw.</p>
      */
-    private void setCurrentBall(int ballType){
+    private int setCurrentBall(int ballType){
         //if we click on the ball do something depending on the ball type
         if(ballType<=keys.TYPE_BALL_RED_CHANCE){
             currentBall=BALL_RED;
@@ -630,6 +640,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
             currentBall=BALL_WAVE;
         }
+        return currentBall;
     }
 
 
@@ -708,6 +719,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 ballObject.setBallWidth(ballObject.getBallWidth() - keys.BALL_YELLOW_SIZE_DECREASE);
                 ballObject.setBallHeight(ballObject.getBallHeight() - keys.BALL_YELLOW_SIZE_DECREASE);
                 ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(), ballObject.getBallWidth(), ballObject.getBallHeight(), true));
+                if(!ballObject.isActiveChangesSpeed())
                 ballObject.setBallSpeed(ballObject.getBallSpeed() + keys.BALL_YELLOW_SPEED_INCREASE);
 
             }
@@ -722,8 +734,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 //reset the yellow ball to its first state for later use
                 timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
                 ballWidth=ballHeight= blueBall.getWidth();
-                yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
-                ballObject.setBallSpeed(keys.BALL_YELLOW_INITIAL_SPEED);
                 changedSize=false;
             }
         }
@@ -845,50 +855,47 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //get a new ball with new coordinates and angle of movement
 
         ballType = ballHandler.getNewBallType();
-        setBallObjectByType(ballType);
+        currentBallType = setCurrentBall(ballType);
+        setBallObjectByType();
     }
 
     /**
      * helper method used to load the right bitmap into the ball based on its type.
      * <p>IMPORTANT: every ball NEEDS to have its speed and color specified or it will not move or be drawn</p>
-     * @param ballType the value that determines what type the ball is
      */
-    private void setBallObjectByType(int ballType){
-         ballObject.setBallSpeed(keys.DEFAULT_BALL_SPEED);
+    private void setBallObjectByType(){
         // BLUE BALL
-        if(ballType<=keys.TYPE_BALL_RED_CHANCE){
-            ballObject = ballHandler.getNewBallObject(ballObject);
+        if(currentBallType == BALL_RED){
+            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setBallColor(redBall);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
 
         // RED BALL
-        if(ballType>keys.TYPE_BALL_RED_CHANCE && ballType<=keys.TYPE_BALL_BLUE_CHANCE){
-            ballObject = ballHandler.getNewBallObject(ballObject);
+        if(currentBallType == BALL_BLUE){
+            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setBallColor(blueBall);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
 
         // YELLOW BALL
-        if(ballType>keys.TYPE_BALL_BLUE_CHANCE && ballType<=keys.TYPE_BALL_YELLOW_CHANCE){
-            ballObject = ballHandler.getNewBallObject(ballObject);
+        if(currentBallType == BALL_YELLOW){
+            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setBallColor(yellowBall);
             ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(),
                     ballWidth + keys.YELLOW_BALL_INITIAL_SIZE, ballHeight+ keys.YELLOW_BALL_INITIAL_SIZE, true));
-            ballObject.setBallSpeed(keys.BALL_YELLOW_INITIAL_SPEED);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
 
         // GREEN BALL
-        if(ballType>keys.TYPE_BALL_YELLOW_CHANCE && ballType<=keys.TYPE_BALL_GREEN_CHANCE){
-            ballObject = ballHandler.getNewBallObject(ballObject);
+        if(currentBallType == BALL_GREEN){
+            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setBallColor(greenBall);
-            ballObject.setBallSpeed(keys.GREEN_BALL_SPEED);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
 
         // PURPLE BALL
-        if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
+        if(currentBallType == BALL_PURPLE){
             purpleBallObjects = ballHandler.getNewBallObjectArray(keys.PURPLE_BALL_NUMBER,purpleBallObjects);
 
             for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
@@ -901,7 +908,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         }
 
         //WAVE BALL
-        if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
+        if(currentBallType == BALL_WAVE){
             multipleBalls = ballHandler.getNewBallObjectArray(keys.WAVE_BALL_NUMBER,multipleBalls);
             currentWaveBall = 0;
             for(i=0; i<keys.WAVE_BALL_NUMBER; i++){

@@ -44,20 +44,9 @@ public class Keys {
 
             // ------------------------------- Purple balls --------------------------------- \\
 
-                //angles
-                public int PURPLE_BALL_ANGLE_ONE = 0;
-                public int PURPLE_BALL_ANGLE_TWO = 1;
-                public int PURPLE_BALL_ANGLE_THREE = 2;
-                //coordinates
-                public int PURPLE_BALL_XY1 = 0;
-                public int PURPLE_BALL_XY2 = 1;
-                public int PURPLE_BALL_XY3 = 2;
+
                 //number of purple ball's
                 public int PURPLE_BALL_NUMBER = 3;
-                //movement
-                public int PURPLE_BALL_MOVE_ONE = 0;
-                public int PURPLE_BALL_MOVE_TWO = 1;
-                public int PURPLE_BALL_MOVE_THREE = 2;
                 //drawing
                 public int BALL_PURPLE_NO_CLICK = 1;
                 public int BALL_PURPLE_ONE_CLICK = 2;
@@ -116,24 +105,25 @@ public class Keys {
 
     // ----------------------------------- Flags -------------------------------------------- \\
 
+    //flags are used to determine what power up we have selected inside the game
         //red
-        public int FLAG_RED_FREEZE_BALLS = 1;
-        public int FLAG_RED_BIG_ENERGY_BONUS = 2;
-        public int FLAG_RED_LIMITING_SQUARE = 3;
-        public int FLAG_RED_UNKNOWN2 = 4;
+        public static final int FLAG_RED_FREEZE_BALLS = 1;
+        public static final int FLAG_RED_BIG_ENERGY_BONUS = 2;
+        public static final int FLAG_RED_LIMITING_SQUARE = 3;
+        public static final int FLAG_RED_UNKNOWN2 = 4;
         //green
-        public int FLAG_GREEN_SLOW_DOWN_BALLS = 5;
-        public int FLAG_GREEN_SMALL_ENERGY_BONUS = 6;
-        public int FLAG_GREEN_INCREASE_BALL_SIZE = 7;
-        public int FLAG_GREEN_UNKNOWN2 = 8;
+        public static final int FLAG_GREEN_SLOW_DOWN_BALLS = 5;
+        public static final int FLAG_GREEN_SMALL_ENERGY_BONUS = 6;
+        public static final int FLAG_GREEN_INCREASE_BALL_SIZE = 7;
+        public static final int FLAG_GREEN_UNKNOWN2 = 8;
         //purple
-        public int FLAG_PURPLE_BIGGER_BALLS = 9;
-        public int FLAG_PURPLE_UNKNOWN2 = 10;
-        public int FLAG_PURPLE_UNKNOWN3 = 11;
-        public int FLAG_PURPLE_UNKNOWN4 = 12;
+        public static final int FLAG_PURPLE_BIGGER_BALLS = 9;
+        public static final int FLAG_PURPLE_UNKNOWN2 = 10;
+        public static final int FLAG_PURPLE_UNKNOWN3 = 11;
+        public static final int FLAG_PURPLE_UNKNOWN4 = 12;
         //yellow
-        public int FLAG_YELLOW_UNKNOWN = 13;
-        public int FLAG_YELLOW_UNKNOWN2 = 14;
-        public int FLAG_YELLOW_UNKNOWN3 = 15;
-        public int FLAG_YELLOW_UNKNOWN4 = 16;
+        public static final int FLAG_YELLOW_UNKNOWN = 13;
+        public static final int FLAG_YELLOW_UNKNOWN2 = 14;
+        public static final int FLAG_YELLOW_UNKNOWN3 = 15;
+        public static final int FLAG_YELLOW_UNKNOWN4 = 16;
 }

@@ -14,7 +14,6 @@ public class GameTimeAndScore {
     private static final int MAX_BALL_CLICK_TIME = 5000;
     //TODO remove unneeded methods
     private static final int BALL_GOLD_DURATION = 3;
-    private String time,scoreS;
     private ProgressBar energyProgress;
 
     /**
@@ -28,7 +27,9 @@ public class GameTimeAndScore {
 
     /**
      * Method that should be used to update the state of the energy bar to the current level of energy.
-     * <p>API levels of 24+ support animation when changing the energy bar</p>
+     * <p>
+     *     API levels of 24+ support animation when changing the energy bar
+     * </p>
      * @param energy sets the level of energy on the progress bar
      */
     public void updateEnergyBar(int energy){

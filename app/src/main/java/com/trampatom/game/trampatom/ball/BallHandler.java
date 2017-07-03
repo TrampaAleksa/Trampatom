@@ -11,11 +11,12 @@ import com.trampatom.game.trampatom.utils.RandomBallVariables;
  * Contains methods for getting a new mBall, and should contain mBall action methods
  */
 public class BallHandler {
+    //TODO Arrays for balls refactoring in far future
 
     int i;
     int x,y,ballType;
     double angle;
-    int ballSpeed;
+    int ballSpeed, yellowBallSpeed, greenBallSpeed;
     int ballWidth, ballHeight;
     Keys keys;
     Ball mBall;
@@ -39,8 +40,11 @@ public class BallHandler {
         this.ballHeight = ballHeight;
         mBall = new Ball();
         ballSpeed = keys.DEFAULT_BALL_SPEED;
+        yellowBallSpeed = keys.BALL_YELLOW_INITIAL_SPEED;
+        greenBallSpeed = keys.GREEN_BALL_SPEED;
 
-        //initialize the ball arrays here to be used in methods
+        //initialize the ball arrays here , because we need to create the ball
+        // objects initially for the first create
         for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
             purpleBalls[i] = new Ball();
         }
@@ -56,17 +60,10 @@ public class BallHandler {
      */
     public Ball getFirstBallObject(){
 
-        //the variables to fill the new mBall with
-
-        x= randomBallVariables.randomX();
-        y = randomBallVariables.randomY();
-        angle = randomBallVariables.randomAngle();
-
         // set the first mBall object
-        mBall.setX(x);
-        mBall.setY(y);
-        mBall.setAngle(angle);
-        mBall.setBallSpeed(ballSpeed);
+        mBall.setX(randomBallVariables.randomX());
+        mBall.setY(randomBallVariables.randomY());
+        mBall.setAngle(randomBallVariables.randomAngle());
         mBall.setBallWidth(ballWidth);
         mBall.setBallHeight(ballHeight);
         mBall.setMoveX(1);  mBall.setMoveY(1);
@@ -75,20 +72,26 @@ public class BallHandler {
 
     /**
      * Method that should be called whenever we want to get a new ball.
-     * <p>This method should only change the ball's coordinates and angle, since some attributes
-     * should remain with the new ball if we used a specific power up.</p>
+     * <p>
+     *     This method should only change the ball's coordinates and angle, since some attributes
+     *     should remain with the new ball if we used a specific power up.
+     * </p>
+     * @param currentBallType needs to be passed so we can set the right speed if we are setting the speed
+
      * @return a ball object with new coordinates and angle
      */
-    public Ball getNewBallObject(Ball ball){
+    public Ball getNewBallObject(Ball ball, int currentBallType){
 
-        x= randomBallVariables.randomX();
-        y = randomBallVariables.randomY();
-        angle = randomBallVariables.randomAngle();
+        // If the speed of the new ball should be changed, check what type the ball is and set the
+        //adequate speed for that ball type
+        if(!ball.isActiveChangesSpeed()){
+            ball = setBallSpeedByType(currentBallType, ball);
+        }
 
         // set the first mBall object
-        ball.setX(x);
-        ball.setY(y);
-        ball.setAngle(angle);
+        ball.setX(randomBallVariables.randomX());
+        ball.setY(randomBallVariables.randomY());
+        ball.setAngle(randomBallVariables.randomAngle());
         ball.setMoveX(1);
         ball.setMoveY(1);
 
@@ -168,10 +171,10 @@ public class BallHandler {
             y = randomBallVariables.randomY();
             balls[0].setX(x);
             balls[0].setY(y);
-            purpleBalls[1].setX(-ballWidth);
-            purpleBalls[1].setY(-ballHeight);
-            purpleBalls[2].setX(-ballWidth);
-            purpleBalls[2].setY(-ballHeight);
+            balls[1].setX(-ballWidth);
+            balls[1].setY(-ballHeight);
+            balls[2].setX(-ballWidth);
+            balls[2].setY(-ballHeight);
 
             angle = randomBallVariables.randomAngle();
             balls[0].setAngle(angle);
@@ -207,4 +210,50 @@ public class BallHandler {
         return randomBallVariables.getRandomBallType();
     }
 
+
+
+    /**
+     * Method used to reset every ball object into its default state, aka removing power up's
+     * @param balls the object that needs to be reset
+     * @return a ball object that has the same angle and coordinates but its attributes are reset to its initial state;
+     */
+    public Ball[] resetBallArrayState(Ball[] balls, int arraySize){
+
+
+        if(arraySize == keys.PURPLE_BALL_NUMBER){
+            for(i=0; i<arraySize; i++){
+                balls[i].setBallWidth(ballWidth);
+                balls[i].setBallHeight(ballHeight);
+                balls[i].setBallSpeed(ballSpeed);
+
+            }
+            return balls;
+        }
+        else{
+            for(i=0; i<arraySize; i++){
+                balls[i].setBallWidth(ballWidth);
+                balls[i].setBallHeight(ballHeight);
+                balls[i].setBallSpeed(ballSpeed);
+            }
+            return balls;
+        }
+
+    }
+
+    private Ball setBallSpeedByType(int currentBallType, Ball ball){
+
+        switch(currentBallType){
+
+            case GameClassicActivity.BALL_GREEN:
+                ball.setBallSpeed(keys.GREEN_BALL_SPEED);
+                break;
+            case GameClassicActivity.BALL_YELLOW:
+                ball.setBallSpeed(keys.BALL_YELLOW_INITIAL_SPEED);
+                break;
+            //most balls have this default speed, the other two cases are for green and yellow ball's
+            default:
+                ball.setBallSpeed(keys.DEFAULT_BALL_SPEED);
+        }
+        return ball;
+    }
 }
