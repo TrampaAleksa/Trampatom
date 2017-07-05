@@ -7,4 +7,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="green"/>
+
+    <Button
+        android:id="@+id/bBiggerSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Size+"
+        />
+    <Button
+        android:layout_below="@+id/bBiggerSize"
+        android:id="@+id/bSmallEnergyBoost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Energy+"
+        />
 </LinearLayout>

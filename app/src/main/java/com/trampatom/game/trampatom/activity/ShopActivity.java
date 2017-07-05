@@ -1,12 +1,14 @@
 package com.trampatom.game.trampatom.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.trampatom.game.trampatom.R;
@@ -26,13 +28,14 @@ import com.trampatom.game.trampatom.currency.fragments.FragmentYellow;
  * <p>Passive power-ups: Yellow atom -> energy related ; Purple atom -> Ball related</p>
  */
 
-public class ShopActivity extends AppCompatActivity{
+public class ShopActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int CATEGORY_NUMBER = 4;
+    public int currentFragmentPossition;
 
     TextView tvNumberAtomsBlue, tvNumberAtomsRed, tvNumberAtomsGreen, tvNumberAtomsYellow, tvNumberAtomsPurple;
     //view pager used to cycle between categories in the shop
-    //ViewPager adapterViewPager;
+    MyPagerAdapter adapterViewPager;
 
     //classes used to run the shop
     AtomPool atomPool;
@@ -49,7 +52,7 @@ public class ShopActivity extends AppCompatActivity{
 
     private void init() {
         //initialize views
-        /*tvNumberAtomsBlue = (TextView) findViewById(R.id.tvAtomNumberBlue);
+        tvNumberAtomsBlue = (TextView) findViewById(R.id.tvAtomNumberBlue);
         tvNumberAtomsRed = (TextView) findViewById(R.id.tvAtomNumberRed);
         tvNumberAtomsGreen = (TextView) findViewById(R.id.tvAtomNumberGreen);
         tvNumberAtomsYellow = (TextView) findViewById(R.id.tvAtomNumberYellow);
@@ -64,11 +67,27 @@ public class ShopActivity extends AppCompatActivity{
                 tvNumberAtomsGreen,
                 tvNumberAtomsYellow,
                 tvNumberAtomsPurple);
+        //set the currency levels
+        shopHandler.setAtomPoolValues();
 
-        shopHandler.setAtomPoolValues();*/
+        //set up the view pager and the tabs for changing categories
         ViewPager vpPager = (ViewPager) findViewById(R.id.vpCategory);
-        MyPagerAdapter adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabCategories);
+        tabLayout.setupWithViewPager(vpPager);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+
+            case R.id.bTrade:
+
+                break;
+
+        }
     }
 
 
@@ -91,6 +110,7 @@ public class ShopActivity extends AppCompatActivity{
         // Returns the fragment to display for that page
         @Override
         public Fragment getItem(int position) {
+
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
                     return FragmentRed.newInstance(0);

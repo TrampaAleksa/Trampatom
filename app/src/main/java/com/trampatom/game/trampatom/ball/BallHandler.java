@@ -196,13 +196,15 @@ public class BallHandler {
      * might have been affected by some power ups remain unchanged and should be changed elsewhere
      * @param arraySize determines if its a purple ball or a wave ball
      * @param balls the array of balls to be changed
+     * @param currentBallType used to determine power up behavior and setting of ball type
      * @return
      */
-    public Ball[] getNewBallObjectArray(int arraySize, Ball[] balls) {
+    public Ball[] getNewBallObjectArray(int arraySize, Ball[] balls, int currentBallType) {
 
 
         //if its a purple ball array
         if (arraySize == keys.PURPLE_BALL_NUMBER) {
+
             //if its purple we only need to set the first ball, and set the other two to not be displayed
             x= randomBallVariables.randomX();
             y = randomBallVariables.randomY();
@@ -218,6 +220,28 @@ public class BallHandler {
             for(i=0; i< arraySize; i++) {
                 balls[i].setMoveX(1);
                 balls[i].setMoveY(1);
+
+
+                // If the speed of the new ball should be changed, check what type the ball is and set the
+                //adequate speed for that ball type
+                if(!balls[i].isActiveChangesSpeed()){
+                    balls[i] = setBallSpeedByType(currentBallType, balls[i]);
+                }
+
+                //if the size of the ball should be changed with a power up, increase its size by an amount
+                //if it shouldn't be increased, just get the ball in the regular way
+                if(!balls[i].isActiveChangesSize()){
+                    balls[i].setBallWidth(ballWidth);
+                    balls[i].setBallHeight(ballHeight);
+                    balls = setBallArrayColorByType(currentBallType, balls);
+                }
+                else{
+                    balls[i] = setBallColorByType(currentBallType, balls[i]);
+                    balls[i].setBallWidth(ballWidth+keys.POWER_UP_BALL_SIZE_INCREASE);
+                    balls[i].setBallHeight(ballHeight+keys.POWER_UP_BALL_SIZE_INCREASE);
+                    balls[i].setBallColor(Bitmap.createScaledBitmap(balls[i].getBallColor(),
+                            balls[i].getBallWidth(),balls[i].getBallHeight(),false));
+                }
             }
         }
         else if(arraySize == keys.WAVE_BALL_NUMBER){
@@ -233,6 +257,26 @@ public class BallHandler {
 
                 balls[i].setMoveX(1);
                 balls[i].setMoveY(1);
+                // If the speed of the new ball should be changed, check what type the ball is and set the
+                //adequate speed for that ball type
+                if(!balls[i].isActiveChangesSpeed()){
+                    balls[i] = setBallSpeedByType(currentBallType, balls[i]);
+                }
+
+                //if the size of the ball should be changed with a power up, increase its size by an amount
+                //if it shouldn't be increased, just get the ball in teh regular way
+                if(!balls[i].isActiveChangesSize()){
+                    balls[i].setBallWidth(ballWidth);
+                    balls[i].setBallHeight(ballHeight);
+                    balls = setBallArrayColorByType(currentBallType, balls);
+                }
+                else{
+                    balls[i] = setBallColorByType(currentBallType, balls[i]);
+                    balls[i].setBallWidth(ballWidth+keys.POWER_UP_BALL_SIZE_INCREASE);
+                    balls[i].setBallHeight(ballHeight+keys.POWER_UP_BALL_SIZE_INCREASE);
+                    balls[i].setBallColor(Bitmap.createScaledBitmap(balls[i].getBallColor(),
+                            balls[i].getBallWidth(),balls[i].getBallHeight(),false));
+                }
 
             }
         }
@@ -254,29 +298,70 @@ public class BallHandler {
      * @param balls the object that needs to be reset
      * @return a ball object that has the same angle and coordinates but its attributes are reset to its initial state;
      */
-    public Ball[] resetBallArrayState(Ball[] balls, int arraySize){
+    public Ball[] resetBallArrayState(Ball[] balls, int arraySize, int currentBallType){
 
 
         if(arraySize == keys.PURPLE_BALL_NUMBER){
             for(i=0; i<arraySize; i++){
-                balls[i].setBallWidth(ballWidth);
-                balls[i].setBallHeight(ballHeight);
-                balls[i].setBallSpeed(ballSpeed);
 
+                // If the speed of the new ball should be changed, check what type the ball is and set the
+                //adequate speed for that ball type
+                if(!balls[i].isActiveChangesSpeed()){
+                    balls[i] = setBallSpeedByType(currentBallType, balls[i]);
+                }
+
+                //if the size of the ball should be changed with a power up, increase its size by an amount
+                //if it shouldn't be increased, just get the ball in teh regular way
+                if(!balls[i].isActiveChangesSize()){
+                    balls[i].setBallWidth(ballWidth);
+                    balls[i].setBallHeight(ballHeight);
+                    balls[i] = setBallColorByType(currentBallType, balls[i]);
+                }
+                else{
+                    balls[i] = setBallColorByType(currentBallType, balls[i]);
+                    balls[i].setBallWidth(ballWidth+keys.POWER_UP_BALL_SIZE_INCREASE);
+                    balls[i].setBallHeight(ballHeight+keys.POWER_UP_BALL_SIZE_INCREASE);
+                    balls[i].setBallColor(Bitmap.createScaledBitmap(balls[i].getBallColor(),
+                            balls[i].getBallWidth(),balls[i].getBallHeight(),false));
+                }
             }
             return balls;
         }
         else{
             for(i=0; i<arraySize; i++){
-                balls[i].setBallWidth(ballWidth);
-                balls[i].setBallHeight(ballHeight);
-                balls[i].setBallSpeed(ballSpeed);
+
+                // If the speed of the new ball should be changed, check what type the ball is and set the
+                //adequate speed for that ball type
+                if(!balls[i].isActiveChangesSpeed()){
+                    balls[i] = setBallSpeedByType(currentBallType, balls[i]);
+                }
+
+                //if the size of the ball should be changed with a power up, increase its size by an amount
+                //if it shouldn't be increased, just get the ball in teh regular way
+                if(!balls[i].isActiveChangesSize()){
+                    balls[i].setBallWidth(ballWidth);
+                    balls[i].setBallHeight(ballHeight);
+                    balls[i] = setBallColorByType(currentBallType, balls[i]);
+                }
+                else{
+                    balls[i] = setBallColorByType(currentBallType, balls[i]);
+                    balls[i].setBallWidth(ballWidth+keys.POWER_UP_BALL_SIZE_INCREASE);
+                    balls[i].setBallHeight(ballHeight+keys.POWER_UP_BALL_SIZE_INCREASE);
+                    balls[i].setBallColor(Bitmap.createScaledBitmap(balls[i].getBallColor(),
+                            balls[i].getBallWidth(),balls[i].getBallHeight(),false));
+                }
             }
             return balls;
         }
 
     }
 
+    /**
+     * Method used to set different speeds for yellow, green and other balls
+     * @param currentBallType determines what seed to set
+     * @param ball the ball to set the speed to
+     * @return a ball object with the appropriate speed
+     */
     private Ball setBallSpeedByType(int currentBallType, Ball ball){
 
         switch(currentBallType){
@@ -320,5 +405,26 @@ public class BallHandler {
         }
         return ball;
 
+    }
+
+    private Ball[] setBallArrayColorByType (int currentBallType, Ball[] balls){
+
+
+        // PURPLE BALL
+        if(currentBallType == GameClassicActivity.BALL_PURPLE){
+            for(i=0; i<keys.PURPLE_BALL_NUMBER; i++) {
+                balls[i].setBallColor(purpleBall);
+            }
+        }
+
+        // WAVE BALL
+        if(currentBallType == GameClassicActivity.BALL_WAVE){
+            for(i=0; i<keys.WAVE_BALL_NUMBER; i++) {
+                balls[i].setBallColor(waveBall[i]);
+            }
+        }
+
+
+        return balls;
     }
 }

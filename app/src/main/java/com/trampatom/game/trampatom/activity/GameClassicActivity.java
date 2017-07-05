@@ -339,9 +339,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                                     onCooldown = false;
                                     coolDownTimer = 0;
                                     //reset the ball objects after the power up expires
-                                    ballObject = powerUps.resetBallState(ballObject, Keys.FLAG_GREEN_INCREASE_BALL_SIZE, currentBallType);
-                                    //purpleBallObjects = ballHandler.resetBallArrayState(purpleBallObjects,keys.PURPLE_BALL_NUMBER);
-                                    //multipleBalls = ballHandler.resetBallArrayState(multipleBalls,keys.WAVE_BALL_NUMBER);
+                                    ballObject = powerUps.resetBallState(ballObject, Keys.FLAG_RED_FREEZE_BALLS, currentBallType);
+                                    purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
+                                            Keys.FLAG_RED_FREEZE_BALLS,keys.PURPLE_BALL_NUMBER, currentBallType);
+                                    multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
+                                            Keys.FLAG_RED_FREEZE_BALLS, keys.WAVE_BALL_NUMBER, currentBallType);
                                 }
                             }
                             if(!gameover) {
@@ -349,6 +351,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                                     soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
                                     lowEnergy = true;
                                 }
+                                //in case we exceed the maximum energy level, set it to the maximum
+                                if(currentEnergyLevel >= GameTimeAndScore.MAX_BALL_CLICK_TIME)
+                                    currentEnergyLevel = GameTimeAndScore.MAX_BALL_CLICK_TIME;
                                 //until the game is finished keep lowering the energy levels
                                 currentEnergyLevel -= keys.ENERGY_DECREASE;
                             }
@@ -593,9 +598,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 //if the power up isn't in coolDown, activate it
                 if(!onCooldown){
                     // DO SOMETHING
-                    ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, Keys.FLAG_GREEN_INCREASE_BALL_SIZE);
-                    //purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, Keys.FLAG_RED_FREEZE_BALLS,keys.PURPLE_BALL_NUMBER);
-                   // multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, Keys.FLAG_RED_FREEZE_BALLS,keys.WAVE_BALL_NUMBER);
+                   // currentEnergyLevel += powerUps.energyPowerUp(Keys.FLAG_GREEN_SMALL_ENERGY_BONUS);
+
+                    ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, Keys.FLAG_RED_FREEZE_BALLS);
+                    purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, Keys.FLAG_RED_FREEZE_BALLS,keys.PURPLE_BALL_NUMBER);
+                    multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, Keys.FLAG_RED_FREEZE_BALLS,keys.WAVE_BALL_NUMBER);
                     //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
                     onCooldown = true;
                 }
@@ -604,7 +611,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
                 if(!usedConsumable) {
                     //DO SOMETHING
-
+                    currentEnergyLevel += powerUps.energyPowerUp(Keys.FLAG_RED_BIG_ENERGY_BONUS);
                     usedConsumable = true;
                 }
                 break;
@@ -746,6 +753,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      *  Score after we clicked all three balls and gain energy.
      */
     private void purpleBall() {
+        //TODO better way of removing purple balls from drawing
+        //TODO fix bug related to drawing purple balls when size power up increased
         if (timesClickedPurple == keys.BALL_PURPLE_NO_CLICK) {
             //if we clicked on the first/ original ball
             if (clickedABall.ballClicked(purpleBallObjects[0].getX(), purpleBallObjects[0].getY(), clickedX, clickedY)) {
@@ -864,14 +873,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void setBallObjectByType(){
         // BLUE BALL
         if(currentBallType == BALL_RED){
-            ballObject.setBallColor(redBall);
             ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
 
         // RED BALL
         if(currentBallType == BALL_BLUE){
-            ballObject.setBallColor(blueBall);
 
             ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
@@ -879,27 +886,22 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         // YELLOW BALL
         if(currentBallType == BALL_YELLOW){
-            ballObject.setBallColor(yellowBall);
             ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
-            ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(),
-                    ballWidth + keys.YELLOW_BALL_INITIAL_SIZE, ballHeight+ keys.YELLOW_BALL_INITIAL_SIZE, true));
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
 
         // GREEN BALL
         if(currentBallType == BALL_GREEN){
-            ballObject.setBallColor(greenBall);
             ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
             ballObject.setSoundId(soundsAndEffects.soundClickedId);
         }
 
         // PURPLE BALL
         if(currentBallType == BALL_PURPLE){
-            purpleBallObjects = ballHandler.getNewBallObjectArray(keys.PURPLE_BALL_NUMBER,purpleBallObjects);
+            purpleBallObjects = ballHandler.getNewBallObjectArray(keys.PURPLE_BALL_NUMBER,purpleBallObjects, currentBallType);
 
             for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
                 //set the speeds of the balls
-                purpleBallObjects[i].setBallSpeed(keys.DEFAULT_BALL_SPEED);
                 purpleBallObjects[i].setSoundId(soundsAndEffects.soundClickedId);
 
             }
@@ -908,10 +910,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //WAVE BALL
         if(currentBallType == BALL_WAVE){
-            multipleBalls = ballHandler.getNewBallObjectArray(keys.WAVE_BALL_NUMBER,multipleBalls);
+            multipleBalls = ballHandler.getNewBallObjectArray(keys.WAVE_BALL_NUMBER,multipleBalls, currentBallType);
             currentWaveBall = 0;
             for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
-                multipleBalls[i].setBallSpeed(keys.DEFAULT_BALL_SPEED+i);
                 multipleBalls[i].setSoundId(soundsAndEffects.soundClickedId);
             }
 
