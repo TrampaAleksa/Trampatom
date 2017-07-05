@@ -55,6 +55,22 @@ public class PowerUps {
         }
     }
 
+    /**
+     * Method used for checking if our selected power up is progress bar related or ball related
+     * so that we can use different methods in the game for power ups.
+     * @return an int value used to determine what type of power up we selected
+     */
+    public int checkCurrentFlagType(int flag){
+        //default value is 0 and if it returns 0 that means we have no power up
+        //if the flag is used to change the energy bar then return 1
+        if(flag == Keys.FLAG_RED_BIG_ENERGY_BONUS )
+            return 1;
+                if(flag == Keys.FLAG_GREEN_SMALL_ENERGY_BONUS)
+                return 1;
+
+        return 2;
+    }
+
  // ---------------------------------------- ACTIVE BALL RELATED ------------------------------- \\
 
     /**

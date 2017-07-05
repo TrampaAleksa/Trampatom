@@ -101,6 +101,9 @@ public class Keys {
         public int CATEGORY_GREEN = 2;
         public int CATEGORY_YELLOW = 3;
         public int CATEGORY_PURPLE = 4;
+        //used to store a preference to determine what power up we selected
+        public static final String KEY_POWER_UP_ONE = "power up 1";
+        public static final String KEY_POWER_UP_TWO = "power up 2";
 
 
     // ----------------------------------- Flags -------------------------------------------- \\
@@ -127,6 +130,10 @@ public class Keys {
         public static final int FLAG_YELLOW_UNKNOWN3 = 15;
         public static final int FLAG_YELLOW_UNKNOWN4 = 16;
 
+        //used to determine what the power up does
+        // and do something in game based on that
+        public static final int FLAG_PROGRESS_BAR_POWER_UP = 1;
+        public static final int FLAG_BALL_POWER_UP = 2;
 
     public int POWER_UP_BALL_SIZE_INCREASE = 30;
 }

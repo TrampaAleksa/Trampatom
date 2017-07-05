@@ -3,6 +3,8 @@ package com.trampatom.game.trampatom.currency;
 
 import android.widget.TextView;
 
+import com.trampatom.game.trampatom.utils.Keys;
+
 /**
  * Class that should contain methods for working with the in game shop.
  * Shop currency is based on Atoms and their types.
@@ -42,9 +44,10 @@ public class ShopHandler {
     }
 
     /**
-     * method used to set every atom we have in the pool to be displayed as a number in the shop activity
+     * Method for getting our atom pool in the shop to spend and for displaying the numbers we have in the shop
+     * @return an array containing our atom pool to be used for transactions
      */
-    public void setAtomPoolValues(){
+    public int[] setAtomPoolValues(){
 
         int[] atomArray = {0,0,0,0,0};
         atomArray = atomPool.getAtoms();
@@ -54,5 +57,44 @@ public class ShopHandler {
         tvNumberAtomsGreen.setText(Integer.toString(atomArray[2]));
         tvNumberAtomsYellow.setText(Integer.toString(atomArray[3]));
         tvNumberAtomsPurple.setText(Integer.toString(atomArray[4]));
+
+        return atomArray;
+    }
+
+    public void selectActivePowerUp(int flag){
+
+        switch(flag){
+            // RED
+            case Keys.FLAG_RED_FREEZE_BALLS:
+
+                break;
+            case Keys.FLAG_RED_LIMITING_SQUARE:
+
+                break;
+            case Keys.FLAG_RED_UNKNOWN2:
+
+                break;
+            case Keys.FLAG_RED_BIG_ENERGY_BONUS:
+
+                break;
+
+            //GREEN
+            case Keys.FLAG_GREEN_INCREASE_BALL_SIZE:
+
+                break;
+            case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
+
+                break;
+
+            case Keys.FLAG_GREEN_UNKNOWN2:
+
+                break;
+
+            case Keys.FLAG_GREEN_SMALL_ENERGY_BONUS:
+
+                break;
+
+        }
+
     }
 }
