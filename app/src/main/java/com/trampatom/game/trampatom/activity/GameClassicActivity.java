@@ -145,9 +145,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             int[] poolArray = {0,0,0,0,0};
         //For activating the power ups. One button has a cooldown the other one is a "one time use only"
             Button bPowerUp1, bPowerUp2;
+        //determines what power up and what passive effect we choose and does a certain action based on that
             int selectedPowerUp1, selectedPowerUp2;
-        //determines if the power up is energy or ball related
+            int selectedPassive1, selectedPassive2;
+        //determines if the power up or passive is energy or ball related
             int flagTypePowerUp1, flagTypePowerUp2;
+            int flagTypePassive1, flagTypePassive2;
         //For managing weather or not we can activate any of the power ups(in cooldown or used)
             boolean usedConsumable = false; boolean timeConsumable = false;
             boolean onCooldown = false;
@@ -198,15 +201,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             soundPool = soundsAndEffects.getGameClassicSounds();
 
         //GAME VIEWS
-            //surface view
-            mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
-            ourHolder = mSurfaceView.getHolder();
-            mSurfaceView.setOnTouchListener(this);
-            // progress bar
-            energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
-            gameTimeAndScore = new GameTimeAndScore(energyProgress);
-            currentEnergyLevel = keys.STARTING_ENERGY;
-
+        //surface view
+        mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
+        ourHolder = mSurfaceView.getHolder();
+        mSurfaceView.setOnTouchListener(this);
+        // progress bar
+        energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
+        gameTimeAndScore = new GameTimeAndScore(energyProgress);
+        currentEnergyLevel = keys.STARTING_ENERGY;
         //buttons
             bPowerUp1 = (Button) findViewById(R.id.bPowerUp1);
             bPowerUp2 = (Button) findViewById(R.id.bPowerUp2);
@@ -228,10 +230,18 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         selectedPowerUp1 = preferences.getInt(Keys.KEY_POWER_UP_ONE, 0);
         selectedPowerUp2 = preferences.getInt(Keys.KEY_POWER_UP_TWO, 0);
+        selectedPassive1 = preferences.getInt(Keys.KEY_PASSIVE_ONE,0);
+        selectedPassive2 = preferences.getInt(Keys.KEY_PASSIVE_TWO,0);
         flagTypePowerUp2 = powerUps.checkCurrentFlagType(selectedPowerUp2);
         flagTypePowerUp1 = powerUps.checkCurrentFlagType(selectedPowerUp1);
+        flagTypePassive1 = powerUps.checkCurrentFlagType(selectedPassive1);
+        flagTypePassive2 = powerUps.checkCurrentFlagType(selectedPassive2);
 
-
+        // in case we selected the power up to increase the starting energy
+        if(flagTypePassive2==4 || flagTypePassive1==4)
+            //set the energy bar in a certain way depending on the passives we selected
+           currentEnergyLevel =  powerUps.energyPassivePowerUp(selectedPassive2, currentEnergyLevel);
+            keys.ENERGY_DECREASE -= powerUps.energyPassivePowerUp(selectedPassive1, currentEnergyLevel);
         //HIGH SCORE
             highScore = new HighScore(this);
             previousHighScore=highScore.getHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY);
@@ -430,9 +440,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //get every ball object when starting a game
         ballHandler = new BallHandler(randomCoordinate, keys, ballWidth, ballHeight);
         ballHandler.parseBallBitmaps(redBall, blueBall, greenBall , yellowBall , purpleBall, waveBall);
+        //set the ball attributes if the passives we selected affect the balls
+        if(flagTypePassive1== 3 || flagTypePassive2 == 3)
+        ballHandler.setDefaultValuesUponPassives(selectedPassive1,selectedPassive2);
         ballObject = ballHandler.getFirstBallObject();
         purpleBallObjects = ballHandler.getFirstBallObjectArray(keys.PURPLE_BALL_NUMBER);
         multipleBalls = ballHandler.getFirstBallObjectArray(keys.WAVE_BALL_NUMBER);
+
+
         //the colors of purple and wave don't have to be be changed so initiate them once
         for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
             multipleBalls[i].setBallColor(waveBall[i]);

@@ -30,6 +30,10 @@ public class Keys {
 
         // default coolDown of the power up that has a coolDown in seconds
         public int POWER_UP_COOLDOWN = 3;
+        //determines how much will the balls size be increased if we use the active power up
+    public int POWER_UP_BALL_SIZE_INCREASE = 30;
+        //determines by how much will the energy level increase if we use the passive for it
+    public int PASSIVE_STARTING_ENERGY_INCREASE = -4000;
 
     // ----------------------------------------- Ball Types ------------------------------------------ \\
 
@@ -104,6 +108,8 @@ public class Keys {
         //used to store a preference to determine what power up we selected
         public static final String KEY_POWER_UP_ONE = "power up 1";
         public static final String KEY_POWER_UP_TWO = "power up 2";
+        public static final String KEY_PASSIVE_ONE = "passive 1";
+        public static final String KEY_PASSIVE_TWO = "passive 2";
 
 
     // ----------------------------------- Flags -------------------------------------------- \\
@@ -121,12 +127,12 @@ public class Keys {
         public static final int FLAG_GREEN_UNKNOWN2 = 8;
         //purple
         public static final int FLAG_PURPLE_BIGGER_BALLS = 9;
-        public static final int FLAG_PURPLE_UNKNOWN2 = 10;
+        public static final int FLAG_PURPLE_SLOWER_ENERGY_DECAY = 10;
         public static final int FLAG_PURPLE_UNKNOWN3 = 11;
         public static final int FLAG_PURPLE_UNKNOWN4 = 12;
         //yellow
-        public static final int FLAG_YELLOW_UNKNOWN = 13;
-        public static final int FLAG_YELLOW_UNKNOWN2 = 14;
+        public static final int FLAG_YELLOW_MORE_ENERGY_ON_START = 13;
+        public static final int FLAG_YELLOW_SLOW_DOWN_BALLS = 14;
         public static final int FLAG_YELLOW_UNKNOWN3 = 15;
         public static final int FLAG_YELLOW_UNKNOWN4 = 16;
 
@@ -135,5 +141,5 @@ public class Keys {
         public static final int FLAG_PROGRESS_BAR_POWER_UP = 1;
         public static final int FLAG_BALL_POWER_UP = 2;
 
-    public int POWER_UP_BALL_SIZE_INCREASE = 30;
+
 }

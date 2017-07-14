@@ -69,6 +69,40 @@ public class BallHandler {
     }
 
     /**
+     * Method that is used to set the default values of balls, like width, height or speed, based on selected passives
+     * <p>
+     *     NOTE: This method is used to change default Ball attributes, for passives that do not affect the ball, use other methods.
+     * </p>
+     * @param flag1 determines the Purple passive used, a value from keys
+     * @param flag2 determines the Yellow passive used, a value from keys
+     */
+    public void setDefaultValuesUponPassives(int flag1, int flag2){
+
+        switch(flag1){
+            case Keys.FLAG_PURPLE_BIGGER_BALLS:
+                ballWidth = ballWidth+40;
+                ballHeight = ballHeight+40;
+                resizeBitmapsToNewDefaultSize();
+                break;
+        }
+        switch (flag2){
+            case Keys.FLAG_YELLOW_SLOW_DOWN_BALLS:
+                keys.DEFAULT_BALL_SPEED = 2;
+                keys.BALL_YELLOW_INITIAL_SPEED = 0;
+                keys.GREEN_BALL_SPEED = 5;
+                break;
+        }
+
+    }
+
+    private void resizeBitmapsToNewDefaultSize() {
+        redBall = Bitmap.createScaledBitmap(redBall,ballWidth+40,ballHeight+40,true);
+        greenBall = Bitmap.createScaledBitmap(greenBall,ballWidth+40,ballHeight+40,true);
+        yellowBall = Bitmap.createScaledBitmap(yellowBall,ballWidth+40,ballHeight+40,true);
+        blueBall = Bitmap.createScaledBitmap(blueBall,ballWidth+40,ballHeight+40,true);
+    }
+
+    /**
      * Method used to get the first ball object with all of its attributes for later manipulating. Use this method to initialize
      * the first ball object in a game.
      * <p>

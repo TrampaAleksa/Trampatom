@@ -5,6 +5,7 @@ import android.widget.ProgressBar;
 
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.activity.GameClassicActivity;
+import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.Keys;
 
 /**
@@ -28,16 +29,15 @@ public class PowerUps {
     int ballWidth, ballHeight;
 
 
-    Ball[] purpleBalls = {null,null,null};
-    Ball[] waveBalls = {null,null,null,null,null,null,null};
-
+    Ball[] purpleBalls = {null, null, null};
+    Ball[] waveBalls = {null, null, null, null, null, null, null};
 
 
     /**
      * Since this class manipulates the progress bar in some cases we should pass the progress bar, and keys
      * for accessing flags of every power up.
      */
-    public PowerUps(ProgressBar progressBar, Keys keys, int ballWidth, int ballHeight){
+    public PowerUps(ProgressBar progressBar, Keys keys, int ballWidth, int ballHeight) {
         this.ballWidth = ballWidth;
         this.ballHeight = ballHeight;
         ballSpeed = keys.DEFAULT_BALL_SPEED;
@@ -47,10 +47,10 @@ public class PowerUps {
         this.keys = keys;
 
         //initialize the ball arrays here to be used in methods
-        for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
+        for (i = 0; i < keys.PURPLE_BALL_NUMBER; i++) {
             purpleBalls[i] = new Ball();
         }
-        for(i=0; i< keys.WAVE_BALL_NUMBER; i++){
+        for (i = 0; i < keys.WAVE_BALL_NUMBER; i++) {
             waveBalls[i] = new Ball();
         }
     }
@@ -58,84 +58,97 @@ public class PowerUps {
     /**
      * Method used for checking if our selected power up is progress bar related or ball related
      * so that we can use different methods in the game for power ups.
+     *
      * @return an int value used to determine what type of power up we selected
      */
-    public int checkCurrentFlagType(int flag){
-        //default value is 0 and if it returns 0 that means we have no power up
-        //if the flag is used to change the energy bar then return 1
-        if(flag == Keys.FLAG_RED_BIG_ENERGY_BONUS )
-            return 1;
-                if(flag == Keys.FLAG_GREEN_SMALL_ENERGY_BONUS)
-                return 1;
+    public int checkCurrentFlagType(int flag) {
 
-        return 2;
+        //if its an active power up/ lower than the key value of the first passive power up
+        //active
+        if(flag < Keys.FLAG_PURPLE_BIGGER_BALLS) {
+            if (flag == Keys.FLAG_RED_BIG_ENERGY_BONUS || flag == Keys.FLAG_GREEN_SMALL_ENERGY_BONUS || flag == Keys.FLAG_YELLOW_MORE_ENERGY_ON_START)
+                //its energy related
+                return 1;
+                //its ball related
+            else return 2;
+        }
+
+        //passive
+        else {
+            if (flag == Keys.FLAG_YELLOW_SLOW_DOWN_BALLS || flag == Keys.FLAG_PURPLE_BIGGER_BALLS)
+                //its ball related
+                return 3;
+            // its energy related
+            else return 4;
+        }
+
     }
 
- // ---------------------------------------- ACTIVE BALL RELATED ------------------------------- \\
+
+    // ---------------------------------------- ACTIVE BALL RELATED ------------------------------- \\
 
     /**
      * Method that should be called when a power up is activated to change the attributes of every ball object
      * for a short time, so that any new ball object that appears has the same traits
+     *
      * @param ballObject the ball object to be changed
-     * @param flag a flag used to determine what power up we used and based on that what to change in a ball
+     * @param flag       a flag used to determine what power up we used and based on that what to change in a ball
      * @return a changed ball object
      */
-        public Ball activateBallObjectConsumablePowerUp(Ball ballObject, int flag){
+    public Ball activateBallObjectConsumablePowerUp(Ball ballObject, int flag) {
 
-            switch(flag){
-        // RED
-                case Keys.FLAG_RED_FREEZE_BALLS:
-                    //set every ball's speed to 0 until it's reset
-                    ballObject.setBallSpeed(0);
-                    ballObject.setActiveChangesSpeed(true);
-
-                    break;
-
-                case Keys.FLAG_RED_LIMITING_SQUARE:
-
-
-
-                    break;
-                case Keys.FLAG_RED_UNKNOWN2:
-
-                    break;
-
-        //GREEN
-                case Keys.FLAG_GREEN_INCREASE_BALL_SIZE:
-
-                    ballObject.setBallWidth(ballObject.getBallWidth()+keys.POWER_UP_BALL_SIZE_INCREASE);
-                    ballObject.setBallHeight(ballObject.getBallHeight()+keys.POWER_UP_BALL_SIZE_INCREASE);
-                    ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(),
-                            ballObject.getBallWidth(),ballObject.getBallHeight(),false));
-                    ballObject.setActiveChangesSize(true);
-
-                    break;
-                case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
-                    ballObject.setBallSpeed(ballObject.getBallSpeed()-3);
-
-                    break;
-
-                case Keys.FLAG_GREEN_UNKNOWN2:
-
-                    break;
-            }
-
-            return ballObject;
-        }
-
-    public Ball[] activateBallObjectArrayConsumablePowerUp(Ball[] balls, int flag, int arraySize){
-
-        switch(flag){
+        switch (flag) {
             // RED
             case Keys.FLAG_RED_FREEZE_BALLS:
-                if(arraySize == keys.PURPLE_BALL_NUMBER){
-                    for(i=0; i< arraySize; i++){
+                //set every ball's speed to 0 until it's reset
+                ballObject.setBallSpeed(0);
+                ballObject.setActiveChangesSpeed(true);
+
+                break;
+
+            case Keys.FLAG_RED_LIMITING_SQUARE:
+
+
+                break;
+            case Keys.FLAG_RED_UNKNOWN2:
+
+                break;
+
+            //GREEN
+            case Keys.FLAG_GREEN_INCREASE_BALL_SIZE:
+
+                ballObject.setBallWidth(ballObject.getBallWidth() + keys.POWER_UP_BALL_SIZE_INCREASE);
+                ballObject.setBallHeight(ballObject.getBallHeight() + keys.POWER_UP_BALL_SIZE_INCREASE);
+                ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(),
+                        ballObject.getBallWidth(), ballObject.getBallHeight(), false));
+                ballObject.setActiveChangesSize(true);
+
+                break;
+            case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
+                ballObject.setBallSpeed(ballObject.getBallSpeed() - 3);
+
+                break;
+
+            case Keys.FLAG_GREEN_UNKNOWN2:
+
+                break;
+        }
+
+        return ballObject;
+    }
+
+    public Ball[] activateBallObjectArrayConsumablePowerUp(Ball[] balls, int flag, int arraySize) {
+
+        switch (flag) {
+            // RED
+            case Keys.FLAG_RED_FREEZE_BALLS:
+                if (arraySize == keys.PURPLE_BALL_NUMBER) {
+                    for (i = 0; i < arraySize; i++) {
                         balls[i].setBallSpeed(0);
                         balls[i].setActiveChangesSpeed(true);
                     }
                     return balls;
-                }
-                else {
+                } else {
                     //set every ball's speed to 0 until it's reset
                     for (i = 0; i < arraySize; i++) {
                         balls[i].setBallSpeed(0);
@@ -148,7 +161,6 @@ public class PowerUps {
             case Keys.FLAG_RED_LIMITING_SQUARE:
 
 
-
                 break;
             case Keys.FLAG_RED_UNKNOWN2:
 
@@ -157,23 +169,22 @@ public class PowerUps {
             //GREEN
             case Keys.FLAG_GREEN_INCREASE_BALL_SIZE:
 
-                if(arraySize == keys.PURPLE_BALL_NUMBER){
-                    for(i=0; i< arraySize; i++){
-                        balls[i].setBallWidth( balls[i].getBallWidth()+keys.POWER_UP_BALL_SIZE_INCREASE);
-                        balls[i].setBallHeight( balls[i].getBallHeight()+keys.POWER_UP_BALL_SIZE_INCREASE);
-                        balls[i].setBallColor(Bitmap.createScaledBitmap( balls[i].getBallColor(),
-                                balls[i].getBallWidth(), balls[i].getBallHeight(),false));
+                if (arraySize == keys.PURPLE_BALL_NUMBER) {
+                    for (i = 0; i < arraySize; i++) {
+                        balls[i].setBallWidth(balls[i].getBallWidth() + keys.POWER_UP_BALL_SIZE_INCREASE);
+                        balls[i].setBallHeight(balls[i].getBallHeight() + keys.POWER_UP_BALL_SIZE_INCREASE);
+                        balls[i].setBallColor(Bitmap.createScaledBitmap(balls[i].getBallColor(),
+                                balls[i].getBallWidth(), balls[i].getBallHeight(), false));
                         balls[i].setActiveChangesSize(true);
                     }
                     return balls;
-                }
-                else {
+                } else {
                     //set every ball's speed to 0 until it's reset
                     for (i = 0; i < arraySize; i++) {
-                        balls[i].setBallWidth( balls[i].getBallWidth()+keys.POWER_UP_BALL_SIZE_INCREASE);
-                        balls[i].setBallHeight( balls[i].getBallHeight()+keys.POWER_UP_BALL_SIZE_INCREASE);
-                        balls[i].setBallColor(Bitmap.createScaledBitmap( balls[i].getBallColor(),
-                                balls[i].getBallWidth(), balls[i].getBallHeight(),false));
+                        balls[i].setBallWidth(balls[i].getBallWidth() + keys.POWER_UP_BALL_SIZE_INCREASE);
+                        balls[i].setBallHeight(balls[i].getBallHeight() + keys.POWER_UP_BALL_SIZE_INCREASE);
+                        balls[i].setBallColor(Bitmap.createScaledBitmap(balls[i].getBallColor(),
+                                balls[i].getBallWidth(), balls[i].getBallHeight(), false));
                         balls[i].setActiveChangesSize(true);
                     }
                     return balls;
@@ -181,16 +192,15 @@ public class PowerUps {
 
 
             case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
-                if(arraySize == keys.PURPLE_BALL_NUMBER){
-                    for(i=0; i< arraySize; i++){
-                        balls[i].setBallSpeed(balls[i].getBallSpeed()-3);
+                if (arraySize == keys.PURPLE_BALL_NUMBER) {
+                    for (i = 0; i < arraySize; i++) {
+                        balls[i].setBallSpeed(balls[i].getBallSpeed() - 3);
                     }
                     return balls;
-                }
-                else {
+                } else {
                     //set every ball's speed to 0 until it's reset
                     for (i = 0; i < arraySize; i++) {
-                        balls[i].setBallSpeed(balls[i].getBallSpeed()-3);
+                        balls[i].setBallSpeed(balls[i].getBallSpeed() - 3);
                     }
                     return balls;
                 }
@@ -206,25 +216,25 @@ public class PowerUps {
 
     /**
      * Method used to reset every ball object into its default state, aka removing power up's
+     *
      * @param ballObject the object that needs to be reset.
      *                   <p>
      *                   NOTE: This method reverses any change made by the method for activating a power up.
      *                   </p>
      * @return a ball object that has the same angle and coordinates but its attributes are reset to its initial state;
      */
-    public Ball resetBallState(Ball ballObject, int flag, int currentBallType){
+    public Ball resetBallState(Ball ballObject, int flag, int currentBallType) {
 
 
-        switch(flag){
+        switch (flag) {
             // RED
             case Keys.FLAG_RED_FREEZE_BALLS:
-                    ballObject = setBallSpeedByType(currentBallType, ballObject);
-                    ballObject.setActiveChangesSpeed(false);
+                ballObject = setBallSpeedByType(currentBallType, ballObject);
+                ballObject.setActiveChangesSpeed(false);
                 return ballObject;
 
 
             case Keys.FLAG_RED_LIMITING_SQUARE:
-
 
 
                 break;
@@ -235,15 +245,15 @@ public class PowerUps {
             //GREEN
             case Keys.FLAG_GREEN_INCREASE_BALL_SIZE:
 
-                ballObject.setBallWidth(ballObject.getBallWidth()-keys.POWER_UP_BALL_SIZE_INCREASE);
-                ballObject.setBallHeight(ballObject.getBallHeight()-keys.POWER_UP_BALL_SIZE_INCREASE);
-                    ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(),
-                            ballObject.getBallWidth(), ballObject.getBallHeight(), false));
-                    ballObject.setActiveChangesSize(false);
+                ballObject.setBallWidth(ballObject.getBallWidth() - keys.POWER_UP_BALL_SIZE_INCREASE);
+                ballObject.setBallHeight(ballObject.getBallHeight() - keys.POWER_UP_BALL_SIZE_INCREASE);
+                ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(),
+                        ballObject.getBallWidth(), ballObject.getBallHeight(), false));
+                ballObject.setActiveChangesSize(false);
 
                 break;
             case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
-                ballObject.setBallSpeed(ballObject.getBallSpeed()-3);
+                ballObject.setBallSpeed(ballObject.getBallSpeed() - 3);
 
                 break;
 
@@ -256,22 +266,21 @@ public class PowerUps {
     }
 
 
-    public Ball[] resetBallObjectArrayState(Ball[] balls, int flag, int arraySize, int currentBallType){
+    public Ball[] resetBallObjectArrayState(Ball[] balls, int flag, int arraySize, int currentBallType) {
 
-        switch(flag){
+        switch (flag) {
             // RED
             case Keys.FLAG_RED_FREEZE_BALLS:
-                if(arraySize == keys.PURPLE_BALL_NUMBER){
-                    for(i=0; i< arraySize; i++){
+                if (arraySize == keys.PURPLE_BALL_NUMBER) {
+                    for (i = 0; i < arraySize; i++) {
                         balls[i].setBallSpeed(keys.DEFAULT_BALL_SPEED);
                         balls[i].setActiveChangesSpeed(false);
                     }
                     return balls;
-                }
-                else {
+                } else {
                     //reset every ball's speed to its default speed
                     for (i = 0; i < arraySize; i++) {
-                        balls[i].setBallSpeed(keys.DEFAULT_BALL_SPEED+i);
+                        balls[i].setBallSpeed(keys.DEFAULT_BALL_SPEED + i);
                         balls[i].setActiveChangesSpeed(false);
                     }
                     return balls;
@@ -279,7 +288,6 @@ public class PowerUps {
 
 
             case Keys.FLAG_RED_LIMITING_SQUARE:
-
 
 
                 break;
@@ -291,21 +299,20 @@ public class PowerUps {
             case Keys.FLAG_GREEN_INCREASE_BALL_SIZE:
 
                 //reset every ball's size to its previous size
-                if(arraySize == keys.PURPLE_BALL_NUMBER){
-                    for(i=0; i< arraySize; i++){
-                        balls[i].setBallWidth(balls[i].getBallWidth()-keys.POWER_UP_BALL_SIZE_INCREASE);
-                        balls[i].setBallHeight(balls[i].getBallHeight()-keys.POWER_UP_BALL_SIZE_INCREASE);
+                if (arraySize == keys.PURPLE_BALL_NUMBER) {
+                    for (i = 0; i < arraySize; i++) {
+                        balls[i].setBallWidth(balls[i].getBallWidth() - keys.POWER_UP_BALL_SIZE_INCREASE);
+                        balls[i].setBallHeight(balls[i].getBallHeight() - keys.POWER_UP_BALL_SIZE_INCREASE);
                         balls[i].setBallColor(Bitmap.createScaledBitmap(balls[i].getBallColor(),
                                 balls[i].getBallWidth(), balls[i].getBallHeight(), false));
                         balls[i].setActiveChangesSize(false);
                     }
                     return balls;
-                }
-                else {
+                } else {
                     //reset every ball's size to its previous size
-                    for(i=0; i< arraySize; i++){
-                        balls[i].setBallWidth(balls[i].getBallWidth()-keys.POWER_UP_BALL_SIZE_INCREASE);
-                        balls[i].setBallHeight(balls[i].getBallHeight()-keys.POWER_UP_BALL_SIZE_INCREASE);
+                    for (i = 0; i < arraySize; i++) {
+                        balls[i].setBallWidth(balls[i].getBallWidth() - keys.POWER_UP_BALL_SIZE_INCREASE);
+                        balls[i].setBallHeight(balls[i].getBallHeight() - keys.POWER_UP_BALL_SIZE_INCREASE);
                         balls[i].setBallColor(Bitmap.createScaledBitmap(balls[i].getBallColor(),
                                 balls[i].getBallWidth(), balls[i].getBallHeight(), false));
                         balls[i].setActiveChangesSize(false);
@@ -315,16 +322,15 @@ public class PowerUps {
 
 
             case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
-                if(arraySize == keys.PURPLE_BALL_NUMBER){
-                    for(i=0; i< arraySize; i++){
-                        balls[i].setBallSpeed(balls[i].getBallSpeed()-3);
+                if (arraySize == keys.PURPLE_BALL_NUMBER) {
+                    for (i = 0; i < arraySize; i++) {
+                        balls[i].setBallSpeed(balls[i].getBallSpeed() - 3);
                     }
                     return balls;
-                }
-                else {
+                } else {
                     //set every ball's speed to 0 until it's reset
                     for (i = 0; i < arraySize; i++) {
-                        balls[i].setBallSpeed(balls[i].getBallSpeed()-3);
+                        balls[i].setBallSpeed(balls[i].getBallSpeed() - 3);
                     }
                     return balls;
                 }
@@ -339,14 +345,15 @@ public class PowerUps {
 
     /**
      * Method used to set different speeds for yellow, green and other balls
+     *
      * @param currentBallType determines what seed to set
-     * @param ball the ball to set the speed to
+     * @param ball            the ball to set the speed to
      * @return a ball object with the appropriate speed
      */
     //TODO we have a duplicate method in ball handler, perhaps refactor that
-    private Ball setBallSpeedByType(int currentBallType, Ball ball){
+    private Ball setBallSpeedByType(int currentBallType, Ball ball) {
 
-        switch(currentBallType){
+        switch (currentBallType) {
 
             case GameClassicActivity.BALL_GREEN:
                 ball.setBallSpeed(keys.GREEN_BALL_SPEED);
@@ -362,11 +369,11 @@ public class PowerUps {
     }
 
 
-
 // ---------------------------------------- ACTIVE ENERGY BAR RELATED ------------------------------- \\
 
     /**
      * Method called when using a power up that manipulates the energy bar. returns the new energy value
+     *
      * @param flag the flag to determine what we are doing with the energy bar depending on the power up related
      *             to the flag we passed
      * @return an int value that is the new energy value for the energy bar
@@ -374,7 +381,7 @@ public class PowerUps {
     public int energyPowerUp(int flag) {
         int energyValue = 0;
 
-        switch(flag){
+        switch (flag) {
 
             case Keys.FLAG_GREEN_SMALL_ENERGY_BONUS:
                 energyValue += 500;
@@ -388,29 +395,47 @@ public class PowerUps {
         return energyValue;
     }
 
+
+    // -------------------------------------- PASSIVE BALL RELATED ------------------------------------- \\
+
+    /**
+     * Method that should be used to set up the starting state of a ball attribute,like the ball's
+     * size or its speed. This method should change the attributes only of the first created ball and
+     * from there the rest is handled by active power-ups
+     *
+     * @param flag used to determine what passive power up we have selected and to return the right attribute
+     * @return an int value representing a default speed/ballWidth etc. A single ball attribute
+     */
+    public int setUpBallPassivePowerUp(int flag) {
+
+
+return 0;
     }
 
 
 
+    // ---------------------------------------- PASSIVE ENERGY RELATED ------------------------------------ \\
 
+    public int energyPassivePowerUp(int flag, int currentEnergy){
 
+        switch(flag){
+        //returns the value that will reduce the amount of energy we lose every second by a certain amount
+            case Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY:
+                int energyDecreaseReduceAmount = -500;
+                return energyDecreaseReduceAmount;
 
+            case Keys.FLAG_YELLOW_MORE_ENERGY_ON_START:
+                //changes the max energy we can have
+                GameTimeAndScore gameTimeAndScore= new GameTimeAndScore(progressBar);
+                currentEnergy = gameTimeAndScore.increaseEnergyCapacity(keys.PASSIVE_STARTING_ENERGY_INCREASE, currentEnergy);
 
-    // --------------------------------------- RED ----------------------------------------- \\
+                return currentEnergy;
 
+        }
+        return 0;
+    }
 
-
-
-    // --------------------------------------- GREEN -------------------------------------------\\
-
-
-
-    // ---------------------------------------- YELLOW ------------------------------------------ \\
-
-
-
-    // ---------------------------------------- PURPLE ------------------------------------------- \\
-
+}
 
 
 

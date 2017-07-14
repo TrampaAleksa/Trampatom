@@ -54,4 +54,16 @@ public class GameTimeAndScore {
         }
     }
 
+    /**
+     * Method that should be called if a passive that increases our starting energy is used
+     * @param additionalEnergy the extra energy we will be starting with depending on our passive level
+     * @param currentEnergy sets the energy to the maximum level of energy after the additional energy is added
+     */
+    public int increaseEnergyCapacity(int additionalEnergy, int currentEnergy){
+
+        energyProgress.setMax(MAX_BALL_CLICK_TIME+additionalEnergy);
+
+return currentEnergy+additionalEnergy;
+    }
+
 }
