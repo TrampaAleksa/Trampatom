@@ -9,8 +9,8 @@ import com.trampatom.game.trampatom.utils.Keys;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
 /**
- * Class that should be used to handle mBall types for game 1.
- * Contains methods for getting a new mBall, and should contain mBall action methods
+ * Class that should be used to handle ball types.
+ * Contains methods for getting a new ball, changing ablls whenevr we get a new one, setting ball speeds and sizes.
  */
 public class BallHandler {
     //TODO Arrays for balls refactoring in far future
@@ -27,7 +27,6 @@ public class BallHandler {
     Ball[] purpleBalls = {null,null,null};
     Ball[] waveBalls = {null,null,null,null,null,null,null};
 
-    public static final int GOLD_BALL_DONT_DRAW = 0;
     private RandomBallVariables randomBallVariables;
     //TODO adequate java docs
 
@@ -95,11 +94,19 @@ public class BallHandler {
 
     }
 
+    /**
+     * Method used to resize every bitmaps default size so that they are displayed with that new size
+     * should be called if we changed the default ball size using a passive effect
+     */
     private void resizeBitmapsToNewDefaultSize() {
-        redBall = Bitmap.createScaledBitmap(redBall,ballWidth+40,ballHeight+40,true);
-        greenBall = Bitmap.createScaledBitmap(greenBall,ballWidth+40,ballHeight+40,true);
-        yellowBall = Bitmap.createScaledBitmap(yellowBall,ballWidth+40,ballHeight+40,true);
-        blueBall = Bitmap.createScaledBitmap(blueBall,ballWidth+40,ballHeight+40,true);
+        redBall = Bitmap.createScaledBitmap(redBall,ballWidth,ballHeight,true);
+        greenBall = Bitmap.createScaledBitmap(greenBall,ballWidth,ballHeight,true);
+        yellowBall = Bitmap.createScaledBitmap(yellowBall,ballWidth,ballHeight,true);
+        blueBall = Bitmap.createScaledBitmap(blueBall,ballWidth,ballHeight,true);
+        purpleBall = Bitmap.createScaledBitmap(purpleBall, ballWidth, ballHeight, true);
+        for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
+            waveBall[i]=  Bitmap.createScaledBitmap(waveBall[i], ballWidth, ballHeight, true);
+        }
     }
 
     /**
@@ -429,7 +436,7 @@ public class BallHandler {
         if(currentBallType == GameClassicActivity.BALL_YELLOW){
             ball.setBallColor(yellowBall);
             ball.setBallColor(Bitmap.createScaledBitmap(ball.getBallColor(),
-                    ballWidth + keys.YELLOW_BALL_INITIAL_SIZE, ballHeight+ keys.YELLOW_BALL_INITIAL_SIZE, true));
+                    ball.getBallWidth() + keys.YELLOW_BALL_INITIAL_SIZE, ball.getBallHeight()+ keys.YELLOW_BALL_INITIAL_SIZE, true));
         }
 
         // GREEN BALL

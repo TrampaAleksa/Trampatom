@@ -1,6 +1,8 @@
 package com.trampatom.game.trampatom.ball;
 
 
+import com.trampatom.game.trampatom.Model.Ball;
+
 /**
  * Class that should contain methods for handling most mBall clicks
  */
@@ -30,6 +32,20 @@ public class ClickedABall {
     public boolean ballClicked(int x, int y , int clickedX, int clickedY){
 
         return clickedX > x && clickedX < (x + ballWidth) && clickedY > y && clickedY < (y + ballHeight);
+    }
+
+    /**
+     * Method used to determine if we clicked a ball. We pass in a ball object because every ball could have different width's
+     * or height's , or any other attribute and this way we ensure there isn't a hitBox bug
+     * @param ball the object we clicked
+     * @param clickedX the x coordinate we clicked
+     * @param clickedY the y coordinate we clicked
+     * @return true if we clicked the ball
+     */
+    public boolean ballClicked(Ball ball , int clickedX, int clickedY){
+
+        return clickedX > ball.getX() && clickedX < ( ball.getX() + ball.getBallWidth())
+                && clickedY >  ball.getY() && clickedY < ( ball.getY() + ball.getBallHeight());
     }
 
     /**

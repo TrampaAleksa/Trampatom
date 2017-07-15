@@ -241,6 +241,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if(flagTypePassive2==4 || flagTypePassive1==4)
             //set the energy bar in a certain way depending on the passives we selected
            currentEnergyLevel =  powerUps.energyPassivePowerUp(selectedPassive2, currentEnergyLevel);
+        //if we selected passive that reduces speed of energy loss, this will reduce it
+            if(selectedPassive1 == Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY)
             keys.ENERGY_DECREASE -= powerUps.energyPassivePowerUp(selectedPassive1, currentEnergyLevel);
         //HIGH SCORE
             highScore = new HighScore(this);
@@ -443,10 +445,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //set the ball attributes if the passives we selected affect the balls
         if(flagTypePassive1== 3 || flagTypePassive2 == 3)
         ballHandler.setDefaultValuesUponPassives(selectedPassive1,selectedPassive2);
+        //get the ball objects for the first time with the default attributes
         ballObject = ballHandler.getFirstBallObject();
         purpleBallObjects = ballHandler.getFirstBallObjectArray(keys.PURPLE_BALL_NUMBER);
         multipleBalls = ballHandler.getFirstBallObjectArray(keys.WAVE_BALL_NUMBER);
-
 
         //the colors of purple and wave don't have to be be changed so initiate them once
         for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
@@ -487,13 +489,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 canvas.draw(ballObject, -1, score);
                 break;
             case BALL_YELLOW:
-                if(!changedSize) {
-                    //resets the yellow ball to its original size when first drawing it
-                    ballObject.setBallWidth(ballWidth + keys.YELLOW_BALL_INITIAL_SIZE);
-                    ballObject.setBallHeight(ballHeight + keys.YELLOW_BALL_INITIAL_SIZE);
-                    ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(), ballObject.getBallWidth(), ballObject.getBallHeight(), true));
-                    changedSize=true;
-                }
                 moveYellowBall();
                 canvas.draw(ballObject, -1, score);
                 break;
@@ -729,7 +724,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void blueBall(){
         //if we clicked the ball should gain score
-        if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)) {
+       // if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)) {
+        if(clickedABall.ballClicked(ballObject,clickedX,clickedY)) {
             //add some energy and update it in the energy text view
             currentEnergyLevel +=100;
             score += 100;
@@ -746,7 +742,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void redBall(){
         //if we click the ball
-        if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)){
+        if(clickedABall.ballClicked(ballObject,clickedX,clickedY)){
             //add some energy and update it in the energy text view
             currentEnergyLevel -=100;
             score -= 100;
@@ -771,7 +767,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * The green ball should simply give us score when clicked, gives more score than blue ball and energy
      */
     private void greenBall(){
-        if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)){
+        if(clickedABall.ballClicked(ballObject,clickedX,clickedY)){
             //add some energy and update it in the energy text view
             currentEnergyLevel +=400;
             score+=400;
@@ -791,7 +787,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void yellowBall(){
 
         //every time the ball is clicked decrease its size and increase speed
-        if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)) {
+        if(clickedABall.ballClicked(ballObject,clickedX,clickedY)) {
             if (timesClicked > 0) {
                 timesClicked--;
                 //every time we click it, reduce its size and increase its speed
@@ -812,7 +808,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 getNewBall();
                 //reset the yellow ball to its first state for later use
                 timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
-                ballWidth=ballHeight= blueBall.getWidth();
+                //ballWidth=ballHeight= blueBall.getWidth();
                 changedSize=false;
             }
         }
@@ -831,7 +827,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //TODO fix bug related to drawing purple balls when size power up increased
         if (timesClickedPurple == keys.BALL_PURPLE_NO_CLICK) {
             //if we clicked on the first/ original ball
-            if (clickedABall.ballClicked(purpleBallObjects[0].getX(), purpleBallObjects[0].getY(), clickedX, clickedY)) {
+            //if (clickedABall.ballClicked(purpleBallObjects[0].getX(), purpleBallObjects[0].getY(), clickedX, clickedY)) {
+            if (clickedABall.ballClicked(purpleBallObjects[0], clickedX, clickedY)) {
                 //used to determine how many balls to draw
                 timesClickedPurple = keys.BALL_PURPLE_ONE_CLICK;
                 //get new angles and set every ball to start moving from the sae spot
@@ -850,7 +847,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         }
         //if we clicked on one of the split balls remove them from the screen
         else  {
-            if(clickedABall.ballClicked(purpleBallObjects[0].getX(), purpleBallObjects[0].getY(), clickedX, clickedY)){
+            //TODO change so that the purple balls clicked don't draw at all
+            if(clickedABall.ballClicked(purpleBallObjects[0], clickedX, clickedY)){
                 purpleBallObjects[0].setX(-purpleBallObjects[0].getBallWidth());
                 purpleBallObjects[0].setY(-purpleBallObjects[0].getBallHeight());
                 //don't draw this ball
@@ -859,7 +857,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 poolArray[4]++;
                 soundPool.play(purpleBallObjects[0].getSoundId(),1,1,0,0,1);
             }
-            if(clickedABall.ballClicked(purpleBallObjects[1].getX(), purpleBallObjects[1].getY(), clickedX, clickedY)){
+            if(clickedABall.ballClicked(purpleBallObjects[1], clickedX, clickedY)){
                 //don't draw this ball
                 secondBallClicked=true;
                 purpleBallObjects[1].setX(-purpleBallObjects[1].getBallWidth());
@@ -868,7 +866,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 poolArray[4]++;
                 soundPool.play(purpleBallObjects[1].getSoundId(),1,1,0,0,1);
             }
-            if(clickedABall.ballClicked(purpleBallObjects[2].getX(), purpleBallObjects[2].getY(), clickedX, clickedY)){
+            if(clickedABall.ballClicked(purpleBallObjects[2], clickedX, clickedY)){
 
                 //don't draw this ball
                 thirdBallClicked=true;
@@ -880,10 +878,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             }
             //if we clicked all three, score and get a new ball
             if(originalBallClicked && secondBallClicked && thirdBallClicked){
-                purpleBallObjects[1].setX(-ballWidth);
-                purpleBallObjects[1].setY(-ballHeight);
-                purpleBallObjects[2].setX(-ballWidth);
-                purpleBallObjects[2].setY(-ballHeight);
+                purpleBallObjects[1].setX(-purpleBallObjects[1].getBallWidth());
+                purpleBallObjects[1].setY(-purpleBallObjects[1].getBallHeight());
+                purpleBallObjects[2].setX(-purpleBallObjects[2].getBallWidth());
+                purpleBallObjects[2].setY(-purpleBallObjects[2].getBallHeight());
 
                 ballPurpleNumber = keys.BALL_PURPLE_NO_CLICK;
                 //reset to starting state
@@ -907,7 +905,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void waveBall(){
         //if we click the correct ball in the sequence remove it and get score
-        if(clickedABall.ballClicked(multipleBalls[currentWaveBall].getX(), multipleBalls[currentWaveBall].getY(), clickedX, clickedY)){
+        if(clickedABall.ballClicked(multipleBalls[currentWaveBall], clickedX, clickedY)){
 
             //gain more and more score and energy the more balls you click
             currentEnergyLevel += currentWaveBall*10;

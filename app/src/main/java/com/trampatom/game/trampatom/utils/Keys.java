@@ -33,7 +33,7 @@ public class Keys {
         //determines how much will the balls size be increased if we use the active power up
     public int POWER_UP_BALL_SIZE_INCREASE = 30;
         //determines by how much will the energy level increase if we use the passive for it
-    public int PASSIVE_STARTING_ENERGY_INCREASE = -4000;
+    public int PASSIVE_STARTING_ENERGY_INCREASE = 1000;
 
     // ----------------------------------------- Ball Types ------------------------------------------ \\
 

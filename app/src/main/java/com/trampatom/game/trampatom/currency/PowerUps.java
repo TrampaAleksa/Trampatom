@@ -421,7 +421,7 @@ return 0;
         switch(flag){
         //returns the value that will reduce the amount of energy we lose every second by a certain amount
             case Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY:
-                int energyDecreaseReduceAmount = -500;
+                int energyDecreaseReduceAmount = 200;
                 return energyDecreaseReduceAmount;
 
             case Keys.FLAG_YELLOW_MORE_ENERGY_ON_START:
@@ -432,7 +432,7 @@ return 0;
                 return currentEnergy;
 
         }
-        return 0;
+        return currentEnergy;
     }
 
 }
