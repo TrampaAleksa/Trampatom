@@ -2,13 +2,12 @@ package com.trampatom.game.trampatom.currency;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.trampatom.game.trampatom.Model.PowerUpPool;
+import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.utils.Keys;
 
 import java.io.BufferedReader;
@@ -17,13 +16,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
 import static android.content.ContentValues.TAG;
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Class that should contain methods for working with the in game shop.
@@ -35,6 +34,7 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class ShopHandler {
+
     AtomPool atomPool;
     TextView tvNumberAtomsBlue, tvNumberAtomsRed, tvNumberAtomsGreen, tvNumberAtomsYellow, tvNumberAtomsPurple;
     Context context;
@@ -94,7 +94,12 @@ public class ShopHandler {
      * Method for getting a object containing all of our power ups and its attributes for the shop.
      * : Image, Description, upgrade level, base cost, id and category.
      * Should be called when opening the shop to load every power up to use for displaying.
-     * @return A PowerUpObject from shared preferences
+     * <p>
+     *     NOTE: In case we did not find a file with the power ups this method will
+     *     return a new default power up pool that NEEDS to be saved , if not it will
+     *     be created anew again.
+     * </p>
+     * @return A PowerUpObject from a json file within the phone
      */
     public List<PowerUpPool> loadPowerUpPool(){
 
@@ -104,12 +109,242 @@ public class ShopHandler {
         Gson gson = new Gson();
         //get a json string fro ma file
         ret = readFile(context, "PowerUps.txt");
-        //since we are loading a list of class objects we need a type token for gson to properly work
-        Type type = new TypeToken<List<PowerUpPool>>() {
-        }.getType();
-        List<PowerUpPool> powerUpPool = gson.fromJson(ret, type);
+        if(ret != null) {
+            //since we are loading a list of class objects we need a type token for gson to properly work
+            Type type = new TypeToken<List<PowerUpPool>>() {
+            }.getType();
+            List<PowerUpPool> powerUpPool = gson.fromJson(ret, type);
 
-        return powerUpPool;
+            return powerUpPool;
+        }
+        else {
+            //in case we don't have the file with the power ups create a new
+            //power up object with the default values for power ups
+            List<PowerUpPool> firstTimePowerUpPool = new ArrayList<>();
+
+            firstTimePowerUpPool = firstTimeLoading();
+            return firstTimePowerUpPool;
+        }
+    }
+
+    /**
+     * Method that should be used to load a list of power up objects if they
+     * were not found in a file or weren't created before.
+     * <p>
+     *     NOTE: inside the method every id should be set according to a flag
+     *     contained within the Keys class to make power up functions in the game
+     *     work properly.
+     * </p>
+     * @return a list of power up objects with initial values set in this method
+     */
+    private List<PowerUpPool> firstTimeLoading(){
+        List<PowerUpPool> initialPowerUpPool = new ArrayList<>();
+        //used as a help object to store unique objects into the list
+        PowerUpPool powerUp = new PowerUpPool();
+        // First power up
+                //add every attribute to the power up
+            powerUp.setId(Keys.FLAG_RED_FREEZE_BALLS);
+            powerUp.setCategory(Keys.CATEGORY_RED);
+            powerUp.setImageId(R.drawable.plus);
+            powerUp.setDescription(context.getString(R.string.description_red_freeze));
+            powerUp.setBaseCost(10);
+            powerUp.setCurrentLevel(0);
+                //after adding every attribute add that power up to the pool
+            initialPowerUpPool.add(powerUp);
+
+        // Second power up
+                //add every attribute to the power up
+            powerUp.setId(Keys.FLAG_RED_BIG_ENERGY_BONUS);
+            powerUp.setCategory(Keys.CATEGORY_RED);
+            powerUp.setImageId(R.drawable.plus);
+            powerUp.setDescription(context.getString(R.string.description_red_energy_boost));
+            powerUp.setBaseCost(10);
+            powerUp.setCurrentLevel(0);
+                //after adding every attribute add that power up to the pool
+            initialPowerUpPool.add(powerUp);
+
+        // Third power up
+                //add every attribute to the power up
+            powerUp.setId(Keys.FLAG_RED_LIMITING_SQUARE);
+            powerUp.setCategory(Keys.CATEGORY_RED);
+            powerUp.setImageId(R.drawable.plus);
+            powerUp.setDescription(context.getString(R.string.description_red_limiting_Square));
+            powerUp.setBaseCost(10);
+            powerUp.setCurrentLevel(0);
+                //after adding every attribute add that power up to the pool
+            initialPowerUpPool.add(powerUp);
+
+        // Fourth power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_RED_UNKNOWN2);
+        powerUp.setCategory(Keys.CATEGORY_RED);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_red_unknown4));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Fifth power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_GREEN_SLOW_DOWN_BALLS);
+        powerUp.setCategory(Keys.CATEGORY_GREEN);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_green_slow_balls));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Sixth power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_GREEN_SMALL_ENERGY_BONUS);
+        powerUp.setCategory(Keys.CATEGORY_GREEN);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_green_energy_boost));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Seventh power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_GREEN_INCREASE_BALL_SIZE);
+        powerUp.setCategory(Keys.CATEGORY_GREEN);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_green_increase_size));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Eight power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_GREEN_UNKNOWN2);
+        powerUp.setCategory(Keys.CATEGORY_GREEN);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_green_unknown4));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Ninth power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_PURPLE_BIGGER_BALLS);
+        powerUp.setCategory(Keys.CATEGORY_PURPLE);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_purple_bigger_balls));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Tenth power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY);
+        powerUp.setCategory(Keys.CATEGORY_PURPLE);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_purple_slow_decay));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Eleventh power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_PURPLE_UNKNOWN3);
+        powerUp.setCategory(Keys.CATEGORY_PURPLE);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_purple_unknown3));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Twelfth power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_PURPLE_UNKNOWN4);
+        powerUp.setCategory(Keys.CATEGORY_PURPLE);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_purple_unknown4));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Thirteenth power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_YELLOW_MORE_ENERGY_ON_START);
+        powerUp.setCategory(Keys.CATEGORY_YELLOW);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_yellow_energy_on_start));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Fourteenth power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_YELLOW_SLOW_DOWN_BALLS);
+        powerUp.setCategory(Keys.CATEGORY_YELLOW);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_yellow_slow_balls));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Fifteenth power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_YELLOW_UNKNOWN3);
+        powerUp.setCategory(Keys.CATEGORY_YELLOW);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_yellow_unknown3));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Sixteenth power up
+        //add every attribute to the power up
+        powerUp.setId(Keys.FLAG_YELLOW_UNKNOWN4);
+        powerUp.setCategory(Keys.CATEGORY_YELLOW);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_yellow_unknown4));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+        return initialPowerUpPool;
+
+
+    }
+    /**
+     * Method that should return only two power ups, the ones we selected to be used within the game.
+     * <p>
+     *     NOTE: this method should be used within the game for performance reasons so that we don't have to iterate through
+     *     the whole power up list but only two.
+     * </p>
+     * @return a array list with two power up pool objects to be used.
+     */
+    public List<PowerUpPool> loadSelectedPowerUps(){
+
+        //if the file wasn't loaded the string will be empty
+        String ret = "";
+
+        Gson gson = new Gson();
+        //get a json string fro ma file
+        ret = readFile(context, "SelectedPowerUps.txt");
+        if(ret != null) {
+            //since we are loading a list of class objects we need a type token for gson to properly work
+            Type type = new TypeToken<List<PowerUpPool>>() {
+            }.getType();
+            List<PowerUpPool> powerUpPool = gson.fromJson(ret, type);
+
+            return powerUpPool;
+        }
+        return null;
     }
 
     /**
@@ -122,6 +357,13 @@ public class ShopHandler {
         Gson gson = new Gson();
         String json = gson.toJson(powerUpPool);
         writeFile(context,json, "PowerUps.txt");
+
+    }
+    public void saveSelectedPowerUps(List<PowerUpPool> powerUpPool){
+
+        Gson gson = new Gson();
+        String json = gson.toJson(powerUpPool);
+        writeFile(context,json, "SelectedPowerUps.txt");
 
     }
 
@@ -153,7 +395,6 @@ public class ShopHandler {
         }
         return null;
     }
-
     public void writeFile(Context context, String data, String file){
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(file, Context.MODE_PRIVATE));
@@ -163,6 +404,9 @@ public class ShopHandler {
             Log.e(TAG, "File write failed: " + e.toString());
         }
     }
+
+
+
 
     public void selectActivePowerUp(int flag){
 

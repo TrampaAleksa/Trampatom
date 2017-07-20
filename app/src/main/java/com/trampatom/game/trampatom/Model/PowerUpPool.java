@@ -1,7 +1,5 @@
 package com.trampatom.game.trampatom.Model;
 
-import android.widget.ImageView;
-
 /**
  * Class containing the attributes of a single power up:
  <p>// DESCRIPTION : should say what the power up will do and what changes with its level up.</p>
@@ -22,20 +20,20 @@ public class PowerUpPool {
     // IMAGE : the icon used to distinguish this power up from the others to help the user visually.
     // CATEGORY : there are four categories , this will be used to sort the right power ups into the right category.
 
-String descriptions;
+String description;
 int id;
 int baseCost;
 int currentLevel;
-ImageView image;
+int imageId;
 int category;
 
 
-    public String getDescriptions() {
-        return descriptions;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescriptions(String descriptions) {
-        this.descriptions = descriptions;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getId() {
@@ -62,12 +60,12 @@ int category;
         this.currentLevel = currentLevel;
     }
 
-    public ImageView getImage() {
-        return image;
+    public int getImageId() {
+        return imageId;
     }
 
-    public void setImage(ImageView image) {
-        this.image = image;
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
     }
 
     public int getCategory() {

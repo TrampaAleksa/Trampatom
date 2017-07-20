@@ -50,10 +50,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.main_menu);
-
         init();
 
     }
+
 
     private void init(){
      highScore = new HighScore(this);

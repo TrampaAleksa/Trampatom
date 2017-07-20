@@ -35,6 +35,7 @@ public class Keys {
         //determines by how much will the energy level increase if we use the passive for it
     public int PASSIVE_STARTING_ENERGY_INCREASE = 1000;
 
+
     // ----------------------------------------- Ball Types ------------------------------------------ \\
 
 
@@ -100,11 +101,20 @@ public class Keys {
         public String KEY_GREEN_CURRENCY = "green currency";
         public String KEY_YELLOW_CURRENCY = "yellow currency";
         public String KEY_PURPLE_CURRENCY = "purple currency";
+
         //keys for getting a specific category for shop purposes
-        public int CATEGORY_RED = 1;
-        public int CATEGORY_GREEN = 2;
-        public int CATEGORY_YELLOW = 3;
-        public int CATEGORY_PURPLE = 4;
+        public static final int CATEGORY_RED = 1;
+        public static final int CATEGORY_GREEN = 2;
+        public static final int CATEGORY_YELLOW = 3;
+        public static final int CATEGORY_PURPLE = 4;
+    /*
+        //keys for getting the base cost of power ups
+        public static final int BASE_COST_RED_FREEZE = 10;
+        public static final int BASE_COST_RED_ENERGY_BOOST = 10;
+        public static final int BASE_COST_RED_LIMITING_SQUARE = 10;
+        public static final int BASE_COST_RED_UNKNOWN_4 = 10;*/
+
+
         //used to store a preference to determine what power up we selected
         public static final String KEY_POWER_UP_ONE = "power up 1";
         public static final String KEY_POWER_UP_TWO = "power up 2";
