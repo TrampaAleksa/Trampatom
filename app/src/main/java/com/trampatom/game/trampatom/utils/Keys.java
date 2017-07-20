@@ -110,6 +110,10 @@ public class Keys {
         public static final String KEY_POWER_UP_TWO = "power up 2";
         public static final String KEY_PASSIVE_ONE = "passive 1";
         public static final String KEY_PASSIVE_TWO = "passive 2";
+        //Preference for accessing the power up pool object containing all info on our power ups
+        public static final String KEY_POWER_UPS_POOL = "Power Up Pool";
+
+        //used to determine what level of power up we are using
 
 
     // ----------------------------------- Flags -------------------------------------------- \\
