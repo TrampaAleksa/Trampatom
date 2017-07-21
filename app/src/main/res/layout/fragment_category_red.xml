@@ -17,4 +17,24 @@
         android:layout_height="wrap_content"
         android:text="Energy++"
         />
+    <TextView
+        android:id="@+id/tvRedFirstPowerUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WUHU"
+        android:layout_below="@+id/bBigEnergyBonus"/>
+    <Button
+        android:layout_below="@+id/tvRedFirstPowerUp"
+        android:id="@+id/bUpgradePowerOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upgrade1"
+        />
+    <Button
+        android:layout_below="@+id/bUpgradePowerOne"
+        android:id="@+id/bReduceLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reduce"
+        />
 </RelativeLayout>

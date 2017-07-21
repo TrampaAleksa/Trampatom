@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.currency.AtomPool;
 import com.trampatom.game.trampatom.currency.ShopHandler;
@@ -18,6 +19,8 @@ import com.trampatom.game.trampatom.currency.fragments.FragmentGreen;
 import com.trampatom.game.trampatom.currency.fragments.FragmentPurple;
 import com.trampatom.game.trampatom.currency.fragments.FragmentRed;
 import com.trampatom.game.trampatom.currency.fragments.FragmentYellow;
+
+import java.util.List;
 
 /**
  * Important activity that contains the shop. The shop is used for purchasing various power ups.
@@ -40,6 +43,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     //classes used to run the shop
     AtomPool atomPool;
     ShopHandler shopHandler;
+    PowerUpPool powerUp;
+    List<PowerUpPool> powerUpPool;
 
 
     @Override
@@ -51,6 +56,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void init() {
+
         //initialize views
         tvNumberAtomsBlue = (TextView) findViewById(R.id.tvAtomNumberBlue);
         tvNumberAtomsRed = (TextView) findViewById(R.id.tvAtomNumberRed);
@@ -60,7 +66,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
         //Classes
         atomPool = new AtomPool(this);
-        shopHandler = new ShopHandler(atomPool);
+        shopHandler = new ShopHandler(atomPool, this);
         shopHandler.initializeAtomNumbersDisplay(
                 tvNumberAtomsBlue,
                 tvNumberAtomsRed,
@@ -69,10 +75,12 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                 tvNumberAtomsPurple);
         //set the currency levels
         shopHandler.setAtomPoolValues();
+        //contains a list of power ups
+        powerUpPool = shopHandler.loadPowerUpPool();
 
         //set up the view pager and the tabs for changing categories
         ViewPager vpPager = (ViewPager) findViewById(R.id.vpCategory);
-        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), powerUpPool);
         vpPager.setAdapter(adapterViewPager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabCategories);
         tabLayout.setupWithViewPager(vpPager);
@@ -95,10 +103,17 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
      * Inner class used to get the right category of the shop based on the selected one using an adapter
      */
     public static class MyPagerAdapter extends FragmentPagerAdapter {
+        List<PowerUpPool> powerUpPoolFragment;
         private static int NUM_ITEMS = 4;
 
-        public MyPagerAdapter(FragmentManager fragmentManager) {
+        /**
+         * Class used to get the pager adapter used to cycle between fragments/categories.
+         * @param fragmentManager needed to manage swapping and inflating of fragments
+         * @param powerUpPoolFragment needed to get the power ups for each fragment and displaying them
+         */
+        public MyPagerAdapter(FragmentManager fragmentManager, List<PowerUpPool> powerUpPoolFragment) {
             super(fragmentManager);
+            this.powerUpPoolFragment = powerUpPoolFragment;
         }
 
         // Returns total number of pages
@@ -112,14 +127,14 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         public Fragment getItem(int position) {
 
             switch (position) {
-                case 0: // Fragment # 0 - This will show FirstFragment
-                    return FragmentRed.newInstance(0);
-                case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return FragmentGreen.newInstance(1);
-                case 2: // Fragment # 1 - This will show SecondFragment
-                    return FragmentYellow.newInstance(2);
-                case 3: // Fragment # 1 - This will show SecondFragment
-                    return FragmentPurple.newInstance(3);
+                case 0: // RED
+                    return FragmentRed.newInstance(powerUpPoolFragment);
+                case 1: // GREEN
+                    return FragmentGreen.newInstance(powerUpPoolFragment);
+                case 2: // YELLOW
+                    return FragmentYellow.newInstance(powerUpPoolFragment);
+                case 3: // PURPLE
+                    return FragmentPurple.newInstance(powerUpPoolFragment);
                 default:
                     return null;
             }
@@ -132,5 +147,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
 
 }

@@ -9,9 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.currency.Fragments;
 import com.trampatom.game.trampatom.utils.Keys;
+
+import java.util.List;
 
 /**
  * Fragment containing the yellow category for the shop
@@ -26,7 +29,7 @@ public class FragmentYellow extends Fragment implements View.OnClickListener {
 
 
     // newInstance constructor for creating fragment with arguments
-    public static FragmentYellow newInstance(int category) {
+    public static FragmentYellow newInstance(List<PowerUpPool> powerUpPool) {
         FragmentYellow fragmentYellow = new FragmentYellow();
         Bundle args = new Bundle();
         fragmentYellow.setArguments(args);

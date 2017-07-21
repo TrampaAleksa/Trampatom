@@ -8,9 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.utils.Keys;
+
+import java.util.List;
 
 
 /**
@@ -22,14 +26,17 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
+    static List<PowerUpPool> powerUpPool;
+    PowerUpPool powerUp;
 
-    Button bFreeze, bBigEnergyBonus;
+    Button bFreeze, bBigEnergyBonus, bUpgrade, bReduce;
 
     // newInstance constructor for creating fragment with arguments
-    public static FragmentRed newInstance(int category) {
+    public static FragmentRed newInstance(List<PowerUpPool> powerUpPool) {
         FragmentRed fragmentRed = new FragmentRed();
         Bundle args = new Bundle();
         fragmentRed.setArguments(args);
+        FragmentRed.powerUpPool = powerUpPool;
         return fragmentRed;
     }
 
@@ -38,7 +45,6 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -46,11 +52,19 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_red, container, false);
+
+        powerUp = powerUpPool.get(0);
         //TextView tvLabel = (TextView) view.findViewById(R.id.tvRed);
         bFreeze = (Button) view.findViewById(R.id.bFreeze);
         bBigEnergyBonus = (Button) view.findViewById(R.id.bBigEnergyBonus);
+        bUpgrade = (Button) view.findViewById(R.id.bUpgradePowerOne);
+        bReduce = (Button) view.findViewById(R.id.bReduceLevel);
         bFreeze.setOnClickListener(this);
         bBigEnergyBonus.setOnClickListener(this);
+        bUpgrade.setOnClickListener(this);
+        bReduce.setOnClickListener(this);
+        TextView tvPowerUp1 = (TextView) view.findViewById(R.id.tvRedFirstPowerUp);
+        tvPowerUp1.setText(powerUp.getDescription());
 
         return view;
     }
@@ -71,6 +85,15 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
                 editor = preferences.edit();
                 editor.putInt(Keys.KEY_POWER_UP_TWO, Keys.FLAG_RED_BIG_ENERGY_BONUS);
                 editor.apply();
+
+                break;
+            case R.id.bUpgradePowerOne:
+                powerUp.setCurrentLevel(powerUp.getCurrentLevel()+1);
+
+                break;
+
+            case R.id.bReduceLevel:
+                powerUp.setCurrentLevel(powerUp.getCurrentLevel()-1);
 
                 break;
 

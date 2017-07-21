@@ -143,6 +143,7 @@ public class ShopHandler {
         PowerUpPool powerUp = new PowerUpPool();
         // First power up
                 //add every attribute to the power up
+         powerUp = new PowerUpPool();
             powerUp.setId(Keys.FLAG_RED_FREEZE_BALLS);
             powerUp.setCategory(Keys.CATEGORY_RED);
             powerUp.setImageId(R.drawable.plus);
@@ -151,31 +152,33 @@ public class ShopHandler {
             powerUp.setCurrentLevel(0);
                 //after adding every attribute add that power up to the pool
             initialPowerUpPool.add(powerUp);
-
         // Second power up
                 //add every attribute to the power up
-            powerUp.setId(Keys.FLAG_RED_BIG_ENERGY_BONUS);
-            powerUp.setCategory(Keys.CATEGORY_RED);
-            powerUp.setImageId(R.drawable.plus);
-            powerUp.setDescription(context.getString(R.string.description_red_energy_boost));
-            powerUp.setBaseCost(10);
-            powerUp.setCurrentLevel(0);
+        powerUp = new PowerUpPool();
+        powerUp.setId(Keys.FLAG_RED_BIG_ENERGY_BONUS);
+        powerUp.setCategory(Keys.CATEGORY_RED);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_red_energy_boost));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
                 //after adding every attribute add that power up to the pool
             initialPowerUpPool.add(powerUp);
 
         // Third power up
                 //add every attribute to the power up
-            powerUp.setId(Keys.FLAG_RED_LIMITING_SQUARE);
-            powerUp.setCategory(Keys.CATEGORY_RED);
-            powerUp.setImageId(R.drawable.plus);
-            powerUp.setDescription(context.getString(R.string.description_red_limiting_Square));
-            powerUp.setBaseCost(10);
-            powerUp.setCurrentLevel(0);
+        powerUp = new PowerUpPool();
+        powerUp.setId(Keys.FLAG_RED_LIMITING_SQUARE);
+        powerUp.setCategory(Keys.CATEGORY_RED);
+        powerUp.setImageId(R.drawable.plus);
+        powerUp.setDescription(context.getString(R.string.description_red_limiting_Square));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(0);
                 //after adding every attribute add that power up to the pool
             initialPowerUpPool.add(powerUp);
 
         // Fourth power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_RED_UNKNOWN2);
         powerUp.setCategory(Keys.CATEGORY_RED);
         powerUp.setImageId(R.drawable.plus);
@@ -187,6 +190,7 @@ public class ShopHandler {
 
         // Fifth power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_GREEN_SLOW_DOWN_BALLS);
         powerUp.setCategory(Keys.CATEGORY_GREEN);
         powerUp.setImageId(R.drawable.plus);
@@ -198,6 +202,7 @@ public class ShopHandler {
 
         // Sixth power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_GREEN_SMALL_ENERGY_BONUS);
         powerUp.setCategory(Keys.CATEGORY_GREEN);
         powerUp.setImageId(R.drawable.plus);
@@ -209,6 +214,7 @@ public class ShopHandler {
 
         // Seventh power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_GREEN_INCREASE_BALL_SIZE);
         powerUp.setCategory(Keys.CATEGORY_GREEN);
         powerUp.setImageId(R.drawable.plus);
@@ -220,6 +226,7 @@ public class ShopHandler {
 
         // Eight power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_GREEN_UNKNOWN2);
         powerUp.setCategory(Keys.CATEGORY_GREEN);
         powerUp.setImageId(R.drawable.plus);
@@ -231,6 +238,7 @@ public class ShopHandler {
 
         // Ninth power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_PURPLE_BIGGER_BALLS);
         powerUp.setCategory(Keys.CATEGORY_PURPLE);
         powerUp.setImageId(R.drawable.plus);
@@ -242,6 +250,7 @@ public class ShopHandler {
 
         // Tenth power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY);
         powerUp.setCategory(Keys.CATEGORY_PURPLE);
         powerUp.setImageId(R.drawable.plus);
@@ -253,6 +262,7 @@ public class ShopHandler {
 
         // Eleventh power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_PURPLE_UNKNOWN3);
         powerUp.setCategory(Keys.CATEGORY_PURPLE);
         powerUp.setImageId(R.drawable.plus);
@@ -264,6 +274,7 @@ public class ShopHandler {
 
         // Twelfth power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_PURPLE_UNKNOWN4);
         powerUp.setCategory(Keys.CATEGORY_PURPLE);
         powerUp.setImageId(R.drawable.plus);
@@ -275,6 +286,7 @@ public class ShopHandler {
 
         // Thirteenth power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_YELLOW_MORE_ENERGY_ON_START);
         powerUp.setCategory(Keys.CATEGORY_YELLOW);
         powerUp.setImageId(R.drawable.plus);
@@ -286,6 +298,7 @@ public class ShopHandler {
 
         // Fourteenth power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_YELLOW_SLOW_DOWN_BALLS);
         powerUp.setCategory(Keys.CATEGORY_YELLOW);
         powerUp.setImageId(R.drawable.plus);
@@ -297,6 +310,7 @@ public class ShopHandler {
 
         // Fifteenth power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_YELLOW_UNKNOWN3);
         powerUp.setCategory(Keys.CATEGORY_YELLOW);
         powerUp.setImageId(R.drawable.plus);
@@ -308,6 +322,7 @@ public class ShopHandler {
 
         // Sixteenth power up
         //add every attribute to the power up
+        powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_YELLOW_UNKNOWN4);
         powerUp.setCategory(Keys.CATEGORY_YELLOW);
         powerUp.setImageId(R.drawable.plus);
@@ -316,6 +331,8 @@ public class ShopHandler {
         powerUp.setCurrentLevel(0);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
+
+        savePowerUpPool(initialPowerUpPool);
         return initialPowerUpPool;
 
 
