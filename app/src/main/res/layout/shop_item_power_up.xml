@@ -7,24 +7,67 @@
         android:id="@+id/ivIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/atomnarandzasta"
-        android:layout_centerInParent="true"/>
+        android:layout_alignTop="@+id/upgradeProgress"
+        android:layout_alignLeft="@+id/upgradeProgress"
+        android:layout_alignRight="@+id/upgradeProgress"
+        android:layout_alignBottom="@+id/upgradeProgress"
+        android:background="@drawable/atomnarandzasta" />
 
 
     <com.hookedonplay.decoviewlib.DecoView
         xmlns:custom="http://schemas.android.com/apk/res-auto"
-        custom:dv_lineWidth="16dp"
+        custom:dv_lineWidth="10dp"
         android:id="@+id/upgradeProgress"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_centerInParent="true"/>
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="14dp"/>
 
 
     <TextView
         android:id="@+id/tvCost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignTop="@+id/ivIcon"
+        android:layout_alignLeft="@+id/ivIcon"
+        android:layout_alignRight="@+id/ivIcon"
+        android:layout_alignBottom="@+id/ivIcon"
+        android:textAlignment="center"
+        android:gravity="center"
         android:text="300"/>
+
+
+    <ImageView
+        android:id="@+id/ivIcon2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/upgradeProgress2"
+        android:layout_alignLeft="@+id/upgradeProgress2"
+        android:layout_alignRight="@+id/upgradeProgress2"
+        android:layout_alignBottom="@+id/upgradeProgress2"
+        android:background="@drawable/atomnarandzasta" />
+
+
+    <com.hookedonplay.decoviewlib.DecoView
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        custom:dv_lineWidth="10dp"
+        android:id="@+id/upgradeProgress2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="14dp"
+        android:layout_below="@+id/upgradeProgress"/>
+
+
+    <TextView
+        android:id="@+id/tvCost2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivIcon2"
+        android:layout_alignLeft="@+id/ivIcon2"
+        android:layout_alignRight="@+id/ivIcon2"
+        android:layout_alignBottom="@+id/ivIcon2"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="300"/>
+
 
 </RelativeLayout>

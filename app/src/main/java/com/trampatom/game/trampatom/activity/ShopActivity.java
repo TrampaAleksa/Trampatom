@@ -91,9 +91,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch(v.getId()){
 
-            case R.id.bTrade:
+            //case R.id.bTrade:
 
-                break;
+               // break;
 
         }
     }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutPowerUpView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="14dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutFirstHalf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivSelectedPowerUp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@color/colorAccent"
+            android:layout_margin="10dp"/>
+
+        <Button
+            android:id="@+id/bBuy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivSelectedPowerUp"
+            android:layout_alignRight="@+id/ivSelectedPowerUp"
+            android:layout_alignLeft="@+id/ivSelectedPowerUp"
+            android:layout_margin="10dp"
+
+            android:text="BUY" />
+
+    </RelativeLayout>
+
+
+<RelativeLayout
+    android:id="@+id/relativeLayoutSecondHalf"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@+id/relativeLayoutFirstHalf"
+    android:layout_alignBottom="@+id/relativeLayoutFirstHalf"
+    android:layout_alignTop="@+id/relativeLayoutFirstHalf">
+
+    <TextView
+        android:id="@+id/tvPrice"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="1000"
+        android:layout_marginTop="36dp"
+        android:layout_marginRight="30dp"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvPrice"
+        android:layout_below="@+id/tvPrice"
+        android:text="OPIS POWER UP-A"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginBottom="14dp"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/tvBeforeAfter"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/tvDescription"
+        android:layout_alignLeft="@+id/tvDescription"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="14dp"
+        android:text="5 > 7"
+        android:textAlignment="center" />
+
+</RelativeLayout>
+
+
+
+
+</RelativeLayout>

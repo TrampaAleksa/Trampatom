@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+
     <ImageView
         android:id="@+id/ivAtomBlue"
         android:background="@drawable/atomplava"
@@ -75,14 +76,6 @@
         android:text="@string/shop_atom_number_def_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <Button
-        android:layout_toRightOf="@+id/tvAtomNumberPurple"
-        android:id="@+id/bTrade"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Trade"
-        />
 
 </RelativeLayout>
 

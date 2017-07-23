@@ -3,38 +3,102 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/relativeLayoutItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-    <Button
-        android:id="@+id/bFreeze"
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentLeft="true">
+
+            <include
+                android:id="@+id/layoutShopItem1"
+                layout="@layout/shop_item_power_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </include>
+
+        </FrameLayout>
+
+
+        <ImageButton
+            android:id="@+id/ibTrade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="14dp"
+            android:background="@drawable/atomplava" />
+
+        <TextView
+            android:id="@+id/tvCategoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ibTrade"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="14dp"
+            android:text="CATEGORY" />
+
+
+        <ImageView
+            android:id="@+id/ivSelect"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/tvCategoryName"
+            android:layout_centerHorizontal="true"
+            android:background="@color/label_back_dark"
+            />
+
+        <Button
+            android:id="@+id/bSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivSelect"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="26dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:text="SELECT" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true">
+
+            <include
+                android:id="@+id/layoutShopItem2"
+                layout="@layout/shop_item_power_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </include>
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutItemView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Freeze"
-        />
-    <Button
-        android:layout_below="@+id/bFreeze"
-        android:id="@+id/bBigEnergyBonus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Energy++"
-        />
-    <TextView
-        android:id="@+id/tvRedFirstPowerUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="WUHU"
-        android:layout_below="@+id/bBigEnergyBonus"/>
-    <Button
-        android:layout_below="@+id/tvRedFirstPowerUp"
-        android:id="@+id/bUpgradePowerOne"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Upgrade1"
-        />
-    <Button
-        android:layout_below="@+id/bUpgradePowerOne"
-        android:id="@+id/bReduceLevel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reduce"
-        />
+        android:layout_below="@+id/relativeLayoutItems">
+
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/layoutPowerUpView"
+            layout="@layout/shop_item_power_up_view">
+
+        </include>
+
+    </RelativeLayout>
+
 </RelativeLayout>

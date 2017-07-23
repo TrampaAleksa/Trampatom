@@ -114,7 +114,7 @@ public class ShopHandler {
             Type type = new TypeToken<List<PowerUpPool>>() {
             }.getType();
             List<PowerUpPool> powerUpPool = gson.fromJson(ret, type);
-
+            savePowerUpPool(powerUpPool);
             return powerUpPool;
         }
         else {
@@ -146,10 +146,10 @@ public class ShopHandler {
          powerUp = new PowerUpPool();
             powerUp.setId(Keys.FLAG_RED_FREEZE_BALLS);
             powerUp.setCategory(Keys.CATEGORY_RED);
-            powerUp.setImageId(R.drawable.plus);
+            powerUp.setImageId(R.drawable.wave5);
             powerUp.setDescription(context.getString(R.string.description_red_freeze));
-            powerUp.setBaseCost(10);
-            powerUp.setCurrentLevel(0);
+            powerUp.setBaseCost(100);
+            powerUp.setCurrentLevel(3);
                 //after adding every attribute add that power up to the pool
             initialPowerUpPool.add(powerUp);
         // Second power up
@@ -157,10 +157,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_RED_BIG_ENERGY_BONUS);
         powerUp.setCategory(Keys.CATEGORY_RED);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.atomcrvena);
         powerUp.setDescription(context.getString(R.string.description_red_energy_boost));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(50);
+        powerUp.setCurrentLevel(2);
                 //after adding every attribute add that power up to the pool
             initialPowerUpPool.add(powerUp);
 
@@ -169,10 +169,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_RED_LIMITING_SQUARE);
         powerUp.setCategory(Keys.CATEGORY_RED);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.wave3);
         powerUp.setDescription(context.getString(R.string.description_red_limiting_Square));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(25);
+        powerUp.setCurrentLevel(1);
                 //after adding every attribute add that power up to the pool
             initialPowerUpPool.add(powerUp);
 
@@ -181,10 +181,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_RED_UNKNOWN2);
         powerUp.setCategory(Keys.CATEGORY_RED);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.wave2);
         powerUp.setDescription(context.getString(R.string.description_red_unknown4));
         powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setCurrentLevel(5);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -193,9 +193,9 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_GREEN_SLOW_DOWN_BALLS);
         powerUp.setCategory(Keys.CATEGORY_GREEN);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.wave1);
         powerUp.setDescription(context.getString(R.string.description_green_slow_balls));
-        powerUp.setBaseCost(10);
+        powerUp.setBaseCost(160);
         powerUp.setCurrentLevel(0);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
@@ -205,10 +205,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_GREEN_SMALL_ENERGY_BONUS);
         powerUp.setCategory(Keys.CATEGORY_GREEN);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.wave7);
         powerUp.setDescription(context.getString(R.string.description_green_energy_boost));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(90);
+        powerUp.setCurrentLevel(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -217,10 +217,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_GREEN_INCREASE_BALL_SIZE);
         powerUp.setCategory(Keys.CATEGORY_GREEN);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.wave6);
         powerUp.setDescription(context.getString(R.string.description_green_increase_size));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(400);
+        powerUp.setCurrentLevel(4);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -229,10 +229,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_GREEN_UNKNOWN2);
         powerUp.setCategory(Keys.CATEGORY_GREEN);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.wave5);
         powerUp.setDescription(context.getString(R.string.description_green_unknown4));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(15);
+        powerUp.setCurrentLevel(4);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -241,10 +241,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_PURPLE_BIGGER_BALLS);
         powerUp.setCategory(Keys.CATEGORY_PURPLE);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.wave4);
         powerUp.setDescription(context.getString(R.string.description_purple_bigger_balls));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(100);
+        powerUp.setCurrentLevel(5);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -253,10 +253,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY);
         powerUp.setCategory(Keys.CATEGORY_PURPLE);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.wave3);
         powerUp.setDescription(context.getString(R.string.description_purple_slow_decay));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(30);
+        powerUp.setCurrentLevel(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -265,10 +265,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_PURPLE_UNKNOWN3);
         powerUp.setCategory(Keys.CATEGORY_PURPLE);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.wave2);
         powerUp.setDescription(context.getString(R.string.description_purple_unknown3));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(200);
+        powerUp.setCurrentLevel(1);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -277,10 +277,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_PURPLE_UNKNOWN4);
         powerUp.setCategory(Keys.CATEGORY_PURPLE);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.wave1);
         powerUp.setDescription(context.getString(R.string.description_purple_unknown4));
         powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setCurrentLevel(5);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -289,10 +289,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_YELLOW_MORE_ENERGY_ON_START);
         powerUp.setCategory(Keys.CATEGORY_YELLOW);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.atomplava);
         powerUp.setDescription(context.getString(R.string.description_yellow_energy_on_start));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(15);
+        powerUp.setCurrentLevel(4);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -301,10 +301,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_YELLOW_SLOW_DOWN_BALLS);
         powerUp.setCategory(Keys.CATEGORY_YELLOW);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.atomroze);
         powerUp.setDescription(context.getString(R.string.description_yellow_slow_balls));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(250);
+        powerUp.setCurrentLevel(5);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -313,10 +313,10 @@ public class ShopHandler {
         powerUp = new PowerUpPool();
         powerUp.setId(Keys.FLAG_YELLOW_UNKNOWN3);
         powerUp.setCategory(Keys.CATEGORY_YELLOW);
-        powerUp.setImageId(R.drawable.plus);
+        powerUp.setImageId(R.drawable.atomzelena);
         powerUp.setDescription(context.getString(R.string.description_yellow_unknown3));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(40);
+        powerUp.setCurrentLevel(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -327,8 +327,8 @@ public class ShopHandler {
         powerUp.setCategory(Keys.CATEGORY_YELLOW);
         powerUp.setImageId(R.drawable.plus);
         powerUp.setDescription(context.getString(R.string.description_yellow_unknown4));
-        powerUp.setBaseCost(10);
-        powerUp.setCurrentLevel(0);
+        powerUp.setBaseCost(25);
+        powerUp.setCurrentLevel(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
