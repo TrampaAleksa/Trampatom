@@ -52,8 +52,7 @@
             android:layout_height="50dp"
             android:layout_below="@+id/tvCategoryName"
             android:layout_centerHorizontal="true"
-            android:background="@color/label_back_dark"
-            />
+            android:background="@android:color/background_dark" />
 
         <Button
             android:id="@+id/bSelect"

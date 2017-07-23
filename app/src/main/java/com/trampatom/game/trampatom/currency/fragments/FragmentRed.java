@@ -2,6 +2,7 @@ package com.trampatom.game.trampatom.currency.fragments;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.RotateDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -11,11 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hookedonplay.decoviewlib.DecoView;
-import com.hookedonplay.decoviewlib.charts.SeriesItem;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.utils.Keys;
@@ -31,6 +32,8 @@ import java.util.List;
 
 public class FragmentRed extends Fragment implements View.OnClickListener{
 
+    int i=0, j=0;
+    int selectedPowerUpIndex;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     static List<PowerUpPool> powerUpPool;
@@ -47,7 +50,7 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
     TextView[] tvPriceItem = {null,null,null,null};
     ImageView ivSelect, ivSelectedItemImage;
     ImageView[] ivItemImage = {null, null, null, null};
-    DecoView[] dvUpgradeProgressItem = {null, null, null, null};
+    CircularProgressBar[] pbUpgradeProgress = {null, null, null, null};
 
 
     // newInstance constructor for creating fragment with arguments
@@ -85,7 +88,7 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
     private void init(View view){
 
         //load all four power ups
-        for(int i=0; i<Keys.FLAG_RED_UNKNOWN2; i++) {
+        for(i=0; i<Keys.FLAG_RED_UNKNOWN2; i++) {
             powerUp[i] = powerUpPool.get(i);
         }
         //we need to initialize the views that we included in the xml so we can access the views inside it
@@ -112,17 +115,97 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
         ivItemImage[1] = (ImageView) rlItemsView1.findViewById(R.id.ivIcon2);
         ivItemImage[2] = (ImageView) rlItemsView2.findViewById(R.id.ivIcon);
         ivItemImage[3] = (ImageView) rlItemsView2.findViewById(R.id.ivIcon2);
-        dvUpgradeProgressItem[0] = (DecoView) rlItemsView1.findViewById(R.id.upgradeProgress);
-        dvUpgradeProgressItem[1] = (DecoView) rlItemsView1.findViewById(R.id.upgradeProgress2);
-        dvUpgradeProgressItem[2] = (DecoView) rlItemsView2.findViewById(R.id.upgradeProgress);
-        dvUpgradeProgressItem[3] = (DecoView) rlItemsView2.findViewById(R.id.upgradeProgress2);
+        pbUpgradeProgress[0] = (CircularProgressBar) rlItemsView1.findViewById(R.id.upgradeProgress);
+        pbUpgradeProgress[1] = (CircularProgressBar) rlItemsView1.findViewById(R.id.upgradeProgress2);
+        pbUpgradeProgress[2] = (CircularProgressBar) rlItemsView2.findViewById(R.id.upgradeProgress);
+        pbUpgradeProgress[3] = (CircularProgressBar) rlItemsView2.findViewById(R.id.upgradeProgress2);
+
         //set on click listeners to all of the buttons
-        bBuy.setOnClickListener(this);
-        bSelect.setOnClickListener(this);
-        ibTrade.setOnClickListener(this);
-        for(int i=0; i<4; i++){
-            ivItemImage[i].setOnClickListener(this);
-        }
+        setClickListeners();
+    }
+
+   private void setClickListeners(){
+
+       bBuy.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+
+               if(powerUp[selectedPowerUpIndex].getCurrentLevel()<5) {
+                   powerUp[selectedPowerUpIndex].setCurrentLevel(powerUp[selectedPowerUpIndex].getCurrentLevel() + 1);
+                   pbUpgradeProgress[selectedPowerUpIndex].setProgress(powerUp[selectedPowerUpIndex].getCurrentLevel()*20);
+               }
+
+           }
+       });
+
+       bSelect.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+
+
+
+           }
+       });
+
+       ibTrade.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+
+
+
+           }
+       });
+
+
+       ivItemImage[0].setOnClickListener(new View.OnClickListener() {
+
+           @Override
+           public void onClick(View v) {
+
+               tvDescription.setText(powerUp[0].getDescription());
+               tvPrice.setText(Integer.toString(powerUp[0].getBaseCost()*powerUp[0].getCurrentLevel()));
+               ivSelectedItemImage.setBackground(getResources().getDrawable(powerUp[0].getImageId(),null));
+                selectedPowerUpIndex =0;
+           }
+       });
+
+
+       ivItemImage[1].setOnClickListener(new View.OnClickListener() {
+
+           @Override
+           public void onClick(View v) {
+
+               tvDescription.setText(powerUp[1].getDescription());
+               tvPrice.setText(Integer.toString(powerUp[1].getBaseCost()*powerUp[1].getCurrentLevel()));
+               ivSelectedItemImage.setBackground(getResources().getDrawable(powerUp[1].getImageId(),null));
+               selectedPowerUpIndex =1;
+           }
+       });
+
+       ivItemImage[2].setOnClickListener(new View.OnClickListener() {
+
+           @Override
+           public void onClick(View v) {
+
+               tvDescription.setText(powerUp[2].getDescription());
+               tvPrice.setText(Integer.toString(powerUp[2].getBaseCost()*powerUp[2].getCurrentLevel()));
+               ivSelectedItemImage.setBackground(getResources().getDrawable(powerUp[2].getImageId(),null));
+               selectedPowerUpIndex =2;
+           }
+       });
+
+       ivItemImage[3].setOnClickListener(new View.OnClickListener() {
+
+           @Override
+           public void onClick(View v) {
+
+               tvDescription.setText(powerUp[3].getDescription());
+               tvPrice.setText(Integer.toString(powerUp[3].getBaseCost()*powerUp[3].getCurrentLevel()));
+               ivSelectedItemImage.setBackground(getResources().getDrawable(powerUp[3].getImageId(),null));
+               selectedPowerUpIndex =3;
+           }
+       });
+
     }
 
     /**
@@ -131,13 +214,10 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
      */
     private void setUpPowerUps(){
         //set all 4 power ups with their attributes
-        for(int i=0; i<4;i++){
+        for(i=0; i<4;i++){
             ivItemImage[i].setBackground(getResources().getDrawable(powerUp[i].getImageId(),null));
             tvPriceItem[i].setText(Integer.toString(i*10));
-            SeriesItem seriesItem = new SeriesItem.Builder(Color.parseColor("#FFE2E2E2"))
-                    .setRange(0, 5, powerUp[i].getCurrentLevel())
-                    .build();
-            int backIndex = dvUpgradeProgressItem[i].addSeries(seriesItem);
+            pbUpgradeProgress[i].setProgress(powerUp[i].getCurrentLevel()*20);
         }
         tvDescription.setText(powerUp[0].getDescription());
         tvPrice.setText(Integer.toString(powerUp[0].getBaseCost()));
@@ -147,6 +227,7 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
 
         switch(v.getId()){
+
 
            /* case R.id.bFreeze:
                 editor = preferences.edit();

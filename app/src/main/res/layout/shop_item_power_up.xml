@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layoutShopItem">
 
     <ImageView
@@ -14,13 +16,16 @@
         android:background="@drawable/atomnarandzasta" />
 
 
-    <com.hookedonplay.decoviewlib.DecoView
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        custom:dv_lineWidth="10dp"
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/upgradeProgress"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_margin="14dp"/>
+        android:layout_margin="14dp"
+        app:cpb_background_progressbar_color="#FFCDD2"
+        app:cpb_background_progressbar_width="10dp"
+        app:cpb_progressbar_color="#F44336"
+        app:cpb_progressbar_width="10dp" />
 
 
     <TextView
@@ -46,16 +51,16 @@
         android:layout_alignBottom="@+id/upgradeProgress2"
         android:background="@drawable/atomnarandzasta" />
 
-
-    <com.hookedonplay.decoviewlib.DecoView
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        custom:dv_lineWidth="10dp"
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/upgradeProgress2"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_margin="14dp"
-        android:layout_below="@+id/upgradeProgress"/>
-
+        android:layout_below="@+id/upgradeProgress"
+        app:cpb_background_progressbar_color="#FFCDD2"
+        app:cpb_background_progressbar_width="10dp"
+        app:cpb_progressbar_color="#F44336"
+        app:cpb_progressbar_width="10dp" />
 
     <TextView
         android:id="@+id/tvCost2"
@@ -68,6 +73,7 @@
         android:textAlignment="center"
         android:gravity="center"
         android:text="300"/>
+
 
 
 </RelativeLayout>
