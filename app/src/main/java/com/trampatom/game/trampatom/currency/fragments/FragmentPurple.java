@@ -12,6 +12,7 @@ import android.widget.Button;
 import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.currency.Fragments;
+import com.trampatom.game.trampatom.currency.ShopHandler;
 import com.trampatom.game.trampatom.utils.Keys;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class FragmentPurple extends Fragment implements View.OnClickListener{
 
 
     // newInstance constructor for creating fragment with arguments
-    public static FragmentPurple newInstance(List<PowerUpPool> powerUpPool) {
+    public static FragmentPurple newInstance(List<PowerUpPool> powerUpPool, ShopHandler shopHandler) {
         FragmentPurple fragmentPurple = new FragmentPurple();
         Bundle args = new Bundle();
         fragmentPurple.setArguments(args);

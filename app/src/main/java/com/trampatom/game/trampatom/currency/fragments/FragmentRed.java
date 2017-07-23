@@ -1,8 +1,6 @@
 package com.trampatom.game.trampatom.currency.fragments;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.RotateDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -12,13 +10,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.R;
+import com.trampatom.game.trampatom.currency.AtomPool;
+import com.trampatom.game.trampatom.currency.ShopHandler;
 import com.trampatom.game.trampatom.utils.Keys;
 
 import java.util.List;
@@ -34,9 +33,13 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
 
     int i=0, j=0;
     int selectedPowerUpIndex;
+    //contains the amount of atoms for this category/fragment, amount of blue atoms
+    int atomAmount, atomBlue;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     static List<PowerUpPool> powerUpPool;
+    static ShopHandler shopHandler;
+    AtomPool atomPool;
     PowerUpPool[] powerUp = {null, null, null, null};
     //two included views containing two power ups each
     RelativeLayout rlItemsView1, rlItemsView2;
@@ -54,11 +57,12 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
 
 
     // newInstance constructor for creating fragment with arguments
-    public static FragmentRed newInstance(List<PowerUpPool> powerUpPool) {
+    public static FragmentRed newInstance(List<PowerUpPool> powerUpPool, ShopHandler shopHandler) {
         FragmentRed fragmentRed = new FragmentRed();
         Bundle args = new Bundle();
         fragmentRed.setArguments(args);
         FragmentRed.powerUpPool = powerUpPool;
+        FragmentRed.shopHandler = shopHandler;
         return fragmentRed;
     }
 
@@ -67,6 +71,9 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        atomPool = new AtomPool(getContext());
+        atomAmount= atomPool.getSingleAtomValue(Keys.CATEGORY_RED);
+        atomBlue = atomPool.getSingleAtomValue(-1);
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -130,7 +137,13 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
            @Override
            public void onClick(View v) {
 
-               if(powerUp[selectedPowerUpIndex].getCurrentLevel()<5) {
+               if(powerUp[selectedPowerUpIndex].getCurrentLevel()<5
+                       && (powerUp[selectedPowerUpIndex].getBaseCost()*powerUp[selectedPowerUpIndex].getCurrentLevel()+1)
+                       <atomAmount) {
+                   //If we havent maxed the level and if we have enough atoms, buy the power up
+                   atomAmount--;
+                   atomPool.setSingleAtomNumber(Keys.KEY_RED_CURRENCY, atomAmount);
+                   shopHandler.changeSingleAtomNumberDisplay(Keys.CATEGORY_RED, atomAmount);
                    powerUp[selectedPowerUpIndex].setCurrentLevel(powerUp[selectedPowerUpIndex].getCurrentLevel() + 1);
                    pbUpgradeProgress[selectedPowerUpIndex].setProgress(powerUp[selectedPowerUpIndex].getCurrentLevel()*20);
                }

@@ -66,6 +66,22 @@ public class AtomPool {
     }
 
     /**
+     * Method used to get the number of atoms we have of a single type
+     * @param category determines what type of atoms are we returning
+     *                   : categries contained as constants inside the Keys class
+     * @return the number of atoms of a type we have in the atom pool
+     */
+    public int getSingleAtomValue(int category){
+        switch (category){
+            case Keys.CATEGORY_RED: return preferences.getInt(keys.KEY_RED_CURRENCY, 0);
+            case Keys.CATEGORY_GREEN: return preferences.getInt(keys.KEY_GREEN_CURRENCY, 0);
+            case Keys.CATEGORY_YELLOW: return preferences.getInt(keys.KEY_YELLOW_CURRENCY, 0);
+            case Keys.CATEGORY_PURPLE: return  preferences.getInt(keys.KEY_PURPLE_CURRENCY, 0);
+            default: return  preferences.getInt(keys.KEY_BLUE_CURRENCY, 0);
+        }
+    }
+
+    /**
      * Important method that should be called at the end of every game to add every collected atom into
      * the currency pool/ total atom count to be used later
      * @param addArray in mid game an array is filled with every atom type we clicked.

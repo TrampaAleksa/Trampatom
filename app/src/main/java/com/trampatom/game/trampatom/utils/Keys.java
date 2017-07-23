@@ -96,11 +96,11 @@ public class Keys {
             // -------------------------- Main currency variables ------------------------ \\
 
         //keys for getting and setting currency with shared preferences
-        public String KEY_BLUE_CURRENCY = "blue currency";
-        public String KEY_RED_CURRENCY = "red currency";
-        public String KEY_GREEN_CURRENCY = "green currency";
-        public String KEY_YELLOW_CURRENCY = "yellow currency";
-        public String KEY_PURPLE_CURRENCY = "purple currency";
+        public static final String KEY_BLUE_CURRENCY = "blue currency";
+        public static final String KEY_RED_CURRENCY = "red currency";
+        public static final String KEY_GREEN_CURRENCY = "green currency";
+        public static final String KEY_YELLOW_CURRENCY = "yellow currency";
+        public static final String KEY_PURPLE_CURRENCY = "purple currency";
 
         //keys for getting a specific category for shop purposes
         public static final int CATEGORY_RED = 1;

@@ -86,6 +86,30 @@ public class ShopHandler {
         return atomArray;
     }
 
+    /**
+     * Method used for changing the displayed amount of atoms we have currently, as displayed in a text view
+     * Should be called whenever we buy something
+     * @param category determines what text view to change
+     *                 @param value  the value to change it to
+     */
+    public void changeSingleAtomNumberDisplay(int category, int value){
+
+        switch (category){
+
+            case Keys.CATEGORY_RED: tvNumberAtomsRed.setText(Integer.toString(value));
+                break;
+            case Keys.CATEGORY_GREEN: tvNumberAtomsGreen.setText(Integer.toString(value));
+                break;
+            case Keys.CATEGORY_YELLOW: tvNumberAtomsYellow.setText(Integer.toString(value));
+                break;
+            case Keys.CATEGORY_PURPLE: tvNumberAtomsPurple.setText(Integer.toString(value));
+                break;
+            default:  tvNumberAtomsBlue.setText(Integer.toString(value));
+
+        }
+
+    }
+
 
 
     // --------------------------------------------- POWER UP POOL OBJECTS ------------------------------------------------ \\

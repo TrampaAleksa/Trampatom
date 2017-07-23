@@ -80,7 +80,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
         //set up the view pager and the tabs for changing categories
         ViewPager vpPager = (ViewPager) findViewById(R.id.vpCategory);
-        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), powerUpPool);
+        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), powerUpPool, shopHandler);
         vpPager.setAdapter(adapterViewPager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabCategories);
         tabLayout.setupWithViewPager(vpPager);
@@ -104,6 +104,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
      */
     public static class MyPagerAdapter extends FragmentPagerAdapter {
         List<PowerUpPool> powerUpPoolFragment;
+        ShopHandler shopHandler;
         private static int NUM_ITEMS = 4;
 
         /**
@@ -111,9 +112,10 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
          * @param fragmentManager needed to manage swapping and inflating of fragments
          * @param powerUpPoolFragment needed to get the power ups for each fragment and displaying them
          */
-        public MyPagerAdapter(FragmentManager fragmentManager, List<PowerUpPool> powerUpPoolFragment) {
+        public MyPagerAdapter(FragmentManager fragmentManager, List<PowerUpPool> powerUpPoolFragment, ShopHandler shopHandler) {
             super(fragmentManager);
             this.powerUpPoolFragment = powerUpPoolFragment;
+            this.shopHandler = shopHandler;
         }
 
         // Returns total number of pages
@@ -128,13 +130,13 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
             switch (position) {
                 case 0: // RED
-                    return FragmentRed.newInstance(powerUpPoolFragment);
+                    return FragmentRed.newInstance(powerUpPoolFragment, shopHandler);
                 case 1: // GREEN
-                    return FragmentGreen.newInstance(powerUpPoolFragment);
+                    return FragmentGreen.newInstance(powerUpPoolFragment,shopHandler);
                 case 2: // YELLOW
-                    return FragmentYellow.newInstance(powerUpPoolFragment);
+                    return FragmentYellow.newInstance(powerUpPoolFragment,shopHandler);
                 case 3: // PURPLE
-                    return FragmentPurple.newInstance(powerUpPoolFragment);
+                    return FragmentPurple.newInstance(powerUpPoolFragment,shopHandler);
                 default:
                     return null;
             }
