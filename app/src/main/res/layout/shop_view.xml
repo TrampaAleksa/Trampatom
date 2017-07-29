@@ -5,100 +5,169 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/rlCurrency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-
-    <ImageView
-        android:id="@+id/ivAtomBlue"
-        android:background="@drawable/atomplava"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <TextView
-        android:layout_toRightOf="@+id/ivAtomBlue"
-        android:id="@+id/tvAtomNumberBlue"
-        android:layout_width="wrap_content"
-        android:text="@string/shop_atom_number_def_value"
-        android:layout_height="wrap_content" />
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shopokvir"
+        android:text="SHOP"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        />
 
     <ImageView
-        android:layout_toRightOf="@+id/tvAtomNumberBlue"
         android:id="@+id/ivAtomRed"
         android:background="@drawable/atomcrvena"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/tvAtomNumberRed"
-        android:layout_toRightOf="@+id/ivAtomRed"
-        android:text="@string/shop_atom_number_def_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="22dp"
+        android:layout_below="@+id/tvTitle"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/shop_line_vertical_atoms"
+            android:background="@drawable/linija1kratkagore"
+            android:layout_below="@+id/tvTitle"
+            android:layout_toRightOf="@+id/ivAtomRed"
+            android:layout_marginRight="22dp"
+            android:layout_marginTop="16dp">
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvAtomNumberRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/ivAtomRed"
+            android:layout_alignRight="@+id/ivAtomRed"
+            android:layout_below="@+id/ivAtomRed"
+            android:gravity="center"
+            android:text="@string/shop_atom_number_def_value"
+            android:textColor="@android:color/holo_red_light" />
 
     <ImageView
-        android:layout_toRightOf="@+id/tvAtomNumberRed"
+        android:layout_toRightOf="@+id/ivAtomRed"
         android:id="@+id/ivAtomGreen"
         android:background="@drawable/atomzelena"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
+        android:layout_below="@+id/tvTitle"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="22dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
 
-        android:layout_toRightOf="@+id/ivAtomGreen"
-        android:id="@+id/tvAtomNumberGreen"
-        android:text="@string/shop_atom_number_def_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/shop_line_vertical_atoms"
+            android:background="@drawable/linija1kratkagore"
+            android:layout_toRightOf="@+id/ivAtomGreen"
+            android:layout_marginRight="22dp"
+            android:layout_below="@+id/tvTitle"
+            android:layout_marginTop="16dp">
+
+        </FrameLayout>
+
+        <TextView
+
+            android:id="@+id/tvAtomNumberGreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/ivAtomGreen"
+            android:layout_alignRight="@+id/ivAtomGreen"
+            android:layout_below="@+id/ivAtomGreen"
+            android:gravity="center"
+            android:text="@string/shop_atom_number_def_value"
+            android:textColor="@android:color/holo_green_light" />
 
     <ImageView
-        android:layout_toRightOf="@+id/tvAtomNumberGreen"
+        android:layout_toRightOf="@+id/ivAtomGreen"
         android:id="@+id/ivAtomYellow"
         android:background="@drawable/atomzuta"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_toRightOf="@+id/ivAtomYellow"
-        android:id="@+id/tvAtomNumberYellow"
-        android:text="@string/shop_atom_number_def_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_below="@+id/tvTitle"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="22dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/shop_line_vertical_atoms"
+            android:background="@drawable/linija1kratkagore"
+            android:layout_toRightOf="@+id/ivAtomYellow"
+            android:layout_marginRight="22dp"
+            android:layout_below="@+id/tvTitle"
+            android:layout_marginTop="16dp">
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvAtomNumberYellow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/ivAtomYellow"
+            android:layout_alignRight="@+id/ivAtomYellow"
+            android:layout_below="@+id/ivAtomYellow"
+            android:gravity="center"
+            android:text="@string/shop_atom_number_def_value"
+            android:textColor="@android:color/holo_orange_light" />
 
     <ImageView
-        android:layout_toRightOf="@+id/tvAtomNumberYellow"
+        android:layout_toRightOf="@+id/ivAtomYellow"
         android:id="@+id/ivAtomPurple"
         android:background="@drawable/atomroze"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_toRightOf="@+id/ivAtomPurple"
-        android:id="@+id/tvAtomNumberPurple"
-        android:text="@string/shop_atom_number_def_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_below="@+id/tvTitle"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="22dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tvAtomNumberPurple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/ivAtomPurple"
+            android:layout_alignRight="@+id/ivAtomPurple"
+            android:layout_below="@+id/ivAtomPurple"
+            android:gravity="center"
+            android:text="@string/shop_atom_number_def_value"
+            android:textColor="@android:color/holo_purple" />
 
-<RelativeLayout
-    android:layout_below="@+id/rlCurrency"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
 
-    <android.support.design.widget.TabLayout
+        <FrameLayout
+            android:id="@+id/hline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/linija2duga"
+            android:layout_below="@+id/tvAtomNumberGreen"
+            android:layout_marginRight="22dp"
+            android:layout_marginLeft="16dp">
+
+        </FrameLayout>
+
+
+
+    <!-- <android.support.design.widget.TabLayout
         android:id="@+id/tabCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="fixed" />
+        app:tabMode="fixed" /> -->
 
     <android.support.v4.view.ViewPager
-        android:layout_below="@+id/tabCategories"
         android:id="@+id/vpCategory"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvAtomNumberGreen"
+        android:layout_marginTop="4dp">
 
         </android.support.v4.view.ViewPager>
-
-</RelativeLayout>
 
 
 </RelativeLayout>

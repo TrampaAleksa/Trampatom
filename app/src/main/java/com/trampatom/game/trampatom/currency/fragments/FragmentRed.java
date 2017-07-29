@@ -21,6 +21,7 @@ import com.trampatom.game.trampatom.currency.ShopHandler;
 import com.trampatom.game.trampatom.utils.Keys;
 
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -29,7 +30,7 @@ import java.util.List;
  * We have the option to buy/ upgrade, select a power up, trade blue for the atom of the category.
  */
 
-public class FragmentRed extends Fragment implements View.OnClickListener{
+public class FragmentRed extends Fragment{
 
     int i=0, j=0;
     int selectedPowerUpIndex;
@@ -54,6 +55,7 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
     ImageView ivSelect, ivSelectedItemImage;
     ImageView[] ivItemImage = {null, null, null, null};
     CircularProgressBar[] pbUpgradeProgress = {null, null, null, null};
+    CircularProgressBar pbSelectedUpgradeProgress;
 
 
     // newInstance constructor for creating fragment with arguments
@@ -113,6 +115,7 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
         tvPrice = (TextView) rlSingleItemView.findViewById(R.id.tvPrice);
         tvDescription = (TextView) rlSingleItemView.findViewById(R.id.tvDescription);
         tvBeforeAfter = (TextView) rlSingleItemView.findViewById(R.id.tvBeforeAfter);
+        pbSelectedUpgradeProgress = (CircularProgressBar) rlSingleItemView.findViewById(R.id.selectedUpgrade);
         //views of the power ups included
         tvPriceItem[0] = (TextView) rlItemsView1.findViewById(R.id.tvCost);
         tvPriceItem[1] = (TextView) rlItemsView1.findViewById(R.id.tvCost2);
@@ -146,6 +149,14 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
                    shopHandler.changeSingleAtomNumberDisplay(Keys.CATEGORY_RED, atomAmount);
                    powerUp[selectedPowerUpIndex].setCurrentLevel(powerUp[selectedPowerUpIndex].getCurrentLevel() + 1);
                    pbUpgradeProgress[selectedPowerUpIndex].setProgress(powerUp[selectedPowerUpIndex].getCurrentLevel()*20);
+                   powerUp[selectedPowerUpIndex].setBefore(powerUp[selectedPowerUpIndex].getAfter());
+                   powerUp[selectedPowerUpIndex].setAfter(powerUp[selectedPowerUpIndex].getAfter()+2);
+                   tvBeforeAfter.setText(powerUp[selectedPowerUpIndex].getBefore()+ " > "
+                           + powerUp[selectedPowerUpIndex].getAfter());
+                   tvPriceItem[selectedPowerUpIndex].setText(String.format(Locale.getDefault(), "%d",
+                           powerUp[selectedPowerUpIndex].getBaseCost()*powerUp[selectedPowerUpIndex].getCurrentLevel()));
+                   tvPrice.setText(String.format(Locale.getDefault(), "%d",
+                           powerUp[selectedPowerUpIndex].getBaseCost()*powerUp[selectedPowerUpIndex].getCurrentLevel()));
                }
 
            }
@@ -155,7 +166,7 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
            @Override
            public void onClick(View v) {
 
-
+            shopHandler.saveSelectedPowerUps(powerUp[selectedPowerUpIndex]);
 
            }
        });
@@ -178,6 +189,7 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
                tvDescription.setText(powerUp[0].getDescription());
                tvPrice.setText(Integer.toString(powerUp[0].getBaseCost()*powerUp[0].getCurrentLevel()));
                ivSelectedItemImage.setBackground(getResources().getDrawable(powerUp[0].getImageId(),null));
+               tvBeforeAfter.setText(powerUp[0].getBefore()+ " > " + powerUp[0].getAfter());
                 selectedPowerUpIndex =0;
            }
        });
@@ -191,6 +203,7 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
                tvDescription.setText(powerUp[1].getDescription());
                tvPrice.setText(Integer.toString(powerUp[1].getBaseCost()*powerUp[1].getCurrentLevel()));
                ivSelectedItemImage.setBackground(getResources().getDrawable(powerUp[1].getImageId(),null));
+               tvBeforeAfter.setText(powerUp[1].getBefore()+ " > " + powerUp[1].getAfter());
                selectedPowerUpIndex =1;
            }
        });
@@ -203,6 +216,7 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
                tvDescription.setText(powerUp[2].getDescription());
                tvPrice.setText(Integer.toString(powerUp[2].getBaseCost()*powerUp[2].getCurrentLevel()));
                ivSelectedItemImage.setBackground(getResources().getDrawable(powerUp[2].getImageId(),null));
+               tvBeforeAfter.setText(powerUp[2].getBefore()+ " > " + powerUp[2].getAfter());
                selectedPowerUpIndex =2;
            }
        });
@@ -215,6 +229,7 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
                tvDescription.setText(powerUp[3].getDescription());
                tvPrice.setText(Integer.toString(powerUp[3].getBaseCost()*powerUp[3].getCurrentLevel()));
                ivSelectedItemImage.setBackground(getResources().getDrawable(powerUp[3].getImageId(),null));
+               tvBeforeAfter.setText(powerUp[3].getBefore()+ " > " + powerUp[3].getAfter());
                selectedPowerUpIndex =3;
            }
        });
@@ -229,43 +244,14 @@ public class FragmentRed extends Fragment implements View.OnClickListener{
         //set all 4 power ups with their attributes
         for(i=0; i<4;i++){
             ivItemImage[i].setBackground(getResources().getDrawable(powerUp[i].getImageId(),null));
-            tvPriceItem[i].setText(Integer.toString(i*10));
+            tvPriceItem[i].setText(Integer.toString(powerUp[i].getBaseCost()*powerUp[i].getCurrentLevel()));
             pbUpgradeProgress[i].setProgress(powerUp[i].getCurrentLevel()*20);
         }
         tvDescription.setText(powerUp[0].getDescription());
         tvPrice.setText(Integer.toString(powerUp[0].getBaseCost()));
+        ivSelectedItemImage.setBackground(getResources().getDrawable(powerUp[0].getImageId(),null));
+        tvBeforeAfter.setText(powerUp[0].getBefore()+ " > " + powerUp[0].getAfter());
+        pbSelectedUpgradeProgress.setProgress(powerUp[0].getCurrentLevel()*20);
 
-    }
-    @Override
-    public void onClick(View v) {
-
-        switch(v.getId()){
-
-
-           /* case R.id.bFreeze:
-                editor = preferences.edit();
-                editor.putInt(Keys.KEY_POWER_UP_TWO, Keys.FLAG_RED_FREEZE_BALLS);
-                editor.apply();
-
-                break;
-
-            case R.id.bBigEnergyBonus:
-                editor = preferences.edit();
-                editor.putInt(Keys.KEY_POWER_UP_TWO, Keys.FLAG_RED_BIG_ENERGY_BONUS);
-                editor.apply();
-
-                break;
-            case R.id.bUpgradePowerOne:
-                powerUp.setCurrentLevel(powerUp.getCurrentLevel()+1);
-
-                break;
-
-            case R.id.bReduceLevel:
-                powerUp.setCurrentLevel(powerUp.getCurrentLevel()-1);
-
-                break;*/
-
-
-        }
     }
 }

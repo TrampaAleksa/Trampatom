@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import com.google.gson.reflect.TypeToken;
 
@@ -36,7 +37,7 @@ import static android.content.ContentValues.TAG;
 public class ShopHandler {
 
     AtomPool atomPool;
-    TextView tvNumberAtomsBlue, tvNumberAtomsRed, tvNumberAtomsGreen, tvNumberAtomsYellow, tvNumberAtomsPurple;
+    TextView tvNumberAtomsRed, tvNumberAtomsGreen, tvNumberAtomsYellow, tvNumberAtomsPurple;
     Context context;
 
     /**
@@ -57,10 +58,10 @@ public class ShopHandler {
      * the amount of atoms we have, upon buying stuff, or upon entering the shop etc.
      * <p>Parameters are the text views holding the number of atoms we have per atom type</p>
      */
-    public void initializeAtomNumbersDisplay(TextView tvNumberAtomsBlue, TextView tvNumberAtomsRed, TextView tvNumberAtomsGreen
+    public void initializeAtomNumbersDisplay( TextView tvNumberAtomsRed, TextView tvNumberAtomsGreen
                                                 ,TextView tvNumberAtomsYellow, TextView tvNumberAtomsPurple){
 
-        this.tvNumberAtomsBlue = tvNumberAtomsBlue;
+       // this.tvNumberAtomsBlue = tvNumberAtomsBlue;
         this.tvNumberAtomsRed = tvNumberAtomsRed;
         this.tvNumberAtomsGreen = tvNumberAtomsGreen;
         this.tvNumberAtomsYellow = tvNumberAtomsYellow;
@@ -77,7 +78,7 @@ public class ShopHandler {
         int[] atomArray = {0,0,0,0,0};
         atomArray = atomPool.getAtoms();
 
-        tvNumberAtomsBlue.setText(Integer.toString(atomArray[0]));
+        //tvNumberAtomsBlue.setText(Integer.toString(atomArray[0]));
         tvNumberAtomsRed.setText(Integer.toString(atomArray[1]));
         tvNumberAtomsGreen.setText(Integer.toString(atomArray[2]));
         tvNumberAtomsYellow.setText(Integer.toString(atomArray[3]));
@@ -104,7 +105,7 @@ public class ShopHandler {
                 break;
             case Keys.CATEGORY_PURPLE: tvNumberAtomsPurple.setText(Integer.toString(value));
                 break;
-            default:  tvNumberAtomsBlue.setText(Integer.toString(value));
+           // default:  tvNumberAtomsBlue.setText(Integer.toString(value));
 
         }
 
@@ -139,7 +140,9 @@ public class ShopHandler {
             }.getType();
             List<PowerUpPool> powerUpPool = gson.fromJson(ret, type);
             savePowerUpPool(powerUpPool);
-            return powerUpPool;
+            //return powerUpPool;
+            return firstTimeLoading();
+
         }
         else {
             //in case we don't have the file with the power ups create a new
@@ -174,6 +177,8 @@ public class ShopHandler {
             powerUp.setDescription(context.getString(R.string.description_red_freeze));
             powerUp.setBaseCost(100);
             powerUp.setCurrentLevel(3);
+            powerUp.setBefore(0);
+            powerUp.setAfter(2);
                 //after adding every attribute add that power up to the pool
             initialPowerUpPool.add(powerUp);
         // Second power up
@@ -185,6 +190,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_red_energy_boost));
         powerUp.setBaseCost(50);
         powerUp.setCurrentLevel(2);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
                 //after adding every attribute add that power up to the pool
             initialPowerUpPool.add(powerUp);
 
@@ -197,6 +204,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_red_limiting_Square));
         powerUp.setBaseCost(25);
         powerUp.setCurrentLevel(1);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
                 //after adding every attribute add that power up to the pool
             initialPowerUpPool.add(powerUp);
 
@@ -209,6 +218,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_red_unknown4));
         powerUp.setBaseCost(10);
         powerUp.setCurrentLevel(5);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -221,6 +232,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_green_slow_balls));
         powerUp.setBaseCost(160);
         powerUp.setCurrentLevel(0);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -233,6 +246,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_green_energy_boost));
         powerUp.setBaseCost(90);
         powerUp.setCurrentLevel(2);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -245,6 +260,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_green_increase_size));
         powerUp.setBaseCost(400);
         powerUp.setCurrentLevel(4);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -257,6 +274,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_green_unknown4));
         powerUp.setBaseCost(15);
         powerUp.setCurrentLevel(4);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -269,6 +288,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_purple_bigger_balls));
         powerUp.setBaseCost(100);
         powerUp.setCurrentLevel(5);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -281,6 +302,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_purple_slow_decay));
         powerUp.setBaseCost(30);
         powerUp.setCurrentLevel(2);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -293,6 +316,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_purple_unknown3));
         powerUp.setBaseCost(200);
         powerUp.setCurrentLevel(1);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -305,6 +330,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_purple_unknown4));
         powerUp.setBaseCost(10);
         powerUp.setCurrentLevel(5);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -317,6 +344,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_yellow_energy_on_start));
         powerUp.setBaseCost(15);
         powerUp.setCurrentLevel(4);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -329,6 +358,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_yellow_slow_balls));
         powerUp.setBaseCost(250);
         powerUp.setCurrentLevel(5);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -341,6 +372,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_yellow_unknown3));
         powerUp.setBaseCost(40);
         powerUp.setCurrentLevel(2);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -353,6 +386,8 @@ public class ShopHandler {
         powerUp.setDescription(context.getString(R.string.description_yellow_unknown4));
         powerUp.setBaseCost(25);
         powerUp.setCurrentLevel(2);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
         //after adding every attribute add that power up to the pool
         initialPowerUpPool.add(powerUp);
 
@@ -361,6 +396,21 @@ public class ShopHandler {
 
 
     }
+
+    /**
+     * Method for saving a power up pool that we have changed during the runtime of our shop.
+     * Should be called when we exit the shop.
+     * @param powerUpPool the power up pool that we are saving so we save any changes we made.
+     */
+    public void savePowerUpPool(List<PowerUpPool> powerUpPool){
+
+        Gson gson = new Gson();
+        String json = gson.toJson(powerUpPool);
+        writeFile(context,json, "PowerUps.txt");
+
+    }
+
+
     /**
      * Method that should return only two power ups, the ones we selected to be used within the game.
      * <p>
@@ -385,23 +435,89 @@ public class ShopHandler {
 
             return powerUpPool;
         }
-        return null;
+        return firstTimeLoadingSelectedPowerUps();
     }
 
     /**
-     * Method for saving a power up pool that we have changed during the runtime of our shop.
-     * Should be called when we exit the shop.
-     * @param powerUpPool the power up pool that we are saving so we save any changes we made.
+     * Method should be called when we haven't loaded any selected power ups, and loads them in memory for future use
+     * @return a list object with four power ups of different categories
      */
-    public void savePowerUpPool(List<PowerUpPool> powerUpPool){
+    private List<PowerUpPool> firstTimeLoadingSelectedPowerUps() {
 
-        Gson gson = new Gson();
-        String json = gson.toJson(powerUpPool);
-        writeFile(context,json, "PowerUps.txt");
+        List<PowerUpPool> initialPowerUpPool = new ArrayList<>();
+        //used as a help object to store unique objects into the list
+        PowerUpPool powerUp = new PowerUpPool();
+        // First power up
+        //add every attribute to the power up
+        powerUp = new PowerUpPool();
+        powerUp.setId(Keys.FLAG_RED_FREEZE_BALLS);
+        powerUp.setCategory(Keys.CATEGORY_RED);
+        powerUp.setImageId(R.drawable.wave5);
+        powerUp.setDescription(context.getString(R.string.description_red_freeze));
+        powerUp.setBaseCost(100);
+        powerUp.setCurrentLevel(3);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+        // Second power up
+        //add every attribute to the power up
+        powerUp = new PowerUpPool();
+        powerUp.setId(Keys.FLAG_GREEN_INCREASE_BALL_SIZE);
+        powerUp.setCategory(Keys.CATEGORY_GREEN);
+        powerUp.setImageId(R.drawable.atomcrvena);
+        powerUp.setDescription(context.getString(R.string.description_green_increase_size));
+        powerUp.setBaseCost(50);
+        powerUp.setCurrentLevel(2);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
 
+        // Third power up
+        //add every attribute to the power up
+        powerUp = new PowerUpPool();
+        powerUp.setId(Keys.FLAG_YELLOW_SLOW_DOWN_BALLS);
+        powerUp.setCategory(Keys.CATEGORY_YELLOW);
+        powerUp.setImageId(R.drawable.wave3);
+        powerUp.setDescription(context.getString(R.string.description_yellow_slow_balls));
+        powerUp.setBaseCost(25);
+        powerUp.setCurrentLevel(1);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        // Fourth power up
+        //add every attribute to the power up
+        powerUp = new PowerUpPool();
+        powerUp.setId(Keys.FLAG_PURPLE_BIGGER_BALLS);
+        powerUp.setCategory(Keys.CATEGORY_PURPLE);
+        powerUp.setImageId(R.drawable.wave2);
+        powerUp.setDescription(context.getString(R.string.description_purple_bigger_balls));
+        powerUp.setBaseCost(10);
+        powerUp.setCurrentLevel(5);
+        powerUp.setBefore(0);
+        powerUp.setAfter(2);
+        //after adding every attribute add that power up to the pool
+        initialPowerUpPool.add(powerUp);
+
+        return initialPowerUpPool;
     }
-    public void saveSelectedPowerUps(List<PowerUpPool> powerUpPool){
 
+
+    public void saveSelectedPowerUps(PowerUpPool selectedPowerUp){
+
+        int i=0;
+        List<PowerUpPool> powerUpPool = loadSelectedPowerUps();
+        //Find the power up based on the category of the power up we selected and swap it with our selected one
+        for (PowerUpPool helpList : powerUpPool) {
+
+            if(helpList.getCategory() == selectedPowerUp.getCategory()){
+                powerUpPool.set(i, selectedPowerUp);
+            }
+            i++;
+        }
         Gson gson = new Gson();
         String json = gson.toJson(powerUpPool);
         writeFile(context,json, "SelectedPowerUps.txt");

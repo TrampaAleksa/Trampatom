@@ -15,6 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:layout_alignParentLeft="true">
 
             <include
@@ -30,37 +32,68 @@
 
         <ImageButton
             android:id="@+id/ibTrade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_centerHorizontal="true"
-            android:layout_margin="14dp"
-            android:background="@drawable/atomplava" />
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/tradebutton" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="75dp"
+            android:background="@drawable/linija1kratka"
+            android:layout_toLeftOf="@+id/ibTrade"
+            android:layout_marginBottom="6dp"
+            >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="75dp"
+            android:background="@drawable/linija1kratka"
+            android:layout_toRightOf="@+id/ibTrade"
+            android:layout_marginBottom="6dp"
+            >
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tvCategoryName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="116dp"
+            android:layout_height="32dp"
             android:layout_below="@+id/ibTrade"
             android:layout_centerHorizontal="true"
-            android:layout_margin="14dp"
-            android:text="CATEGORY" />
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/okvirplav"
+            android:gravity="center"
+            android:text="CATEGORY"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_blue_dark" />
 
 
         <ImageView
             android:id="@+id/ivSelect"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="60dp"
             android:layout_below="@+id/tvCategoryName"
             android:layout_centerHorizontal="true"
-            android:background="@android:color/background_dark" />
+            android:background="@drawable/selectarrows" />
 
         <Button
             android:id="@+id/bSelect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ivSelect"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="26dp"
+            android:layout_below="@+id/tvCategoryName"
+            android:background="@drawable/selectokvir"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="56dp"
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
@@ -70,6 +103,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:layout_alignParentRight="true">
 
             <include
@@ -94,7 +129,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/layoutPowerUpView"
-            layout="@layout/shop_item_power_up_view">
+            layout="@layout/shop_item_power_up_view"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
 
         </include>
 

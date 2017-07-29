@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layoutPowerUpView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="14dp"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -11,21 +11,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+            android:layout_width="172dp"
+            android:layout_height="172dp"
+            android:id="@+id/selectedUpgrade"
+            app:cpb_background_progressbar_color="#FFCDD2"
+            app:cpb_background_progressbar_width="10dp"
+            app:cpb_progressbar_color="#F44336"
+            app:cpb_progressbar_width="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:elevation="2dp"
+            />
+
         <ImageView
             android:id="@+id/ivSelectedPowerUp"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
             android:background="@color/colorAccent"
-            android:layout_margin="10dp"/>
+            android:layout_alignTop="@+id/selectedUpgrade"
+            android:layout_alignLeft="@+id/selectedUpgrade"
+            android:layout_alignRight="@+id/selectedUpgrade"
+            android:layout_alignBottom="@+id/selectedUpgrade"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"/>
 
         <Button
             android:id="@+id/bBuy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
             android:layout_below="@id/ivSelectedPowerUp"
             android:layout_alignRight="@+id/ivSelectedPowerUp"
             android:layout_alignLeft="@+id/ivSelectedPowerUp"
-            android:layout_margin="10dp"
+            android:background="@drawable/shopokvir"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
 
             android:text="BUY" />
 
@@ -43,11 +69,14 @@
     <TextView
         android:id="@+id/tvPrice"
         android:layout_width="140dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentRight="true"
         android:text="1000"
         android:layout_marginTop="36dp"
         android:layout_marginRight="30dp"
+        android:background="@drawable/shopokvir"
+        android:textColor="@android:color/white"
+        android:gravity="center"
         android:textAlignment="center" />
 
     <TextView
@@ -55,11 +84,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tvPrice"
+        android:layout_alignRight="@+id/tvPrice"
         android:layout_below="@+id/tvPrice"
+        android:layout_above="@+id/tvBeforeAfter"
         android:text="OPIS POWER UP-A"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="14dp"
-        android:layout_marginLeft="14dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginLeft="0dp"
         android:layout_marginBottom="14dp"
         android:textAlignment="center" />
 
@@ -67,16 +98,52 @@
         android:id="@+id/tvBeforeAfter"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/tvDescription"
-        android:layout_alignLeft="@+id/tvDescription"
+        android:layout_alignLeft="@+id/tvPrice"
+        android:layout_alignRight="@+id/tvPrice"
         android:layout_alignParentBottom="true"
-        android:layout_margin="14dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="14dp"
         android:text="5 > 7"
+        android:textSize="18dp"
         android:textAlignment="center" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="4dp"
+        android:layout_alignLeft="@+id/tvPrice"
+        android:layout_marginLeft="6dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/linija2kratka">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginRight="6dp"
+        android:layout_alignRight="@+id/tvPrice"
+        android:background="@drawable/linija2kratka">
+
+    </FrameLayout>
+
 
 </RelativeLayout>
 
+    <FrameLayout
+        android:layout_width="195dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/linija1duga">
 
-
+    </FrameLayout>
 
 </RelativeLayout>

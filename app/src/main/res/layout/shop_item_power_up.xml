@@ -19,9 +19,10 @@
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/upgradeProgress"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_margin="14dp"
+        android:elevation="2dp"
         app:cpb_background_progressbar_color="#FFCDD2"
         app:cpb_background_progressbar_width="10dp"
         app:cpb_progressbar_color="#F44336"
@@ -30,14 +31,15 @@
 
     <TextView
         android:id="@+id/tvCost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ivIcon"
-        android:layout_alignLeft="@+id/ivIcon"
-        android:layout_alignRight="@+id/ivIcon"
-        android:layout_alignBottom="@+id/ivIcon"
+        android:layout_width="76dp"
+        android:layout_height="20dp"
         android:textAlignment="center"
+        android:layout_above="@+id/upgradeProgress2"
+        android:layout_marginBottom="34dp"
+        android:layout_marginLeft="28dp"
         android:gravity="center"
+        android:rotation="-30"
+        android:background="@android:color/white"
         android:text="300"/>
 
 
@@ -53,9 +55,12 @@
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/upgradeProgress2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_margin="14dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:elevation="2dp"
         android:layout_below="@+id/upgradeProgress"
         app:cpb_background_progressbar_color="#FFCDD2"
         app:cpb_background_progressbar_width="10dp"
@@ -64,13 +69,14 @@
 
     <TextView
         android:id="@+id/tvCost2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ivIcon2"
-        android:layout_alignLeft="@+id/ivIcon2"
-        android:layout_alignRight="@+id/ivIcon2"
-        android:layout_alignBottom="@+id/ivIcon2"
+        android:layout_width="76dp"
+        android:layout_height="20dp"
         android:textAlignment="center"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="26dp"
+        android:layout_below="@+id/upgradeProgress"
+        android:background="@android:color/white"
+        android:rotation="-30"
         android:gravity="center"
         android:text="300"/>
 

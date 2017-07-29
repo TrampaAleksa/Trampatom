@@ -26,6 +26,25 @@ int baseCost;
 int currentLevel;
 int imageId;
 int category;
+int before;
+
+    public int getBefore() {
+        return before;
+    }
+
+    public void setBefore(int before) {
+        this.before = before;
+    }
+
+    public int getAfter() {
+        return after;
+    }
+
+    public void setAfter(int after) {
+        this.after = after;
+    }
+
+    int after;
 
 
     public String getDescription() {

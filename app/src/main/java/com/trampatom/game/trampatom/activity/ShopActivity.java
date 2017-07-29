@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.trampatom.game.trampatom.Model.PowerUpPool;
@@ -37,8 +38,10 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     public int currentFragmentPossition;
 
     TextView tvNumberAtomsBlue, tvNumberAtomsRed, tvNumberAtomsGreen, tvNumberAtomsYellow, tvNumberAtomsPurple;
+    ImageView ivAtomRed, ivAtomGreen, ivAtomYellow,ivAtomPurple;
     //view pager used to cycle between categories in the shop
     MyPagerAdapter adapterViewPager;
+    ViewPager vpPager;
 
     //classes used to run the shop
     AtomPool atomPool;
@@ -63,12 +66,20 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         tvNumberAtomsGreen = (TextView) findViewById(R.id.tvAtomNumberGreen);
         tvNumberAtomsYellow = (TextView) findViewById(R.id.tvAtomNumberYellow);
         tvNumberAtomsPurple = (TextView) findViewById(R.id.tvAtomNumberPurple);
+        ivAtomRed = (ImageView) findViewById(R.id.ivAtomRed);
+        ivAtomGreen = (ImageView) findViewById(R.id.ivAtomGreen);
+        ivAtomYellow = (ImageView) findViewById(R.id.ivAtomYellow);
+        ivAtomPurple = (ImageView) findViewById(R.id.ivAtomPurple);
+        ivAtomRed.setOnClickListener(this);
+        ivAtomGreen.setOnClickListener(this);
+        ivAtomYellow.setOnClickListener(this);
+        ivAtomPurple.setOnClickListener(this);
+
 
         //Classes
         atomPool = new AtomPool(this);
         shopHandler = new ShopHandler(atomPool, this);
         shopHandler.initializeAtomNumbersDisplay(
-                tvNumberAtomsBlue,
                 tvNumberAtomsRed,
                 tvNumberAtomsGreen,
                 tvNumberAtomsYellow,
@@ -79,11 +90,11 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         powerUpPool = shopHandler.loadPowerUpPool();
 
         //set up the view pager and the tabs for changing categories
-        ViewPager vpPager = (ViewPager) findViewById(R.id.vpCategory);
+        vpPager = (ViewPager) findViewById(R.id.vpCategory);
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), powerUpPool, shopHandler);
         vpPager.setAdapter(adapterViewPager);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabCategories);
-        tabLayout.setupWithViewPager(vpPager);
+        /*TabLayout tabLayout = (TabLayout) findViewById(R.id.tabCategories);
+        tabLayout.setupWithViewPager(vpPager);*/
 
     }
 
@@ -91,9 +102,18 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch(v.getId()){
 
-            //case R.id.bTrade:
-
-               // break;
+            case R.id.ivAtomRed:
+                vpPager.setCurrentItem(0);
+                break;
+            case R.id.ivAtomGreen:
+                vpPager.setCurrentItem(1);
+                break;
+            case R.id.ivAtomYellow:
+                vpPager.setCurrentItem(2);
+                break;
+            case R.id.ivAtomPurple:
+                vpPager.setCurrentItem(3);
+                break;
 
         }
     }
@@ -109,7 +129,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
         /**
          * Class used to get the pager adapter used to cycle between fragments/categories.
-         * @param fragmentManager needed to manage swapping and inflating of fragments
+         *
+         * @param fragmentManager     needed to manage swapping and inflating of fragments
          * @param powerUpPoolFragment needed to get the power ups for each fragment and displaying them
          */
         public MyPagerAdapter(FragmentManager fragmentManager, List<PowerUpPool> powerUpPoolFragment, ShopHandler shopHandler) {
@@ -132,23 +153,23 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                 case 0: // RED
                     return FragmentRed.newInstance(powerUpPoolFragment, shopHandler);
                 case 1: // GREEN
-                    return FragmentGreen.newInstance(powerUpPoolFragment,shopHandler);
+                    return FragmentGreen.newInstance(powerUpPoolFragment, shopHandler);
                 case 2: // YELLOW
-                    return FragmentYellow.newInstance(powerUpPoolFragment,shopHandler);
+                    return FragmentYellow.newInstance(powerUpPoolFragment, shopHandler);
                 case 3: // PURPLE
-                    return FragmentPurple.newInstance(powerUpPoolFragment,shopHandler);
+                    return FragmentPurple.newInstance(powerUpPoolFragment, shopHandler);
                 default:
                     return null;
             }
         }
 
         // Returns the page title for the top indicator
-        @Override
+       /* @Override
         public CharSequence getPageTitle(int position) {
             return "Page " + position;
         }
 
+    }*/
+
     }
-
-
 }
