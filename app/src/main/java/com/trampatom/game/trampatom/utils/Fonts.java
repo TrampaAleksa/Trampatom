@@ -25,4 +25,22 @@ public class Fonts {
         tvHighScore.setTypeface(face);
         start.setTypeface(face);
     }
+
+    /**
+     * Method used for setting a font for the shop menu
+     * @param tvDescription
+     * @param tvBeforeAfter
+     * @param tvCategory
+     * @param bSelect
+     * @param bBuy
+     */
+    public void setFontsShop(TextView tvDescription, TextView tvBeforeAfter,TextView tvCategory, Button bSelect, Button bBuy ){
+
+        tvDescription.setTypeface(face);
+        tvBeforeAfter.setTypeface(face);
+        tvCategory.setTypeface(face);
+        bSelect.setTypeface(face);
+        bBuy.setTypeface(face);
+
+    }
 }

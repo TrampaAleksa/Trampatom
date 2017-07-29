@@ -2,4 +2,5 @@
 <resources>
     <dimen name="text_size">28sp</dimen>
     <dimen name="shop_line_vertical_atoms">68dp</dimen>
+    <dimen name="margin_text_currency">62dp</dimen>
 </resources>

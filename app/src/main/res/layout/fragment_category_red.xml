@@ -97,6 +97,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
+            android:textSize="16dp"
             android:text="SELECT" />
 
         <FrameLayout
@@ -122,8 +123,11 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutItemView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayoutItems">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relativeLayoutItems"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <include
             android:layout_width="wrap_content"

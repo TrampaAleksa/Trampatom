@@ -1,6 +1,7 @@
 package com.trampatom.game.trampatom.currency.fragments;
 
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.currency.AtomPool;
 import com.trampatom.game.trampatom.currency.ShopHandler;
+import com.trampatom.game.trampatom.utils.Fonts;
 import com.trampatom.game.trampatom.utils.Keys;
 
 import java.util.List;
@@ -130,6 +132,10 @@ public class FragmentRed extends Fragment{
         pbUpgradeProgress[2] = (CircularProgressBar) rlItemsView2.findViewById(R.id.upgradeProgress);
         pbUpgradeProgress[3] = (CircularProgressBar) rlItemsView2.findViewById(R.id.upgradeProgress2);
 
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/CaviarDreams.ttf");
+        Fonts fonts = new Fonts(typeface);
+        fonts.setFontsShop(tvDescription,tvBeforeAfter,tvCategoryDisplay, bSelect, bBuy);
         //set on click listeners to all of the buttons
         setClickListeners();
     }

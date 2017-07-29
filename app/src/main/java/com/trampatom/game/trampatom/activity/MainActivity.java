@@ -2,6 +2,7 @@ package com.trampatom.game.trampatom.activity;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.trampatom.game.trampatom.MusicService;
 import com.trampatom.game.trampatom.R;
+import com.trampatom.game.trampatom.utils.Fonts;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.SelectAGame;
 
@@ -75,6 +77,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             sound.setOnClickListener(this);
             tvHighScore = (TextView) findViewById(R.id.tvHighScoreValue);
             tvSelectedGame = (TextView) findViewById(R.id.tvGame);
+        TextView tvHighScoreValue = (TextView) findViewById(R.id.tvHighScore);
+
+
+        //fonts
+        Typeface typeface = Typeface.createFromAsset(getAssets(),
+                "fonts/CaviarDreams.ttf");
+        Fonts fonts = new Fonts(typeface);
+        fonts.setFonts(tvHighScore,tvSelectedGame,tvHighScoreValue,start);
         //Classes
         selectAGame = new SelectAGame(tvSelectedGame);
         //Variables
