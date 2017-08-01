@@ -67,11 +67,12 @@
 
     <RelativeLayout
         android:id="@+id/framePrice"
-        android:layout_width="152dp"
+        android:layout_width="150dp"
         android:layout_height="34dp"
         android:layout_marginTop="36dp"
         android:layout_marginLeft="0dp"
         android:gravity="center"
+        android:backgroundTint="@android:color/holo_red_light"
         android:background="@drawable/shopokvir"
         >
 
@@ -93,7 +94,7 @@
             android:layout_marginLeft="4dp"
             android:layout_toRightOf="@+id/tvPrice"
             android:layout_alignBottom="@+id/tvPrice"
-            android:background="@drawable/atomplava"
+            android:background="@drawable/atomcrvena"
             />
 
 
@@ -131,6 +132,7 @@
         android:textAlignment="center" />
 
     <FrameLayout
+        android:id="@+id/lineBAleft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -138,11 +140,13 @@
         android:layout_alignLeft="@+id/framePrice"
         android:layout_marginLeft="6dp"
         android:layout_alignParentBottom="true"
+        android:backgroundTint="@android:color/holo_red_light"
         android:background="@drawable/linija2kratka">
 
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/lineBARight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -150,6 +154,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginRight="6dp"
         android:layout_alignRight="@+id/framePrice"
+        android:backgroundTint="@android:color/holo_red_light"
         android:background="@drawable/linija2kratka">
 
     </FrameLayout>
@@ -158,11 +163,13 @@
 </RelativeLayout>
 
     <FrameLayout
+        android:id="@+id/lineImage"
         android:layout_width="195dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
+        android:backgroundTint="@android:color/holo_red_light"
         android:background="@drawable/linija1duga">
 
     </FrameLayout>

@@ -3,69 +3,419 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivAtomBlue"
-        android:background="@drawable/atomplava"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <TextView
-        android:layout_below="@+id/ivAtomBlue"
-        android:id="@+id/tvAtomNumberBlue"
-        android:layout_width="wrap_content"
-        android:text="@string/shop_atom_number_def_value"
-        android:layout_height="wrap_content" />
 
-    <ImageView
-        android:layout_below="@+id/tvAtomNumberBlue"
-        android:id="@+id/ivAtomRed"
-        android:background="@drawable/atomcrvena"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/tvAtomNumberRed"
-        android:layout_below="@+id/ivAtomRed"
-        android:text="@string/shop_atom_number_def_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <!-- TOP CURRENCY DISPLAY RELATED -->
 
-    <ImageView
-        android:layout_below="@+id/tvAtomNumberRed"
-        android:id="@+id/ivAtomGreen"
-        android:background="@drawable/atomzelena"
+    <RelativeLayout
+        android:id="@+id/rlTitle"
+        android:background="@color/primaryBlack"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
+        android:layout_height="wrap_content"
 
-        android:layout_below="@+id/ivAtomGreen"
-        android:id="@+id/tvAtomNumberGreen"
-        android:text="@string/shop_atom_number_def_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_marginTop="@dimen/shop_category_main_margin"
+        android:layout_marginLeft="@dimen/shop_category_main_margin"
+        android:layout_marginRight="@dimen/shop_category_main_margin"
+        >
 
-    <ImageView
-        android:layout_below="@+id/tvAtomNumberGreen"
-        android:id="@+id/ivAtomYellow"
-        android:background="@drawable/atomzuta"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_below="@+id/ivAtomYellow"
-        android:id="@+id/tvAtomNumberYellow"
-        android:text="@string/shop_atom_number_def_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+                <!-- LEFT CURRENCY VIEWS -->
 
-    <ImageView
-        android:layout_below="@+id/tvAtomNumberYellow"
-        android:id="@+id/ivAtomPurple"
-        android:background="@drawable/atomroze"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_below="@+id/ivAtomPurple"
-        android:id="@+id/tvAtomNumberPurple"
-        android:text="@string/shop_atom_number_def_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/ivAtomRed"
+            android:layout_width="@dimen/shop_atom_size"
+            android:layout_height="@dimen/shop_atom_size"
+            android:layout_marginBottom="@dimen/shop_currency_red_marginBottom"
+
+            android:layout_marginLeft="@dimen/shop_currency_red_marginLeft"
+            android:layout_marginRight="@dimen/shop_currency_red_marginRight"
+            android:layout_marginTop="@dimen/shop_currency_red_marginTop"
+            android:background="@drawable/atomcrvena" />
+
+        <TextView
+            android:id="@+id/tvAtomNumberRed"
+            android:layout_width="@dimen/shop_currency_textWidth"
+            android:layout_height="@dimen/shop_atom_size"
+
+            android:layout_alignTop="@+id/ivAtomRed"
+            android:layout_toRightOf="@+id/ivAtomRed"
+            android:gravity="center_vertical"
+            android:text="@string/shop_atom_number_def_value"
+            android:textColor="@android:color/white"/>
+
+        <FrameLayout
+            android:id="@+id/frameRedGreen"
+            android:layout_width="@dimen/shop_currency_frameRedGreen_width"
+            android:layout_height="@dimen/shop_currency_frameRedGreen_height"
+
+            android:layout_below="@+id/ivAtomRed"
+            android:layout_alignLeft="@+id/ivAtomRed"
+            android:layout_marginLeft="@dimen/shop_currency_line_margin"
+            android:background="@android:color/background_light">
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/ivAtomGreen"
+            android:layout_width="@dimen/shop_atom_size"
+            android:layout_height="@dimen/shop_atom_size"
+            android:layout_below="@+id/frameRedGreen"
+
+            android:layout_marginTop="@dimen/shop_currency_red_marginTop"
+            android:layout_marginBottom="@dimen/shop_currency_red_marginBottom"
+            android:layout_marginLeft="@dimen/shop_currency_red_marginLeft"
+            android:layout_marginRight="@dimen/shop_currency_red_marginRight"
+            android:background="@drawable/atomzelena" />
+
+        <TextView
+            android:id="@+id/tvAtomNumberGreen"
+            android:layout_width="@dimen/shop_currency_textWidth"
+            android:layout_height="@dimen/shop_atom_size"
+
+            android:layout_alignBottom="@+id/ivAtomGreen"
+            android:layout_toRightOf="@+id/ivAtomGreen"
+            android:gravity="center_vertical"
+            android:text="@string/shop_atom_number_def_value"
+            android:textColor="@android:color/white"/>
+
+
+                <!-- RIGHT CURRENCY VIEWS -->
+
+        <ImageView
+            android:id="@+id/ivAtomYellow"
+            android:layout_width="@dimen/shop_atom_size"
+            android:layout_height="@dimen/shop_atom_size"
+            android:background="@drawable/atomzuta"
+
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/shop_currency_red_marginLeft"
+            android:layout_marginTop="@dimen/shop_currency_red_marginTop"
+            android:layout_marginBottom="@dimen/shop_currency_red_marginBottom"
+            android:layout_marginLeft="@dimen/shop_currency_red_marginRight"
+            />
+
+        <TextView
+            android:id="@+id/tvAtomNumberYellow"
+            android:layout_width="@dimen/shop_currency_textWidth"
+            android:layout_height="@dimen/shop_atom_size"
+
+            android:layout_alignTop="@+id/ivAtomYellow"
+            android:layout_toLeftOf="@+id/ivAtomYellow"
+            android:gravity="center_vertical"
+            android:text="@string/shop_atom_number_def_value"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/white" />
+
+
+        <FrameLayout
+            android:id="@+id/frameYellowPurple"
+            android:layout_width="@dimen/shop_currency_frameRedGreen_width"
+            android:layout_height="@dimen/shop_currency_frameRedGreen_height"
+
+            android:layout_below="@+id/ivAtomYellow"
+            android:layout_alignRight="@+id/ivAtomYellow"
+            android:layout_marginRight="@dimen/shop_currency_line_margin"
+            android:background="@android:color/background_light">
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/ivAtomPurple"
+            android:background="@drawable/atomroze"
+            android:layout_width="@dimen/shop_atom_size"
+            android:layout_height="@dimen/shop_atom_size"
+
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/frameYellowPurple"
+            android:layout_marginTop="@dimen/shop_currency_red_marginTop"
+            android:layout_marginRight="@dimen/shop_currency_red_marginLeft"
+            android:layout_marginBottom="@dimen/shop_currency_red_marginBottom"
+            android:layout_marginLeft="@dimen/shop_currency_red_marginRight"
+             />
+
+        <TextView
+            android:id="@+id/tvAtomNumberPurple"
+            android:layout_width="@dimen/shop_currency_textWidth"
+            android:layout_height="@dimen/shop_atom_size"
+
+            android:layout_alignBottom="@+id/ivAtomPurple"
+            android:layout_toLeftOf="@+id/ivAtomPurple"
+
+            android:gravity="center_vertical"
+            android:text="@string/shop_atom_number_def_value"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/white" />
+
+
+                    <!-- MIDDLE CURRENCY VIES -->
+
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="@dimen/shop_currency_title_marginTop"
+                android:layout_centerHorizontal="true"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/shop_currency_title_textSize"
+                android:text="@string/shop_currency_title"/>
+
+            <ImageButton
+                android:id="@+id/ibTrade"
+                android:background="@drawable/tradebutton"
+                android:layout_width="@dimen/shop_currency_size_trade"
+                android:layout_height="@dimen/shop_currency_size_trade"
+
+                android:layout_below="@+id/tvTitle"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/shop_currency_trade_marginTop"
+                />
+
+    </RelativeLayout>
+
+
+    <!-- MIDDLE LAYER -->
+
+
+    <RelativeLayout
+        android:id="@+id/rlCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignRight="@+id/rlTitle"
+        android:layout_alignLeft="@+id/rlTitle"
+        android:layout_below="@+id/rlTitle"
+
+        >
+
+       <FrameLayout
+           android:id="@+id/frameActives"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="@dimen/shop_category_frame_margin"
+           >
+
+           <include layout = "@layout/category_red"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+       </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frameGadgets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/shop_category_frame_margin"
+            android:layout_below="@+id/frameActives"
+            >
+
+            <include layout = "@layout/category_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frameEnchantment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/shop_category_frame_margin"
+            android:layout_below="@+id/frameGadgets"
+            >
+
+            <include layout = "@layout/category_yellow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLaboratory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/shop_category_frame_margin"
+
+            android:layout_below="@+id/frameEnchantment"
+            >
+
+            <include layout = "@layout/category_purple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </FrameLayout>
+
+
+    </RelativeLayout>
+
+
+    <!-- BOTTOM LAYOUT VIEW -->
+
+            <!-- PRICE / BUY -->
+
+        <RelativeLayout
+            android:id="@+id/rlSelectedPowerUp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/rlCategories"
+            android:layout_alignRight="@+id/rlTitle"
+            android:layout_alignLeft="@+id/rlTitle"
+            android:layout_marginBottom="@dimen/shop_category_main_margin"
+            >
+
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="@dimen/shop_selected_price_width"
+                android:layout_height="@dimen/shop_selected_buy_height"
+
+                android:layout_marginLeft="@dimen/shop_selected_price_marginLeft"
+                android:layout_marginRight="@dimen/shop_selected_price_marginRight"
+                android:gravity="center_vertical"
+                android:textAlignment="textEnd"
+                android:textSize="22dp"
+                android:text="@string/shop_selected_def_price"/>
+
+            <ImageView
+                android:id="@+id/ivPriceImage"
+                android:background="@drawable/atomcrvena"
+                android:layout_width="@dimen/shop_selected_size_priceImage"
+                android:layout_height="@dimen/shop_selected_size_priceImage"
+
+                android:layout_marginTop="@dimen/shop_selected_priceImage_marginTop"
+                android:layout_marginRight="@dimen/shop_selected_priceImage_marginRight"
+                android:layout_toRightOf="@+id/tvPrice"
+                />
+
+            <Button
+                android:id="@+id/bBuy"
+                android:background="@color/primaryBlack"
+                android:layout_width="@dimen/shop_selected_buy_width"
+                android:layout_height="@dimen/shop_selected_buy_height"
+
+                android:text="@string/shop_selected_text_buy"
+                android:textColor="@android:color/white"
+                android:layout_toRightOf="@+id/ivPriceImage"
+                />
+
+
+            <!-- LEVEL INDICATORS -->
+
+            <ImageView
+                android:id="@+id/ivLevel1"
+                android:background="@color/categoryRed"
+                android:layout_width="@dimen/shop_selected_level_width"
+                android:layout_height="@dimen/shop_selected_level_height"
+
+                android:layout_toRightOf="@+id/bBuy"
+                android:layout_marginLeft="@dimen/shop_selected_level_marginLeft"
+                android:layout_marginTop="@dimen/shop_selected_level_marginTop"
+                />
+
+            <ImageView
+                android:id="@+id/ivLevel2"
+                android:background="@color/categoryRed"
+                android:layout_width="@dimen/shop_selected_level_width"
+                android:layout_height="@dimen/shop_selected_level_height"
+
+                android:layout_toRightOf="@+id/ivLevel1"
+                android:layout_marginLeft="@dimen/shop_selected_level_marginInner"
+                android:layout_marginTop="@dimen/shop_selected_level_marginTop"
+                />
+
+            <ImageView
+                android:id="@+id/ivLevel3"
+                android:background="@color/categoryRed"
+                android:layout_width="@dimen/shop_selected_level_width"
+                android:layout_height="@dimen/shop_selected_level_height"
+
+                android:layout_toRightOf="@+id/ivLevel2"
+                android:layout_marginLeft="@dimen/shop_selected_level_marginInner"
+                android:layout_marginTop="@dimen/shop_selected_level_marginTop"
+                />
+
+            <ImageView
+                android:id="@+id/ivLevel4"
+                android:background="@color/categoryRed"
+                android:layout_width="@dimen/shop_selected_level_width"
+                android:layout_height="@dimen/shop_selected_level_height"
+
+                android:layout_toRightOf="@+id/ivLevel3"
+                android:layout_marginLeft="@dimen/shop_selected_level_marginInner"
+                android:layout_marginTop="@dimen/shop_selected_level_marginTop"
+                />
+
+            <ImageView
+                android:id="@+id/ivLevel5"
+                android:background="@color/categoryRed"
+                android:layout_width="@dimen/shop_selected_level_width"
+                android:layout_height="@dimen/shop_selected_level_height"
+
+                android:layout_toRightOf="@+id/ivLevel4"
+                android:layout_marginLeft="@dimen/shop_selected_level_marginInner"
+                android:layout_marginTop="@dimen/shop_selected_level_marginTop"
+                />
+
+
+            <!-- DESCRIPTION / IMAGE -->
+
+
+            <FrameLayout
+                android:id="@+id/frameSelectedPowerUp"
+                android:background="@color/categoryRed"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+
+                android:layout_below="@+id/ivLevel1"
+                android:layout_marginLeft="@dimen/shop_selected_frame_marginLR"
+                android:layout_marginRight="@dimen/shop_selected_frame_marginLR"
+                android:layout_marginTop="@dimen/shop_selected_frame_marginTop"
+                >
+
+
+            </FrameLayout>
+
+
+            <ImageView
+                android:id="@+id/ivSelectedPowerUp"
+                android:background="@color/categoryRed"
+                android:layout_width="@dimen/shop_selected_image_width"
+                android:layout_height="@dimen/shop_selected_image_height"
+
+                android:layout_marginTop="@dimen/shop_selected_image_marginTop"
+                android:layout_marginLeft="@dimen/shop_selected_image_marginLeft"
+                android:layout_marginRight="@dimen/shop_selected_image_marginRight"
+                android:layout_below="@+id/frameSelectedPowerUp"
+                />
+
+            <TextView
+                android:id="@+id/tvPowerUpTitle"
+                android:layout_width="@dimen/shop_selected_powerUp_title_width"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@+id/frameSelectedPowerUp"
+                android:layout_toRightOf="@+id/ivPriceImage"
+                android:layout_marginTop="@dimen/shop_selected_title_marginTop"
+                android:layout_marginLeft="@dimen/shop_selected_title_marginLeft"
+                android:layout_marginRight="@dimen/shop_selected_title_marginRight"
+                android:text="@string/shop_selected_title"
+                android:textSize="@dimen/shop_selected_title_textSize"
+                android:gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:gravity="center_horizontal"
+                android:textAlignment="gravity"
+                android:text="@string/description_red_freeze"
+                android:layout_below="@id/tvPowerUpTitle"
+                android:layout_alignLeft="@+id/tvPowerUpTitle"
+                android:layout_alignRight="@+id/tvPowerUpTitle"
+                />
+
+        </RelativeLayout>
+
+
+
 </RelativeLayout>

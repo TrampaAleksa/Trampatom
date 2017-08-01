@@ -84,12 +84,13 @@ public class FragmentRed extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_category_red, container, false);
+        View view = inflater.inflate(R.layout.shop_fragment, container, false);
         init(view);
         setUpPowerUps();
 
         return view;
     }
+
 
     /**
      * Initialize all the views contained within the fragment to be accessed
@@ -131,6 +132,7 @@ public class FragmentRed extends Fragment{
         pbUpgradeProgress[1] = (CircularProgressBar) rlItemsView1.findViewById(R.id.upgradeProgress2);
         pbUpgradeProgress[2] = (CircularProgressBar) rlItemsView2.findViewById(R.id.upgradeProgress);
         pbUpgradeProgress[3] = (CircularProgressBar) rlItemsView2.findViewById(R.id.upgradeProgress2);
+
 
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/CaviarDreams.ttf");

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainShopLayout"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -42,9 +43,11 @@
             android:background="@drawable/tradebutton" />
 
         <FrameLayout
+            android:id="@+id/lineTradeLeft"
             android:layout_width="wrap_content"
             android:layout_height="75dp"
             android:background="@drawable/linija1kratka"
+            android:backgroundTint="@android:color/holo_red_light"
             android:layout_toLeftOf="@+id/ibTrade"
             android:layout_marginBottom="6dp"
             >
@@ -52,10 +55,12 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/lineTradeRight"
             android:layout_width="wrap_content"
             android:layout_height="75dp"
             android:background="@drawable/linija1kratka"
             android:layout_toRightOf="@+id/ibTrade"
+            android:backgroundTint="@android:color/holo_red_light"
             android:layout_marginBottom="6dp"
             >
 
@@ -73,8 +78,9 @@
             android:background="@drawable/okvirplav"
             android:gravity="center"
             android:text="CATEGORY"
+            android:backgroundTint="@android:color/holo_red_light"
             android:textAlignment="center"
-            android:textColor="@android:color/holo_blue_dark" />
+            android:textColor="@android:color/holo_red_light" />
 
 
         <ImageView
@@ -83,6 +89,7 @@
             android:layout_height="60dp"
             android:layout_below="@+id/tvCategoryName"
             android:layout_centerHorizontal="true"
+            android:backgroundTint="@android:color/holo_red_light"
             android:background="@drawable/selectarrows" />
 
         <Button

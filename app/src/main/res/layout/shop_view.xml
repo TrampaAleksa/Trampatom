@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
@@ -27,9 +28,11 @@
         android:layout_height="46dp" />
 
         <FrameLayout
+            android:id="@+id/lineUp1"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/shop_line_vertical_atoms"
             android:background="@drawable/linija1kratkagore"
+            android:backgroundTint="@android:color/holo_red_light"
             android:layout_below="@+id/tvTitle"
             android:layout_toRightOf="@+id/ivAtomRed"
             android:layout_marginRight="22dp"
@@ -62,9 +65,11 @@
         android:layout_height="46dp" />
 
         <FrameLayout
+            android:id="@+id/lineUp2"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/shop_line_vertical_atoms"
             android:background="@drawable/linija1kratkagore"
+            android:backgroundTint="@android:color/holo_red_light"
             android:layout_toRightOf="@+id/ivAtomGreen"
             android:layout_marginRight="22dp"
             android:layout_below="@+id/tvTitle"
@@ -98,9 +103,11 @@
         android:layout_height="46dp" />
 
         <FrameLayout
+            android:id="@+id/lineUp3"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/shop_line_vertical_atoms"
             android:background="@drawable/linija1kratkagore"
+            android:backgroundTint="@android:color/holo_red_light"
             android:layout_toRightOf="@+id/ivAtomYellow"
             android:layout_marginRight="22dp"
             android:layout_below="@+id/tvTitle"
@@ -150,6 +157,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/linija2duga"
+            android:backgroundTint="@android:color/holo_red_light"
             android:layout_below="@+id/ivAtomRed"
             android:layout_marginTop="14dp"
             android:layout_marginRight="22dp"
@@ -170,7 +178,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tvAtomNumberRed"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="6dp">
 
         </android.support.v4.view.ViewPager>
 

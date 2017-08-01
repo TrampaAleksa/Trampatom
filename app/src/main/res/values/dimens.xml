@@ -1,6 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_size">28sp</dimen>
+
     <dimen name="shop_line_vertical_atoms">68dp</dimen>
     <dimen name="margin_text_currency">62dp</dimen>
+    <dimen name="shop_atom_size">32dp</dimen>
+
+    <!-- SHOP RELATED -->
+
+        <!-- CURRENCY -->
+
+    <dimen name="shop_currency_red_marginTop">6dp</dimen>
+    <dimen name="shop_currency_red_marginLeft">14dp</dimen>
+    <dimen name="shop_currency_red_marginBottom">6dp</dimen>
+    <dimen name="shop_currency_red_marginRight">10dp</dimen>
+
+    <dimen name="shop_currency_textWidth">60dp</dimen>
+    <dimen name="shop_currency_line_margin">6dp</dimen>
+    <dimen name="shop_currency_size_trade">52dp</dimen>
+
+    <dimen name="shop_currency_title_textSize">20dp</dimen>
+    <dimen name="shop_currency_title_marginTop">6dp</dimen>
+
+    <dimen name="shop_currency_frameRedGreen_width">100dp</dimen>
+    <dimen name="shop_currency_frameRedGreen_height">2dp</dimen>
+
+    <dimen name="shop_currency_trade_marginTop">4dp</dimen>
+
+
+
+    <!-- CATEGORY -->
+
+    <dimen name="shop_category_categoryContainer_width">130dp</dimen>
+    <dimen name="shop_category_categoryContainer_height">54dp</dimen>
+    <dimen name="shop_category_size_powerUp">38dp</dimen>
+
+    <dimen name="shop_category_name_height">52dp</dimen>
+    <dimen name="shop_category_powerUp_marginEdge">12dp</dimen>
+    <dimen name="shop_category_powerUp_marginInner">6dp</dimen>
+
+    <dimen name="shop_category_frame_margin">14dp</dimen>
+    <dimen name="shop_category_main_margin">8dp</dimen>
+
+    <dimen name="shop_category_frameAboveName">100dp</dimen>
+    <dimen name="shop_category_frameAboveName_marginTop">16dp</dimen>
+    <dimen name="shop_category_nae_marginTop">10dp</dimen>
+
+
+
+    <!-- SELECTED -->
+
+    <dimen name="shop_selected_buy_width">84dp</dimen>
+    <dimen name="shop_selected_buy_height">34dp</dimen>
+
+    <dimen name="shop_selected_size_priceImage">26dp</dimen>
+    <dimen name="shop_selected_priceImage_marginRight">16dp</dimen>
+    <dimen name="shop_selected_priceImage_marginTop">4dp</dimen>
+    <dimen name="shop_selected_price_width">66dp</dimen>
+    <dimen name="shop_selected_price_marginLeft">10dp</dimen>
+    <dimen name="shop_selected_price_marginRight">4dp</dimen>
+
+    <dimen name="shop_selected_level_width">22dp</dimen>
+    <dimen name="shop_selected_level_height">14dp</dimen>
+    <dimen name="shop_selected_level_marginLeft">16dp</dimen>
+    <dimen name="shop_selected_level_marginTop">20dp</dimen>
+    <dimen name="shop_selected_level_marginInner">4dp</dimen>
+
+    <dimen name="shop_selected_powerUp_title_width">220dp</dimen>
+    <dimen name="shop_selected_title_textSize">18dp</dimen>
+    <dimen name="shop_selected_title_marginTop">4dp</dimen>
+    <dimen name="shop_selected_title_marginLeft">6dp</dimen>
+    <dimen name="shop_selected_title_marginRight">6dp</dimen>
+
+    <dimen name="shop_selected_image_marginTop">10dp</dimen>
+    <dimen name="shop_selected_image_marginLeft">10dp</dimen>
+    <dimen name="shop_selected_image_marginRight">10dp</dimen>
+    <dimen name="shop_selected_image_width">104dp</dimen>
+    <dimen name="shop_selected_image_height">104dp</dimen>
+
+    <dimen name="shop_selected_frame_marginTop">6dp</dimen>
+    <dimen name="shop_selected_frame_marginLR">4dp</dimen>
+
+
 </resources>

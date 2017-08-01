@@ -1,12 +1,18 @@
 <resources>
+
     <string name="app_name">Trampatom</string>
     <string name="main_activity_start">START</string>
     <string name="game_score">Score:</string>
     <string name="game_time">60</string>
-    <string name="shop_atom_number_def_value">0</string>
+
     <string name="classic_power_up_1">Power up 1</string>
     <string name="classic_power_up_2">Power up 2</string>
 
+
+
+    <!-- SHOP ACTIVITY RELATED -->
+
+            <!-- POWER UP DESCRIPTIONS -->
 
     <string name="description_red_freeze">Freezes the balls for a couple of seconds
     depending on how much you have upgraded it</string>
@@ -29,4 +35,14 @@
     <string name="description_yellow_slow_balls">slower ball movement</string>
     <string name="description_yellow_unknown3">Not finished yet</string>
     <string name="description_yellow_unknown4">Not finished yet</string>
+
+             <!-- TITLE LAYOUT VARIABLES -->
+    <string name="shop_atom_number_def_value">1000</string>
+    <string name="shop_currency_title">S H O P</string>
+    <string name="shop_category_name_active">ACTIVE</string>
+    <string name="shop_selected_def_price">1000</string>
+    <string name="shop_selected_text_buy">BUY</string>
+    <string name="shop_selected_title">TITLE</string>
+
+
 </resources>

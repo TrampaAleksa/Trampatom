@@ -37,10 +37,11 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     private static final int CATEGORY_NUMBER = 4;
     public int currentFragmentPossition;
 
+    TextView tvTitle;
     TextView tvNumberAtomsBlue, tvNumberAtomsRed, tvNumberAtomsGreen, tvNumberAtomsYellow, tvNumberAtomsPurple;
     ImageView ivAtomRed, ivAtomGreen, ivAtomYellow,ivAtomPurple;
     //view pager used to cycle between categories in the shop
-    MyPagerAdapter adapterViewPager;
+   // MyPagerAdapter adapterViewPager
     ViewPager vpPager;
 
     //classes used to run the shop
@@ -53,7 +54,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.shop_view);
+        setContentView(R.layout.shop);
 
         init();
     }
@@ -61,6 +62,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     private void init() {
 
         //initialize views
+     /*   tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvNumberAtomsBlue = (TextView) findViewById(R.id.tvAtomNumberBlue);
         tvNumberAtomsRed = (TextView) findViewById(R.id.tvAtomNumberRed);
         tvNumberAtomsGreen = (TextView) findViewById(R.id.tvAtomNumberGreen);
@@ -89,13 +91,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         //contains a list of power ups
         powerUpPool = shopHandler.loadPowerUpPool();
 
-        //set up the view pager and the tabs for changing categories
-        vpPager = (ViewPager) findViewById(R.id.vpCategory);
-        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), powerUpPool, shopHandler);
-        vpPager.setAdapter(adapterViewPager);
-        /*TabLayout tabLayout = (TabLayout) findViewById(R.id.tabCategories);
-        tabLayout.setupWithViewPager(vpPager);*/
-
+*/
     }
 
     @Override
@@ -119,57 +115,4 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    /**
-     * Inner class used to get the right category of the shop based on the selected one using an adapter
-     */
-    public static class MyPagerAdapter extends FragmentPagerAdapter {
-        List<PowerUpPool> powerUpPoolFragment;
-        ShopHandler shopHandler;
-        private static int NUM_ITEMS = 4;
-
-        /**
-         * Class used to get the pager adapter used to cycle between fragments/categories.
-         *
-         * @param fragmentManager     needed to manage swapping and inflating of fragments
-         * @param powerUpPoolFragment needed to get the power ups for each fragment and displaying them
-         */
-        public MyPagerAdapter(FragmentManager fragmentManager, List<PowerUpPool> powerUpPoolFragment, ShopHandler shopHandler) {
-            super(fragmentManager);
-            this.powerUpPoolFragment = powerUpPoolFragment;
-            this.shopHandler = shopHandler;
-        }
-
-        // Returns total number of pages
-        @Override
-        public int getCount() {
-            return NUM_ITEMS;
-        }
-
-        // Returns the fragment to display for that page
-        @Override
-        public Fragment getItem(int position) {
-
-            switch (position) {
-                case 0: // RED
-                    return FragmentRed.newInstance(powerUpPoolFragment, shopHandler);
-                case 1: // GREEN
-                    return FragmentGreen.newInstance(powerUpPoolFragment, shopHandler);
-                case 2: // YELLOW
-                    return FragmentYellow.newInstance(powerUpPoolFragment, shopHandler);
-                case 3: // PURPLE
-                    return FragmentPurple.newInstance(powerUpPoolFragment, shopHandler);
-                default:
-                    return null;
-            }
-        }
-
-        // Returns the page title for the top indicator
-       /* @Override
-        public CharSequence getPageTitle(int position) {
-            return "Page " + position;
-        }
-
-    }*/
-
-    }
 }

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    >
+
+    <RelativeLayout
+        android:id="@+id/rlCategoryContainer"
+        android:background="@color/primaryBlack"
+        android:layout_width="@dimen/shop_category_categoryContainer_width"
+        android:layout_height="@dimen/shop_category_categoryContainer_height">
+
+        <FrameLayout
+            android:id="@+id/frameAboveName"
+            android:layout_width="@dimen/shop_category_frameAboveName"
+            android:layout_height="2dp"
+            android:background="@color/categoryPurple"
+
+            android:layout_marginTop="@dimen/shop_category_frameAboveName_marginTop"
+            android:layout_centerHorizontal="true"
+            >
+
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/tvCategoryName"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/frameAboveName"
+            android:layout_marginTop="@dimen/shop_category_nae_marginTop"
+            android:layout_centerHorizontal="true"
+            android:textSize="18dp"
+            android:text="@string/shop_category_name_active"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlPowerUps"
+        android:background="@color/categoryPurple"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shop_category_name_height"
+
+        android:layout_toRightOf="@+id/rlCategoryContainer"
+        android:layout_marginTop="1dp"
+        >
+
+
+        <ImageView
+            android:id="@+id/ivPowerUp1"
+            android:background="@android:color/holo_purple"
+            android:layout_width="@dimen/shop_category_size_powerUp"
+            android:layout_height="@dimen/shop_category_size_powerUp"
+            android:layout_marginLeft="@dimen/shop_category_powerUp_marginEdge"
+            android:layout_marginRight="@dimen/shop_category_powerUp_marginInner"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:id="@+id/ivPowerUp2"
+            android:background="@android:color/holo_purple"
+            android:layout_width="@dimen/shop_category_size_powerUp"
+            android:layout_height="@dimen/shop_category_size_powerUp"
+
+            android:layout_marginLeft="@dimen/shop_category_powerUp_marginInner"
+            android:layout_marginRight="@dimen/shop_category_powerUp_marginInner"
+            android:layout_toRightOf="@+id/ivPowerUp1"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:id="@+id/ivPowerUp3"
+            android:background="@android:color/holo_purple"
+            android:layout_width="@dimen/shop_category_size_powerUp"
+            android:layout_height="@dimen/shop_category_size_powerUp"
+
+            android:layout_marginLeft="@dimen/shop_category_powerUp_marginInner"
+            android:layout_marginRight="@dimen/shop_category_powerUp_marginInner"
+            android:layout_toRightOf="@+id/ivPowerUp2"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:id="@+id/ivPowerUp4"
+            android:background="@android:color/holo_purple"
+            android:layout_width="@dimen/shop_category_size_powerUp"
+            android:layout_height="@dimen/shop_category_size_powerUp"
+
+            android:layout_marginLeft="@dimen/shop_category_powerUp_marginInner"
+            android:layout_marginRight="@dimen/shop_category_powerUp_marginInner"
+            android:layout_toRightOf="@+id/ivPowerUp3"
+            android:layout_centerVertical="true"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>
