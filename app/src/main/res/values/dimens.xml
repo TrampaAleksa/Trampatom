@@ -44,14 +44,16 @@
 
     <dimen name="shop_category_frameAboveName">100dp</dimen>
     <dimen name="shop_category_frameAboveName_marginTop">16dp</dimen>
-    <dimen name="shop_category_nae_marginTop">10dp</dimen>
+    <dimen name="shop_category_nae_marginTop">8dp</dimen>
+    <dimen name="shop_category_name_textSize">16dp</dimen>
+
 
 
 
     <!-- SELECTED -->
 
     <dimen name="shop_selected_buy_width">84dp</dimen>
-    <dimen name="shop_selected_buy_height">34dp</dimen>
+    <dimen name="shop_selected_buy_height">28dp</dimen>
 
     <dimen name="shop_selected_size_priceImage">26dp</dimen>
     <dimen name="shop_selected_priceImage_marginRight">16dp</dimen>
@@ -60,9 +62,9 @@
     <dimen name="shop_selected_price_marginLeft">10dp</dimen>
     <dimen name="shop_selected_price_marginRight">4dp</dimen>
 
-    <dimen name="shop_selected_level_width">22dp</dimen>
-    <dimen name="shop_selected_level_height">14dp</dimen>
-    <dimen name="shop_selected_level_marginLeft">16dp</dimen>
+    <dimen name="shop_selected_level_width">18dp</dimen>
+    <dimen name="shop_selected_level_height">12dp</dimen>
+    <dimen name="shop_selected_level_marginLeft">14dp</dimen>
     <dimen name="shop_selected_level_marginTop">20dp</dimen>
     <dimen name="shop_selected_level_marginInner">4dp</dimen>
 
@@ -78,8 +80,9 @@
     <dimen name="shop_selected_image_width">104dp</dimen>
     <dimen name="shop_selected_image_height">104dp</dimen>
 
-    <dimen name="shop_selected_frame_marginTop">6dp</dimen>
-    <dimen name="shop_selected_frame_marginLR">4dp</dimen>
+    <dimen name="shop_selected_frame_marginTop">10dp</dimen>
+    <dimen name="shop_selected_frame_marginLR">22dp</dimen>
+    <dimen name="shop_selected_frame_background_marginTop">12dp</dimen>
 
 
 </resources>

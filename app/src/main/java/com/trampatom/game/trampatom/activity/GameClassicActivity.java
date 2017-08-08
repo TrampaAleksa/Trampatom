@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -13,6 +14,7 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.trampatom.game.trampatom.Model.Ball;
+import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.BallHandler;
@@ -32,10 +35,13 @@ import com.trampatom.game.trampatom.canvas.CanvasGameClassic;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.currency.AtomPool;
 import com.trampatom.game.trampatom.currency.PowerUps;
+import com.trampatom.game.trampatom.currency.ShopHandler;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
+import com.trampatom.game.trampatom.utils.PassivesManager;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
+import java.util.List;
 import java.util.Random;
 
 import com.trampatom.game.trampatom.utils.Keys;
@@ -58,6 +64,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     public static final int BALL_YELLOW = 4;
     public static final int BALL_PURPLE = 5;
     public static final int BALL_WAVE = 6;
+
+    public static final int HEIGHT_SCALE = 11;
 
 
     // ------------------- General Ball Variables --------------------------------------- \\
@@ -108,6 +116,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         SoundPool soundPool;
         PowerUps powerUps;
         ProgressBar energyProgress;
+        List<PowerUpPool> powerUpPool;
+        PowerUpPool[] powerUp= { null , null, null, null};
+        PassivesManager passivesManager;
 
 
     // ------------------- Arrays ------------------------------------------------------- \\
@@ -189,6 +200,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     // --------------------------- Initialization ------------------------------- \\
 
     private void init() {
+        passivesManager = new PassivesManager();
 
         random = new Random();
         keys = new Keys();
@@ -218,6 +230,26 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             coolDown = keys.POWER_UP_COOLDOWN;
             consumable = keys.POWER_UP_COOLDOWN;
 
+
+        //POWER UPS
+
+        //load the power ups we selected in the shop from a file
+        ShopHandler shopHandler = new ShopHandler(this);
+        powerUpPool = shopHandler.loadSelectedPowerUps();
+        for(i=0; i<4; i++){
+            powerUp[i] = powerUpPool.get(i);
+        }
+        //set the selected power ups id-s to be used to determine what they do
+        selectedPowerUp1 = powerUp[1].getId();
+        selectedPowerUp2 =  powerUp[0].getId();
+        selectedPassive1 =  powerUp[3].getId();
+        selectedPassive2 =  powerUp[2].getId();
+        //set flags to determine what type of power up it is (energy related, ball related etc)
+        flagTypePowerUp2 = passivesManager.checkCurrentFlagType(selectedPowerUp2);
+        flagTypePowerUp1 = passivesManager.checkCurrentFlagType(selectedPowerUp1);
+        flagTypePassive1 = passivesManager.checkCurrentFlagType(selectedPassive1);
+        flagTypePassive2 = passivesManager.checkCurrentFlagType(selectedPassive2);
+
         // OTHER
         //get device's width and height
             width= MainActivity.getWidth();
@@ -225,22 +257,13 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //set and resize all the bitmaps
             initiateBitmaps();
 
-        //POWER UPS
         powerUps = new PowerUps(energyProgress,keys, ballWidth, ballHeight);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        selectedPowerUp1 = preferences.getInt(Keys.KEY_POWER_UP_ONE, 0);
-        selectedPowerUp2 = preferences.getInt(Keys.KEY_POWER_UP_TWO, 0);
-        selectedPassive1 = preferences.getInt(Keys.KEY_PASSIVE_ONE,0);
-        selectedPassive2 = preferences.getInt(Keys.KEY_PASSIVE_TWO,0);
-        flagTypePowerUp2 = powerUps.checkCurrentFlagType(selectedPowerUp2);
-        flagTypePowerUp1 = powerUps.checkCurrentFlagType(selectedPowerUp1);
-        flagTypePassive1 = powerUps.checkCurrentFlagType(selectedPassive1);
-        flagTypePassive2 = powerUps.checkCurrentFlagType(selectedPassive2);
 
         // in case we selected the power up to increase the starting energy
-        if(flagTypePassive2==4 || flagTypePassive1==4)
+        if(flagTypePassive2==4 || flagTypePassive1==4) {
             //set the energy bar in a certain way depending on the passives we selected
-           currentEnergyLevel =  powerUps.energyPassivePowerUp(selectedPassive2, currentEnergyLevel);
+            currentEnergyLevel = powerUps.energyPassivePowerUp(selectedPassive2, currentEnergyLevel);
+        }
         //if we selected passive that reduces speed of energy loss, this will reduce it
             if(selectedPassive1 == Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY)
             keys.ENERGY_DECREASE -= powerUps.energyPassivePowerUp(selectedPassive1, currentEnergyLevel);
@@ -252,12 +275,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //BALL
             //sets the required times to click a yellow ball and its speed
             timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
-            yellowBallSpeed = keys.BALL_YELLOW_INITIAL_SPEED;
             // sets only one purple ball to be displayed initially
             timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
         //the first ball is always blue;
             currentBall= BALL_BLUE;
             initialDraw=true;
+        setCurrentBall(ballType);
     }
 
     /**
@@ -275,6 +298,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             options.inPreferredConfig = Bitmap.Config.RGB_565;
         //loading the bitmaps
         // TODO change so that the bitmaps are decoded inside Ball Handler, to prevent parsing every ball there
+        //get the size of the device that is running the game and scale teh balls according to this
 
             waveBall[0] = BitmapFactory.decodeResource(getResources(), R.drawable.wave1, options);
             waveBall[1] = BitmapFactory.decodeResource(getResources(), R.drawable.wave2, options);
@@ -289,8 +313,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             yellowBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomzuta, options);
             purpleBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomroze, options);
             //ball Height and Width
-            ballHeight = blueBall.getHeight() + keys.BALL_SIZE_ADAPT;
-            ballWidth = blueBall.getWidth() + keys.BALL_SIZE_ADAPT;
+            //ballHeight = blueBall.getHeight() + keys.BALL_SIZE_ADAPT;
+            //ballWidth = blueBall.getWidth() + keys.BALL_SIZE_ADAPT;
+            ballHeight = height/ HEIGHT_SCALE;
+            ballWidth = ballHeight;
+        // in case we selected a passive to increase the balls size change it
+            ballHeight = passivesManager.setNewBallSizeFromPassives(ballHeight,selectedPassive1,
+                    selectedPassive2,powerUp[2].getCurrentLevel(), powerUp[3].getCurrentLevel());
+            ballWidth = ballHeight;
             //resize all balls to the new ball width and height
             blueBall = Bitmap.createScaledBitmap(blueBall, ballWidth, ballHeight, true);
             redBall = Bitmap.createScaledBitmap(redBall, ballWidth, ballHeight, true);
@@ -333,8 +363,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             // ------------------------------- Start-Up -------------------------- \\
 
     /**
-     * Method for handling the game's timer. Counts down and upon finishing the timer
-     * we finish the game and check if we set a new high score.
+     * Important method containing every timed events that happen in the game.
+     * <p>
+     *     Used to handle power up cooldown's and durations, reduction of the energy bar, finishing of the game or other timed events.
+     * </p>
      * <p><note> It's possible to put a loop on the timer by removing a comment in onFinish </note></p>
      */
     public void timedActions() {
@@ -440,15 +472,16 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         canvas = new CanvasGameClassic(ourHolder,mCanvas, stars);
 
         //get every ball object when starting a game
-        ballHandler = new BallHandler(randomCoordinate, keys, ballWidth, ballHeight);
-        ballHandler.parseBallBitmaps(redBall, blueBall, greenBall , yellowBall , purpleBall, waveBall);
+            ballHandler = new BallHandler(randomCoordinate, keys, ballWidth, ballHeight);
+            ballHandler.parseBallBitmaps(redBall, blueBall, greenBall , yellowBall , purpleBall, waveBall);
         //set the ball attributes if the passives we selected affect the balls
-        if(flagTypePassive1== 3 || flagTypePassive2 == 3)
-        ballHandler.setDefaultValuesUponPassives(selectedPassive1,selectedPassive2);
+            if(flagTypePassive1== 3 || flagTypePassive2 == 3)
+            ballHandler.setDefaultValuesUponPassives(selectedPassive1,selectedPassive2);
+
         //get the ball objects for the first time with the default attributes
-        ballObject = ballHandler.getFirstBallObject();
-        purpleBallObjects = ballHandler.getFirstBallObjectArray(keys.PURPLE_BALL_NUMBER);
-        multipleBalls = ballHandler.getFirstBallObjectArray(keys.WAVE_BALL_NUMBER);
+            ballObject = ballHandler.getFirstBallObject();
+            purpleBallObjects = ballHandler.getFirstBallObjectArray(keys.PURPLE_BALL_NUMBER);
+            multipleBalls = ballHandler.getFirstBallObjectArray(keys.WAVE_BALL_NUMBER);
 
         //the colors of purple and wave don't have to be be changed so initiate them once
         for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
@@ -461,17 +494,16 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         clickedABall = new ClickedABall(ballWidth, ballHeight);
         ballMovement = new BallMovement(width, height);
-       setCurrentBall(ballObject.getBallType());
        initialDraw = false;
     }
 
 
             // ------------------------------- Ball Movement -------------------------- \\
 
+    //TODO ball objects used to move balls, so make single method for moving a single ball object
+
     /**
-     * <p>Method that should be run in a constant loop.</p>
-     * <p>It moves and draws specific ball types depending on what is the current ball type.</p>
-     * <p>All the move methods should be used here used here</p>
+     * Method that should be used to move every ball according to the type of the current ball.
      */
     public void moveAndDraw(){
         if(currentEnergyLevel<=0) {
@@ -509,25 +541,24 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
     /**
-     * <p>Method for moving most balls that use regular x and y coordinates.</p>
-     * <p>it gets a moveArray and uses it to store new coordinates and a move direction for the ball.</p>
-     * These balls should move at a constant speed and don't change their angle
+     * Method that should be used to move every ball that moves at the default speed.
+     * It uses a ball object and then changes its coordinates depending on the ball's speed
      */
     private void moveBall() {
         ballObject = ballMovement.moveBall(ballObject);
     }
     /**
      * <p>Method for moving yellow balls.</p>
-     * <p>It gets a moveArray and uses it to store new coordinates and a move direction for the ball.</p>
-     * Yellow balls reduce in size and increase its speed on every click
+     * <p>
+     *     Yellow balls slow down their speed after every click and are reduced in size.
+     * </p>
      */
     private void moveYellowBall(){
         ballObject = ballMovement.moveBall(ballObject);
     }
     /**
      * <p>Method for moving green ball by changing its x and y coordinates.</p>
-     * <p>It gets a moveArray and uses it to store new coordinates and a move direction for the ball.</p>
-     * This ball has a random chance to change its angle.
+     * Green ball moves faster than the other balls
      */
     private void moveGreenBall(){
         ballObject = ballMovement.moveGreenBall(ballObject);
@@ -570,7 +601,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //draw and move number of balls equal to the difference of total balls and the balls we clicked
         //current wave ball is the ball we should click, move every next ball after the current ball
         //every ball before the current ball will not be moved or drawn
-        for(i=currentWaveBall; i<keys.WAVE_BALL_NUMBER; i++){
+        for(int i=currentWaveBall; i<keys.WAVE_BALL_NUMBER; i++){
             multipleBalls[i] = ballMovement.moveWave(multipleBalls[i]);
         }
     }
@@ -791,10 +822,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             if (timesClicked > 0) {
                 timesClicked--;
                 //every time we click it, reduce its size and increase its speed
-                ballObject.setBallWidth(ballObject.getBallWidth() - keys.BALL_YELLOW_SIZE_DECREASE);
-                ballObject.setBallHeight(ballObject.getBallHeight() - keys.BALL_YELLOW_SIZE_DECREASE);
+                ballObject.setBallWidth(ballObject.getBallWidth() - (ballObject.getBallWidth()/keys.BALL_YELLOW_SIZE_DECREASE));
+                ballObject.setBallHeight(ballObject.getBallHeight() - (ballObject.getBallWidth()/keys.BALL_YELLOW_SIZE_DECREASE));
                 ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(), ballObject.getBallWidth(), ballObject.getBallHeight(), true));
-                if(ballObject.isActiveChangesSpeed())
+                //if(ballObject.isActiveChangesSpeed())
                 ballObject.setBallSpeed(ballObject.getBallSpeed() + keys.BALL_YELLOW_SPEED_INCREASE);
 
             }
@@ -915,6 +946,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             soundPool.play(multipleBalls[0].getSoundId(),1,1,0,0,1);
             // next ball should be clicked
             currentWaveBall ++;
+
             if(currentWaveBall == keys.WAVE_BALL_NUMBER){
                 currentWaveBall = 0;
                 // to round up the gain; with *10 you gain 420 score total

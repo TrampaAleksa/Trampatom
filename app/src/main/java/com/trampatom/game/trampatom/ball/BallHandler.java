@@ -79,8 +79,6 @@ public class BallHandler {
 
         switch(flag1){
             case Keys.FLAG_PURPLE_BIGGER_BALLS:
-                ballWidth = ballWidth+40;
-                ballHeight = ballHeight+40;
                 resizeBitmapsToNewDefaultSize();
                 break;
         }
@@ -159,11 +157,11 @@ public class BallHandler {
             ball = setBallColorByType(currentBallType, ball);
         }
         else{
-            ball = setBallColorByType(currentBallType, ball);
             ball.setBallWidth(ballWidth+keys.POWER_UP_BALL_SIZE_INCREASE);
             ball.setBallHeight(ballHeight+keys.POWER_UP_BALL_SIZE_INCREASE);
-            ball.setBallColor(Bitmap.createScaledBitmap(ball.getBallColor(),
-                    ball.getBallWidth(),ball.getBallHeight(),false));
+            ball = setBallColorByType(currentBallType, ball);
+           /* ball.setBallColor(Bitmap.createScaledBitmap(ball.getBallColor(),
+                    ball.getBallWidth(),ball.getBallHeight(),false));*/
         }
 
         // set the first mBall object
@@ -208,23 +206,23 @@ public class BallHandler {
                 return purpleBalls;
             }
             else if(arraySize == keys.WAVE_BALL_NUMBER){
-                waveBalls[0].setY(ballHeight*2);
+                waveBalls[0].setY(ballHeight/3);
                 waveBalls[0].setX(0);
                 waveBalls[0].setBallWidth(ballWidth);
                 waveBalls[0].setBallHeight(ballHeight);
-                purpleBalls[0].setBallSpeed(ballSpeed);
+                waveBalls[0].setBallSpeed(ballSpeed);
                 for(i=1; i< arraySize; i++) {
                     //every wave ball starts at the left
                     waveBalls[i].setX(0);
                     //initialize the wave balls so they are at a distance
                     waveBalls[i].setBallWidth(ballWidth);
                     waveBalls[i].setBallHeight(ballHeight);
-                    waveBalls[i].setY(waveBalls[i-1].getY() + ballHeight + 10);
+                    waveBalls[i].setY(waveBalls[i-1].getY() + ballHeight + ballHeight/10);
 
                     waveBalls[i].setMoveX(1);
                     waveBalls[i].setMoveY(1);
                     //every next ball moves faster
-                    waveBalls[i].setBallSpeed(keys.DEFAULT_BALL_SPEED + i);
+                    waveBalls[i].setBallSpeed(waveBalls[0].getBallSpeed() + i);
                     }
                 return waveBalls;
                 }
@@ -286,23 +284,23 @@ public class BallHandler {
             }
         }
         else if(arraySize == keys.WAVE_BALL_NUMBER){
-            balls[0].setY(ballHeight*2);
+            balls[0].setY(ballHeight/3);
             balls[0].setX(0);
             balls[0].setMoveX(1);
             balls[0].setMoveY(1);
-            for(i=1; i< arraySize; i++) {
+            // If the speed of the new ball should be changed, check what type the ball is and set the
+            //adequate speed for that ball type
+            if(balls[0].isActiveChangesSize())
+            balls = setWaveSpeed(balls);
+            for(int i=1; i< arraySize; i++) {
                 //every wave ball starts at the left
                 balls[i].setX(0);
 
-                balls[i].setY(balls[i - 1].getY() + ballHeight + 10);
+                balls[i].setY(balls[i - 1].getY() + ballHeight + ballHeight/10);
 
                 balls[i].setMoveX(1);
                 balls[i].setMoveY(1);
-                // If the speed of the new ball should be changed, check what type the ball is and set the
-                //adequate speed for that ball type
-                if(!balls[i].isActiveChangesSpeed()){
-                    balls[i] = setBallSpeedByType(currentBallType, balls[i]);
-                }
+
 
                 //if the size of the ball should be changed with a power up, increase its size by an amount
                 //if it shouldn't be increased, just get the ball in teh regular way
@@ -325,11 +323,14 @@ public class BallHandler {
 
         return balls;
     }
+
+
         /**
          * Important method that should be called before getting a new ball object to determine what object to get
          */
     public int getNewBallType(){
         return randomBallVariables.getRandomBallType();
+        //return 12;
     }
 
 
@@ -434,9 +435,12 @@ public class BallHandler {
 
         // YELLOW BALL
         if(currentBallType == GameClassicActivity.BALL_YELLOW){
+            //if its a yellow ball set the width and height to be bigger by 50%
             ball.setBallColor(yellowBall);
-            ball.setBallColor(Bitmap.createScaledBitmap(ball.getBallColor(),
-                    ball.getBallWidth() + keys.YELLOW_BALL_INITIAL_SIZE, ball.getBallHeight()+ keys.YELLOW_BALL_INITIAL_SIZE, true));
+            ball.setBallWidth(ballWidth + (ballWidth/2));
+            ball.setBallHeight(ballHeight + (ballHeight/2));
+            ball.setBallColor(Bitmap.createScaledBitmap(yellowBall,
+                    ball.getBallWidth(), ball.getBallHeight(), true));
         }
 
         // GREEN BALL
@@ -466,6 +470,19 @@ public class BallHandler {
         }
 
 
+
+
         return balls;
+    }
+
+    private Ball[] setWaveSpeed(Ball[] balls){
+
+            for(int i=0; i<keys.WAVE_BALL_NUMBER;i++){
+
+                balls[i].setBallSpeed(keys.DEFAULT_BALL_SPEED+i);
+
+            }
+
+            return balls;
     }
 }

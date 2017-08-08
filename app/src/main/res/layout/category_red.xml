@@ -33,7 +33,7 @@
             android:layout_below="@+id/frameAboveName"
             android:layout_marginTop="@dimen/shop_category_nae_marginTop"
             android:layout_centerHorizontal="true"
-            android:textSize="18dp"
+            android:textSize="@dimen/shop_category_name_textSize"
             android:text="@string/shop_category_name_active"/>
 
     </RelativeLayout>

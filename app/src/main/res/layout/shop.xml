@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
 
 
@@ -196,6 +197,7 @@
            >
 
            <include layout = "@layout/category_red"
+               android:id="@+id/categoryRed"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"/>
        </FrameLayout>
@@ -209,6 +211,7 @@
             >
 
             <include layout = "@layout/category_green"
+                android:id="@+id/categoryGreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </FrameLayout>
@@ -221,7 +224,8 @@
             android:layout_below="@+id/frameGadgets"
             >
 
-            <include layout = "@layout/category_yellow"
+            <include layout = "@layout/category_purple"
+                android:id="@+id/categoryYellow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </FrameLayout>
@@ -235,7 +239,8 @@
             android:layout_below="@+id/frameEnchantment"
             >
 
-            <include layout = "@layout/category_purple"
+            <include layout = "@layout/category_yellow"
+                android:id="@+id/categoryPurple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 />
@@ -260,6 +265,18 @@
             android:layout_alignLeft="@+id/rlTitle"
             android:layout_marginBottom="@dimen/shop_category_main_margin"
             >
+
+            <FrameLayout
+                android:id="@+id/frameBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_background"
+                android:layout_marginTop="@dimen/shop_selected_frame_background_marginTop"
+                >
+
+
+
+            </FrameLayout>
 
 
             <TextView
@@ -398,6 +415,7 @@
                 android:layout_marginRight="@dimen/shop_selected_title_marginRight"
                 android:text="@string/shop_selected_title"
                 android:textSize="@dimen/shop_selected_title_textSize"
+                android:textColor="@android:color/white"
                 android:gravity="center"
                 />
 
@@ -408,6 +426,7 @@
 
                 android:gravity="center_horizontal"
                 android:textAlignment="gravity"
+                android:textColor="@android:color/white"
                 android:text="@string/description_red_freeze"
                 android:layout_below="@id/tvPowerUpTitle"
                 android:layout_alignLeft="@+id/tvPowerUpTitle"

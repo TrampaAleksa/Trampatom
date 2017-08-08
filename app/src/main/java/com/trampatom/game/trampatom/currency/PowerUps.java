@@ -55,34 +55,7 @@ public class PowerUps {
         }
     }
 
-    /**
-     * Method used for checking if our selected power up is progress bar related or ball related
-     * so that we can use different methods in the game for power ups.
-     *
-     * @return an int value used to determine what type of power up we selected
-     */
-    public int checkCurrentFlagType(int flag) {
 
-        //if its an active power up/ lower than the key value of the first passive power up
-        //active
-        if(flag < Keys.FLAG_PURPLE_BIGGER_BALLS) {
-            if (flag == Keys.FLAG_RED_BIG_ENERGY_BONUS || flag == Keys.FLAG_GREEN_SMALL_ENERGY_BONUS || flag == Keys.FLAG_YELLOW_MORE_ENERGY_ON_START)
-                //its energy related
-                return 1;
-                //its ball related
-            else return 2;
-        }
-
-        //passive
-        else {
-            if (flag == Keys.FLAG_YELLOW_SLOW_DOWN_BALLS || flag == Keys.FLAG_PURPLE_BIGGER_BALLS)
-                //its ball related
-                return 3;
-            // its energy related
-            else return 4;
-        }
-
-    }
 
 
     // ---------------------------------------- ACTIVE BALL RELATED ------------------------------- \\
@@ -398,19 +371,6 @@ public class PowerUps {
 
     // -------------------------------------- PASSIVE BALL RELATED ------------------------------------- \\
 
-    /**
-     * Method that should be used to set up the starting state of a ball attribute,like the ball's
-     * size or its speed. This method should change the attributes only of the first created ball and
-     * from there the rest is handled by active power-ups
-     *
-     * @param flag used to determine what passive power up we have selected and to return the right attribute
-     * @return an int value representing a default speed/ballWidth etc. A single ball attribute
-     */
-    public int setUpBallPassivePowerUp(int flag) {
-
-
-return 0;
-    }
 
 
 

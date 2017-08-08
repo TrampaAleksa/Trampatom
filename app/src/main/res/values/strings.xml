@@ -43,6 +43,9 @@
     <string name="shop_selected_def_price">1000</string>
     <string name="shop_selected_text_buy">BUY</string>
     <string name="shop_selected_title">TITLE</string>
+    <string name="shop_category_name_gadgets">GADGETS</string>
+    <string name="shop_category_name_enchantment">ENCHANTMENT</string>
+    <string name="shop_category_name_laboratory">LABORATORY</string>
 
 
 </resources>

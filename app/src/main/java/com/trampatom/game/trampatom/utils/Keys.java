@@ -62,7 +62,7 @@ public class Keys {
                 public int YELLOW_BALL_INITIAL_SIZE = 25;
                 public int BALL_YELLOW_REQUIRED_CLICKS = 4;
                 public int BALL_YELLOW_INITIAL_SPEED = 2;
-                public int BALL_YELLOW_SIZE_DECREASE = 10;
+                public int BALL_YELLOW_SIZE_DECREASE = 12;
                 public int BALL_YELLOW_SPEED_INCREASE = 3;
 
 

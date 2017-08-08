@@ -50,6 +50,16 @@ public class ShopHandler {
         this.context = context;
     }
 
+    /**
+     * Constructor used in the game since we do not need to use any atom pool methods related to the shop in the game
+     * but we have to load the selected power ups
+     * @param context need a context to read from files that store the power ups
+     */
+    public ShopHandler(Context context){
+
+        this.context = context;
+    }
+
 
     // --------------------------------------------- CURRENCY ------------------------------------ \\
 
