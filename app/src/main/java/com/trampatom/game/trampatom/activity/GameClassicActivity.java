@@ -93,6 +93,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //used for either drawing only one ball or multiple balls
                 int timesClickedPurple;
             //used to determine how many and what ball to draw on screen
+                boolean[] ballClicked = {false,false,false};
                 boolean originalBallClicked= false; boolean secondBallClicked=false; boolean thirdBallClicked=false;
         //used for wave ball
                 int currentWaveBall = 0;
@@ -531,7 +532,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
-                canvas.drawPurple(purpleBallObjects,-1, score, timesClicked);
+                canvas.drawPurple(purpleBallObjects,-1, score, timesClicked, ballClicked);
                 break;
             case BALL_WAVE:
                 moveWave();
@@ -580,14 +581,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 //the above for loop will now move three set of coordinates instead of just one
                     ballPurpleNumber = keys.PURPLE_BALL_NUMBER;
                 //remove the balls that were clicked from the screen and stop moving them
-                if (originalBallClicked)
-                    purpleBallObjects[0].setX(-ballWidth-10);
-
-                if (secondBallClicked) {
-                    purpleBallObjects[1].setX(-ballWidth-10);
+                if (ballClicked[0]) {
+                    purpleBallObjects[0].setX(-purpleBallObjects[0].getBallWidth());
                 }
-                if (thirdBallClicked) {
-                    purpleBallObjects[2].setX(-ballWidth-10);
+                if (ballClicked[1]) {
+                    purpleBallObjects[1].setX(-purpleBallObjects[1].getBallWidth());
+                }
+                if (ballClicked[2]) {
+                    purpleBallObjects[2].setX(-purpleBallObjects[2].getBallWidth());
                 }
         }
     }
@@ -858,7 +859,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //TODO fix bug related to drawing purple balls when size power up increased
         if (timesClickedPurple == keys.BALL_PURPLE_NO_CLICK) {
             //if we clicked on the first/ original ball
-            //if (clickedABall.ballClicked(purpleBallObjects[0].getX(), purpleBallObjects[0].getY(), clickedX, clickedY)) {
             if (clickedABall.ballClicked(purpleBallObjects[0], clickedX, clickedY)) {
                 //used to determine how many balls to draw
                 timesClickedPurple = keys.BALL_PURPLE_ONE_CLICK;
@@ -880,19 +880,19 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         else  {
             //TODO change so that the purple balls clicked don't draw at all
             if(clickedABall.ballClicked(purpleBallObjects[0], clickedX, clickedY)){
-                purpleBallObjects[0].setX(-purpleBallObjects[0].getBallWidth());
-                purpleBallObjects[0].setY(-purpleBallObjects[0].getBallHeight());
+               // purpleBallObjects[0].setX(-purpleBallObjects[0].getBallWidth());
+               // purpleBallObjects[0].setY(-purpleBallObjects[0].getBallHeight());
                 //don't draw this ball
-                originalBallClicked=true;
+                ballClicked[0]=true;
                 //add the atom to the atom pool
                 poolArray[4]++;
                 soundPool.play(purpleBallObjects[0].getSoundId(),1,1,0,0,1);
             }
             if(clickedABall.ballClicked(purpleBallObjects[1], clickedX, clickedY)){
                 //don't draw this ball
-                secondBallClicked=true;
-                purpleBallObjects[1].setX(-purpleBallObjects[1].getBallWidth());
-                purpleBallObjects[1].setY(-purpleBallObjects[1].getBallHeight());
+                ballClicked[1]=true;
+               // purpleBallObjects[1].setX(-purpleBallObjects[1].getBallWidth());
+               // purpleBallObjects[1].setY(-purpleBallObjects[1].getBallHeight());
                 //add the atom to the atom pool
                 poolArray[4]++;
                 soundPool.play(purpleBallObjects[1].getSoundId(),1,1,0,0,1);
@@ -900,23 +900,23 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             if(clickedABall.ballClicked(purpleBallObjects[2], clickedX, clickedY)){
 
                 //don't draw this ball
-                thirdBallClicked=true;
-                purpleBallObjects[2].setX(-purpleBallObjects[2].getBallWidth());
-                purpleBallObjects[2].setY(-purpleBallObjects[2].getBallHeight());
+                ballClicked[2]=true;
+               // purpleBallObjects[2].setX(-purpleBallObjects[2].getBallWidth());
+               // purpleBallObjects[2].setY(-purpleBallObjects[2].getBallHeight());
                 //add the atom to the atom pool
                 poolArray[4]++;
                 soundPool.play(purpleBallObjects[2].getSoundId(),1,1,0,0,1);
             }
             //if we clicked all three, score and get a new ball
-            if(originalBallClicked && secondBallClicked && thirdBallClicked){
-                purpleBallObjects[1].setX(-purpleBallObjects[1].getBallWidth());
+            if(ballClicked[0] && ballClicked[1] && ballClicked[2]){
+                /*purpleBallObjects[1].setX(-purpleBallObjects[1].getBallWidth());
                 purpleBallObjects[1].setY(-purpleBallObjects[1].getBallHeight());
                 purpleBallObjects[2].setX(-purpleBallObjects[2].getBallWidth());
-                purpleBallObjects[2].setY(-purpleBallObjects[2].getBallHeight());
+                purpleBallObjects[2].setY(-purpleBallObjects[2].getBallHeight());*/
 
                 ballPurpleNumber = keys.BALL_PURPLE_NO_CLICK;
                 //reset to starting state
-                originalBallClicked = secondBallClicked = thirdBallClicked = false;
+                ballClicked[0] = ballClicked[1] = ballClicked[2] = false;
                 timesClickedPurple = keys.BALL_PURPLE_NO_CLICK;
                 //add some energy and update it in the energy text view
                 currentEnergyLevel +=500;

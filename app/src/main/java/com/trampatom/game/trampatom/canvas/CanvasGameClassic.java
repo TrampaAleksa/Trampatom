@@ -73,7 +73,7 @@ public class CanvasGameClassic {
      * @param timesClicked used to determine how many purple balls to draw
      * @return always false
      */
-    public boolean drawPurple(Ball[] purpleBalls, int flag, int score, int timesClicked){
+    public boolean drawPurple(Ball[] purpleBalls, int flag, int score, int timesClicked, boolean[] ballClicked){
         this.score = score;
         if(timesClicked == BALL_PURPLE_NO_CLICK) {
             ourCanvas = ourHolder.lockCanvas();
@@ -84,11 +84,22 @@ public class CanvasGameClassic {
         else {
             ourCanvas = ourHolder.lockCanvas();
             drawBackground();
+            if (!ballClicked[0])
+                ourCanvas.drawBitmap(purpleBalls[0].getBallColor(), purpleBalls[0].getX(), purpleBalls[0].getY(), null);
+            if (!ballClicked[1])
+                ourCanvas.drawBitmap(purpleBalls[1].getBallColor(), purpleBalls[1].getX(), purpleBalls[1].getY(), null);
+            if (!ballClicked[2])
+                ourCanvas.drawBitmap(purpleBalls[2].getBallColor(), purpleBalls[2].getX(), purpleBalls[2].getY(), null);
+                ourHolder.unlockCanvasAndPost(ourCanvas);
+        }
+        /*else {
+            ourCanvas = ourHolder.lockCanvas();
+            drawBackground();
             ourCanvas.drawBitmap(purpleBalls[0].getBallColor(), purpleBalls[0].getX(), purpleBalls[0].getY(), null);
             ourCanvas.drawBitmap(purpleBalls[1].getBallColor(), purpleBalls[1].getX(), purpleBalls[1].getY(), null);
             ourCanvas.drawBitmap(purpleBalls[2].getBallColor(), purpleBalls[2].getX(), purpleBalls[2].getY(), null);
             ourHolder.unlockCanvasAndPost(ourCanvas);
-        }
+        }*/
         return false;
     }
 
