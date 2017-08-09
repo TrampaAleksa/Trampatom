@@ -91,7 +91,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //initially there is only one purple ball
                 int ballPurpleNumber =1;
             //used for either drawing only one ball or multiple balls
-                int timesClickedPurple;
+                int timesClickedPurple=0;
             //used to determine how many and what ball to draw on screen
                 boolean[] ballClicked = {false,false,false};
                 boolean originalBallClicked= false; boolean secondBallClicked=false; boolean thirdBallClicked=false;
@@ -275,7 +275,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //BALL
             //sets the required times to click a yellow ball and its speed
-            timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
+            timesClicked=0;
             // sets only one purple ball to be displayed initially
             timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
         //the first ball is always blue;
@@ -532,7 +532,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
-                canvas.drawPurple(purpleBallObjects,-1, score, timesClicked, ballClicked);
+                canvas.drawPurple(purpleBallObjects,-1, score, timesClickedPurple, ballClicked);
                 break;
             case BALL_WAVE:
                 moveWave();
@@ -820,14 +820,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //every time the ball is clicked decrease its size and increase speed
         if(clickedABall.ballClicked(ballObject,clickedX,clickedY)) {
-            if (timesClicked > 0) {
-                timesClicked--;
+            if (keys.TIMES_CLICKED_YELLOW < keys.BALL_YELLOW_REQUIRED_CLICKS) {
+                keys.TIMES_CLICKED_YELLOW++;
                 //every time we click it, reduce its size and increase its speed
                 ballObject.setBallWidth(ballObject.getBallWidth() - (ballObject.getBallWidth()/keys.BALL_YELLOW_SIZE_DECREASE));
                 ballObject.setBallHeight(ballObject.getBallHeight() - (ballObject.getBallWidth()/keys.BALL_YELLOW_SIZE_DECREASE));
                 ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(), ballObject.getBallWidth(), ballObject.getBallHeight(), true));
-                //if(ballObject.isActiveChangesSpeed())
-                ballObject.setBallSpeed(ballObject.getBallSpeed() + keys.BALL_YELLOW_SPEED_INCREASE);
+                if(!ballObject.isActiveChangesSpeed())
+                ballObject.setBallSpeed(ballObject.getBallSpeed()+keys.BALL_YELLOW_SPEED_INCREASE);
 
             }
             else {
@@ -839,7 +839,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
                 getNewBall();
                 //reset the yellow ball to its first state for later use
-                timesClicked=keys.BALL_YELLOW_REQUIRED_CLICKS;
+                keys.TIMES_CLICKED_YELLOW=0;
                 //ballWidth=ballHeight= blueBall.getWidth();
                 changedSize=false;
             }
@@ -880,8 +880,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         else  {
             //TODO change so that the purple balls clicked don't draw at all
             if(clickedABall.ballClicked(purpleBallObjects[0], clickedX, clickedY)){
-               // purpleBallObjects[0].setX(-purpleBallObjects[0].getBallWidth());
-               // purpleBallObjects[0].setY(-purpleBallObjects[0].getBallHeight());
                 //don't draw this ball
                 ballClicked[0]=true;
                 //add the atom to the atom pool
@@ -891,8 +889,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             if(clickedABall.ballClicked(purpleBallObjects[1], clickedX, clickedY)){
                 //don't draw this ball
                 ballClicked[1]=true;
-               // purpleBallObjects[1].setX(-purpleBallObjects[1].getBallWidth());
-               // purpleBallObjects[1].setY(-purpleBallObjects[1].getBallHeight());
                 //add the atom to the atom pool
                 poolArray[4]++;
                 soundPool.play(purpleBallObjects[1].getSoundId(),1,1,0,0,1);
@@ -901,18 +897,13 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
                 //don't draw this ball
                 ballClicked[2]=true;
-               // purpleBallObjects[2].setX(-purpleBallObjects[2].getBallWidth());
-               // purpleBallObjects[2].setY(-purpleBallObjects[2].getBallHeight());
+
                 //add the atom to the atom pool
                 poolArray[4]++;
                 soundPool.play(purpleBallObjects[2].getSoundId(),1,1,0,0,1);
             }
             //if we clicked all three, score and get a new ball
             if(ballClicked[0] && ballClicked[1] && ballClicked[2]){
-                /*purpleBallObjects[1].setX(-purpleBallObjects[1].getBallWidth());
-                purpleBallObjects[1].setY(-purpleBallObjects[1].getBallHeight());
-                purpleBallObjects[2].setX(-purpleBallObjects[2].getBallWidth());
-                purpleBallObjects[2].setY(-purpleBallObjects[2].getBallHeight());*/
 
                 ballPurpleNumber = keys.BALL_PURPLE_NO_CLICK;
                 //reset to starting state

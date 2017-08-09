@@ -323,7 +323,6 @@ public class PowerUps {
      * @param ball            the ball to set the speed to
      * @return a ball object with the appropriate speed
      */
-    //TODO we have a duplicate method in ball handler, perhaps refactor that
     private Ball setBallSpeedByType(int currentBallType, Ball ball) {
 
         switch (currentBallType) {
@@ -332,7 +331,8 @@ public class PowerUps {
                 ball.setBallSpeed(keys.GREEN_BALL_SPEED);
                 break;
             case GameClassicActivity.BALL_YELLOW:
-                ball.setBallSpeed(keys.BALL_YELLOW_INITIAL_SPEED);
+                //after resetting yellow balls speed set it depending on how many times we clicked it
+                ball.setBallSpeed(keys.BALL_YELLOW_INITIAL_SPEED+(keys.TIMES_CLICKED_YELLOW*keys.BALL_YELLOW_SPEED_INCREASE));
                 break;
             //most balls have this default speed, the other two cases are for green and yellow ball's
             default:

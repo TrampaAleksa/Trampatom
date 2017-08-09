@@ -236,6 +236,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
         //check if you clicked any negative ball
         for(j=0; j<BALL_NEGATIVE_NUMBER; j++){
         if(clickedABall.negativeBallClicked(XY[j], XY[j+BALL_NEGATIVE_NUMBER], clickedX, clickedY, negWidth[j], negHeight[j])) {
+            soundPool.play(soundsAndEffects.soundClickedId,1,1,0,0,1);
             //if you had a life lose it, but don't lose the game
             if(gotLife) {
                 //lose a life and set the ball back to blue signalling that we lost a life
@@ -245,7 +246,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             else
             gameover = true;
             }
-            soundPool.play(soundsAndEffects.soundClickedId,1,1,0,0,1);
+
         }
     }
     /**

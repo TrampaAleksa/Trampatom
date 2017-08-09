@@ -59,7 +59,7 @@ public class Keys {
 
             // ------------------------------- Yellow balls --------------------------------- \\
 
-                public int YELLOW_BALL_INITIAL_SIZE = 25;
+                public int TIMES_CLICKED_YELLOW = 0;
                 public int BALL_YELLOW_REQUIRED_CLICKS = 4;
                 public int BALL_YELLOW_INITIAL_SPEED = 2;
                 public int BALL_YELLOW_SIZE_DECREASE = 12;

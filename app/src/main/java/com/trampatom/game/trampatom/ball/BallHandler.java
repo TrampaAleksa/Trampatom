@@ -329,8 +329,8 @@ public class BallHandler {
          * Important method that should be called before getting a new ball object to determine what object to get
          */
     public int getNewBallType(){
-        return randomBallVariables.getRandomBallType();
-        //return 12;
+        //return randomBallVariables.getRandomBallType();
+        return 12;
     }
 
 
