@@ -34,6 +34,8 @@ public class Keys {
     public int POWER_UP_BALL_SIZE_INCREASE = 30;
         //determines by how much will the energy level increase if we use the passive for it
     public int PASSIVE_STARTING_ENERGY_INCREASE = 1000;
+        // how many times will the next ball be the same type if we used a power up for setting same type next few balls
+    public int POWER_UP_SAME_TYPE_NEXT_BALL = 0;
 
 
     // ----------------------------------------- Ball Types ------------------------------------------ \\
@@ -107,12 +109,6 @@ public class Keys {
         public static final int CATEGORY_GREEN = 2;
         public static final int CATEGORY_YELLOW = 3;
         public static final int CATEGORY_PURPLE = 4;
-    /*
-        //keys for getting the base cost of power ups
-        public static final int BASE_COST_RED_FREEZE = 10;
-        public static final int BASE_COST_RED_ENERGY_BOOST = 10;
-        public static final int BASE_COST_RED_LIMITING_SQUARE = 10;
-        public static final int BASE_COST_RED_UNKNOWN_4 = 10;*/
 
 
         //used to store a preference to determine what power up we selected
@@ -132,8 +128,8 @@ public class Keys {
         //red
         public static final int FLAG_RED_FREEZE_BALLS = 1;
         public static final int FLAG_RED_BIG_ENERGY_BONUS = 2;
-        public static final int FLAG_RED_LIMITING_SQUARE = 3;
-        public static final int FLAG_RED_UNKNOWN2 = 4;
+        public static final int FLAG_RED_SELECTIVE_TYPE = 3;
+        public static final int FLAG_RED_GRAVITY_PULL = 4;
         //green
         public static final int FLAG_GREEN_SLOW_DOWN_BALLS = 5;
         public static final int FLAG_GREEN_SMALL_ENERGY_BONUS = 6;
@@ -154,6 +150,15 @@ public class Keys {
         // and do something in game based on that
         public static final int FLAG_PROGRESS_BAR_POWER_UP = 1;
         public static final int FLAG_BALL_POWER_UP = 2;
+
+
+    //-------------------- POWER UP INDEXES ------------------------\\
+
+        public static final int POWER_UP_INDEX_ACIVE_COOLDOWN = 1;
+        public static final int POWER_UP_INDEX_ACIVE_CONSUMABLE = 0;
+        public static final int POWER_UP_INDEX_PASSIVE_EFFECT = 2;
+        public static final int POWER_UP_INDEX_PASSIVE_CHANCE = 3;
+
 
 
 }

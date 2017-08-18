@@ -3,7 +3,12 @@ package com.trampatom.game.trampatom.Model;
 import android.graphics.Bitmap;
 
 /**
- * Class containing getters and setters for a lot of ball related stuff
+ * Class containing getters and setters for a lot of ball related stuff.
+ * x,y ball coordinates.
+ * ballType - determines what type the ball is, used for ball logic.
+ * moveX, moveY - used for ball movement/ bouncing off walls
+ * ballHeight, ballWidth - every ball has its width and height, usually the same.
+ * ballSpeed 
  */
 public class Ball {
     public Ball(){
@@ -19,7 +24,27 @@ public class Ball {
     int ballHeight, ballWidth;
     int ballSpeed;
 
+    public boolean isActiveChangesAngle() {
+        return activeChangesAngle;
+    }
+
+    public void setActiveChangesAngle(boolean activeChangesAngle) {
+        this.activeChangesAngle = activeChangesAngle;
+    }
+
+    boolean activeChangesAngle;
+
     boolean activeChangesSpeed;
+
+    boolean activeChangesType;
+
+    public boolean isActiveChangesType() {
+        return activeChangesType;
+    }
+
+    public void setActiveChangesType(boolean activeChangesType) {
+        this.activeChangesType = activeChangesType;
+    }
 
     public boolean isActiveChangesSize() {
         return activeChangesSize;
@@ -54,6 +79,9 @@ public class Ball {
     }
 
     public void setBallSpeed(int ballSpeed) {
+        //used to prevent setting negative speed values(reversing the ball)
+        if(ballSpeed <0)
+            ballSpeed=0;
         this.ballSpeed = ballSpeed;
     }
 

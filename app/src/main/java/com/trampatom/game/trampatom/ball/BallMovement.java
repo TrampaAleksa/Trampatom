@@ -25,6 +25,7 @@ public class BallMovement {
     double angle;
     int ballWidth, ballHeight;
     int ballSpeed;
+    boolean shouldMove = true;
 
 
     /**
@@ -46,6 +47,9 @@ public class BallMovement {
      * @return the now moved mBall
      */
     public Ball moveBall(Ball ballObject){
+
+
+
          x = ballObject.getX();
          y = ballObject.getY();
          moveX = ballObject.getMoveX();
@@ -55,9 +59,17 @@ public class BallMovement {
          ballHeight = ballObject.getBallHeight();
          ballSpeed = ballObject.getBallSpeed();
 
+        //if we used the Gravity Pull power up
+        if(ballObject.isActiveChangesAngle()){
+            if(checkIfCenter(ballObject.getX(), ballObject.getY())){
+                return ballObject;
+            }
+        }
 
-        x += moveX*ballSpeed * Math.sin(angle);
-        y += moveY*ballSpeed * Math.cos(angle);
+        x += moveX*ballSpeed * Math.cos(angle);
+        y += moveY*ballSpeed * Math.sin(angle);
+        // x =(int) (moveX*(x+ (ballSpeed * Math.cos(angle))));
+         //y =(int) (moveY*(y + (ballSpeed * Math.sin(angle))));
 
         //if the mBall is off screen change its direction
         if(x > width-ballWidth) {
@@ -85,55 +97,63 @@ public class BallMovement {
         ballObject.setMoveX(moveX); ballObject.setMoveY(moveY);
         return ballObject;
     }
+
+
+
     /**
      * Method that uses a passed mBall object to manipulate its coordinates and move it.
      * @param ballObject the mBall object we want to move
      * @return the now moved mBall
      */
     public Ball moveGreenBall(Ball ballObject){
-        //gets a random number and if its below 20 change the angle
-        changeAngleGreen = random.nextInt(Keys.GREEN_BALL_ANGLE_CHANGE_CHANCE);
-        if(changeAngleGreen<=20){
-            ballObject.setAngle((random.nextInt(360))*(3.14/180));
-        }
-        x = ballObject.getX();
-        y = ballObject.getY();
-        moveX = ballObject.getMoveX();
-        moveY = ballObject.getMoveY();
-        angle = ballObject.getAngle();
-        ballWidth = ballObject.getBallWidth();
-        ballHeight = ballObject.getBallHeight();
-        ballSpeed = ballObject.getBallSpeed();
+
+            //gets a random number and if its below 20 change the angle
+            changeAngleGreen = random.nextInt(Keys.GREEN_BALL_ANGLE_CHANGE_CHANCE);
+            if (changeAngleGreen <= 20) {
+                ballObject.setAngle((random.nextInt(360)) * (3.14 / 180));
+            }
+
+            x = ballObject.getX();
+            y = ballObject.getY();
+            moveX = ballObject.getMoveX();
+            moveY = ballObject.getMoveY();
+            angle = ballObject.getAngle();
+            ballWidth = ballObject.getBallWidth();
+            ballHeight = ballObject.getBallHeight();
+            ballSpeed = ballObject.getBallSpeed();
 
 
-        x += moveX*ballSpeed * Math.sin(angle);
-        y += moveY*ballSpeed * Math.cos(angle);
+            x += moveX * ballSpeed * Math.sin(angle);
+            y += moveY * ballSpeed * Math.cos(angle);
 
-        //if the mBall is off screen change its direction
-        if(x > width-ballWidth) {
-            x = width-ballWidth;
-            moveX = -moveX;
-            // too far right
-        }
-        if(y > height-ballHeight) {
-            y = height-ballHeight;
-            moveY = -moveY;
-            // too far bottom
-        }
-        if(x < 0) {
-            x = 0;
-            moveX = -moveX;
-            // too far left
-        }
-        if(y < 0) {
-            y = 0;
-            moveY = -moveY;
-            // too far top
-        }
+            //if the mBall is off screen change its direction
+            if (x > width - ballWidth) {
+                x = width - ballWidth;
+                moveX = -moveX;
+                // too far right
+            }
+            if (y > height - ballHeight) {
+                y = height - ballHeight;
+                moveY = -moveY;
+                // too far bottom
+            }
+            if (x < 0) {
+                x = 0;
+                moveX = -moveX;
+                // too far left
+            }
+            if (y < 0) {
+                y = 0;
+                moveY = -moveY;
+                // too far top
+            }
 
-        ballObject.setX(x); ballObject.setY(y);
-        ballObject.setMoveX(moveX); ballObject.setMoveY(moveY);
-        return ballObject;
+            ballObject.setX(x);
+            ballObject.setY(y);
+            ballObject.setMoveX(moveX);
+            ballObject.setMoveY(moveY);
+            return ballObject;
+
     }
 
 
@@ -179,36 +199,6 @@ public class BallMovement {
         return helpArray;
     }
 
-    /**
-     * method used for moving the wave balls on the y coordinate left and right
-     * @param x current x coordinate
-     * @param y current y coordinate
-     * @param moveX direction of movement
-     * @param moveY direcion of y movement
-     * @param ballSpeed mBall speed
-     * @return x , y , moveX, moveY
-     */
-    public int[] moveWave(int x, int y ,int ballWidth, int moveX, int moveY,int ballSpeed){
-        // wave moves just in x coordinate but y could be used later
-        x += moveX*ballSpeed;
-
-        //if the mBall is off screen change its direction
-        if(x > width-ballWidth) {
-            x = width-ballWidth;
-            moveX = -moveX;
-            // too far right
-        }
-        if(x < 0) {
-            x = 0;
-            moveX = -moveX;
-            // too far left
-        }
-
-
-        int helpArray[] = {x,y,moveX,moveY};
-        return helpArray;
-    }
-
 
     /**
      * Method that uses a passed mBall object to manipulate its coordinates and move it.
@@ -216,6 +206,13 @@ public class BallMovement {
      * @return the now moved mBall
      */
     public Ball moveWave(Ball ballObject){
+
+        //if we used the Gravity Pull power up
+        if(ballObject.isActiveChangesAngle()){
+            if(checkIfCenter(ballObject.getX(), ballObject.getY())){
+                return ballObject;
+            }
+        }
 
         x = ballObject.getX();
         y = ballObject.getY();
@@ -226,7 +223,15 @@ public class BallMovement {
         ballSpeed = ballObject.getBallSpeed();
 
         // wave moves just in x coordinate but y could be used later
-        x += moveX*ballSpeed;
+        if(!ballObject.isActiveChangesAngle()) {
+            x += moveX * ballSpeed;
+        }
+        //if we used gravity pull move all the balls towards the center
+        else {
+            angle = ballObject.getAngle();
+            x += moveX*ballSpeed * Math.cos(angle);
+            y += moveY*ballSpeed * Math.sin(angle);
+        }
 
         //if the mBall is off screen change its direction
         if(x > width-ballWidth) {
@@ -298,5 +303,17 @@ public class BallMovement {
         int helpArray[] = {x,y,moveX,moveY,(int) angle};
         return helpArray;
 
+    }
+
+
+    /**
+     * Method used for checking if the ball is near the center. used to get a boolean for stopping the ball's movement
+     * @return true if its near the center
+     */
+    private boolean checkIfCenter(int x, int y) {
+        if(x>(width/2-ballWidth) && x<(width/2+ballWidth) && y>(height/2 - ballHeight) && y<(height/2 + ballHeight))
+            return true;
+
+        return false;
     }
 }

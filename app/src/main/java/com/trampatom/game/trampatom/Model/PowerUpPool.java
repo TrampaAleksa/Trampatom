@@ -20,13 +20,9 @@ public class PowerUpPool {
     // IMAGE : the icon used to distinguish this power up from the others to help the user visually.
     // CATEGORY : there are four categories , this will be used to sort the right power ups into the right category.
 
-String description;
-int id;
-int baseCost;
-int currentLevel;
-int imageId;
-int category;
-int before;
+private String description;
+private int id , baseCost, currentLevel, imageId, category, before;
+
 
     public int getBefore() {
         return before;

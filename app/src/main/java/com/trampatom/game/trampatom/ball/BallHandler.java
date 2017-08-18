@@ -16,6 +16,7 @@ public class BallHandler {
     //TODO Arrays for balls refactoring in far future
 
     private Bitmap redBall,  blueBall,  greenBall,  yellowBall,  purpleBall; Bitmap[] waveBall;
+    public static boolean yellowBallSpeedChangeActive;
 
     int i;
     int x,y,ballType;
@@ -120,6 +121,8 @@ public class BallHandler {
         //set the parameters used to check if a power up is active to false at the start
         mBall.setActiveChangesSpeed(false);
         mBall.setActiveChangesSize(false);
+        mBall.setActiveChangesType(false);
+        mBall.setActiveChangesAngle(false);
 
         // set the first mBall object
         mBall.setX(randomBallVariables.randomX());
@@ -142,11 +145,25 @@ public class BallHandler {
      * @return a ball object with new coordinates and angle
      */
     public Ball getNewBallObject(Ball ball, int currentBallType){
+        if(ball.isActiveChangesType()){
+
+            if((keys.POWER_UP_SAME_TYPE_NEXT_BALL > 0)){
+                keys.POWER_UP_SAME_TYPE_NEXT_BALL --;
+            }
+            else{
+                ball.setActiveChangesType(false);
+            }
+
+        }
 
         // If the speed of the new ball should be changed, check what type the ball is and set the
         //adequate speed for that ball type
         if(!ball.isActiveChangesSpeed()){
             ball = setBallSpeedByType(currentBallType, ball);
+        }
+        //in case a power up is active that slows the ball down, to prevent a bug set the initial speed
+        else if (currentBallType == GameClassicActivity.BALL_YELLOW && yellowBallSpeedChangeActive ){
+            ball.setBallSpeed(0);
         }
 
         //if the size of the ball should be changed with a power up, increase its size by an amount
@@ -167,7 +184,14 @@ public class BallHandler {
         // set the first mBall object
         ball.setX(randomBallVariables.randomX());
         ball.setY(randomBallVariables.randomY());
-        ball.setAngle(randomBallVariables.randomAngle());
+        //if the angle of the ball shouldn't be changed put a random angle. If it should then its the
+        //gravity pull power up and the angle is set to the center
+        if(!ball.isActiveChangesAngle()){
+            ball.setAngle(randomBallVariables.randomAngle());
+        }
+        else {
+            ball.setAngle(randomBallVariables.centeredAngle(ball.getX(), ball.getY()));
+        }
         ball.setMoveX(1);
         ball.setMoveY(1);
 
@@ -181,6 +205,7 @@ public class BallHandler {
      * @return
      */
     public Ball[] getFirstBallObjectArray(int arraySize){
+
 
 
             //if its a purple ball array
@@ -197,6 +222,10 @@ public class BallHandler {
                 angle = randomBallVariables.randomAngle();
                 purpleBalls[0].setAngle(angle);
                 for(i=0; i< arraySize; i++) {
+                    purpleBalls[i].setActiveChangesSpeed(false);
+                    purpleBalls[i].setActiveChangesSize(false);
+                    purpleBalls[i].setActiveChangesType(false);
+                    purpleBalls[i].setActiveChangesAngle(false);
                     purpleBalls[i].setBallSpeed(ballSpeed);
                     purpleBalls[i].setBallWidth(ballWidth);
                     purpleBalls[i].setBallHeight(ballHeight);
@@ -212,6 +241,10 @@ public class BallHandler {
                 waveBalls[0].setBallHeight(ballHeight);
                 waveBalls[0].setBallSpeed(ballSpeed);
                 for(i=1; i< arraySize; i++) {
+                    waveBalls[i].setActiveChangesSpeed(false);
+                    waveBalls[i].setActiveChangesSize(false);
+                    waveBalls[i].setActiveChangesType(false);
+                    waveBalls[i].setActiveChangesAngle(false);
                     //every wave ball starts at the left
                     waveBalls[i].setX(0);
                     //initialize the wave balls so they are at a distance
@@ -241,6 +274,17 @@ public class BallHandler {
     public Ball[] getNewBallObjectArray(int arraySize, Ball[] balls, int currentBallType) {
 
 
+        if(balls[0].isActiveChangesType()){
+
+            if((keys.POWER_UP_SAME_TYPE_NEXT_BALL > 0)){
+                keys.POWER_UP_SAME_TYPE_NEXT_BALL --;
+            }
+            else{
+                balls[0].setActiveChangesType(false);
+            }
+
+        }
+
         //if its a purple ball array
         if (arraySize == keys.PURPLE_BALL_NUMBER) {
 
@@ -254,9 +298,20 @@ public class BallHandler {
             balls[2].setX(-ballWidth);
             balls[2].setY(-ballHeight);
 
-            angle = randomBallVariables.randomAngle();
-            balls[0].setAngle(angle);
+
+
+            //angle = randomBallVariables.randomAngle();
+            //balls[0].setAngle(angle);
             for(i=0; i< arraySize; i++) {
+
+                // if a power up changes the angle set it differently ( gravity pull )
+                if(!balls[i].isActiveChangesAngle()){
+                    balls[i].setAngle(randomBallVariables.randomAngle());
+                }
+                else {
+                    balls[i].setAngle(randomBallVariables.centeredAngle(balls[i].getX(), balls[i].getY()));
+                }
+
                 balls[i].setMoveX(1);
                 balls[i].setMoveY(1);
 
@@ -293,6 +348,8 @@ public class BallHandler {
             if(balls[0].isActiveChangesSize())
             balls = setWaveSpeed(balls);
             for(int i=1; i< arraySize; i++) {
+
+
                 //every wave ball starts at the left
                 balls[i].setX(0);
 
@@ -301,6 +358,10 @@ public class BallHandler {
                 balls[i].setMoveX(1);
                 balls[i].setMoveY(1);
 
+                // if a power up changes the angle set it differently ( gravity pull )
+                if(balls[i].isActiveChangesAngle()){
+                    balls[i].setAngle(randomBallVariables.centeredAngle(balls[i].getX(), balls[i].getY()));
+                }
 
                 //if the size of the ball should be changed with a power up, increase its size by an amount
                 //if it shouldn't be increased, just get the ball in teh regular way
@@ -329,8 +390,8 @@ public class BallHandler {
          * Important method that should be called before getting a new ball object to determine what object to get
          */
     public int getNewBallType(){
-        //return randomBallVariables.getRandomBallType();
-        return 12;
+        return randomBallVariables.getRandomBallType();
+        //return 12;
     }
 
 

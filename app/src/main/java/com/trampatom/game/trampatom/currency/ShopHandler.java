@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import com.google.gson.reflect.TypeToken;
 
@@ -208,7 +207,7 @@ public class ShopHandler {
         // Third power up
                 //add every attribute to the power up
         powerUp = new PowerUpPool();
-        powerUp.setId(Keys.FLAG_RED_LIMITING_SQUARE);
+        powerUp.setId(Keys.FLAG_RED_SELECTIVE_TYPE);
         powerUp.setCategory(Keys.CATEGORY_RED);
         powerUp.setImageId(R.drawable.wave3);
         powerUp.setDescription(context.getString(R.string.description_red_limiting_Square));
@@ -222,7 +221,7 @@ public class ShopHandler {
         // Fourth power up
         //add every attribute to the power up
         powerUp = new PowerUpPool();
-        powerUp.setId(Keys.FLAG_RED_UNKNOWN2);
+        powerUp.setId(Keys.FLAG_RED_GRAVITY_PULL);
         powerUp.setCategory(Keys.CATEGORY_RED);
         powerUp.setImageId(R.drawable.wave2);
         powerUp.setDescription(context.getString(R.string.description_red_unknown4));
@@ -582,10 +581,10 @@ public class ShopHandler {
             case Keys.FLAG_RED_FREEZE_BALLS:
 
                 break;
-            case Keys.FLAG_RED_LIMITING_SQUARE:
+            case Keys.FLAG_RED_SELECTIVE_TYPE:
 
                 break;
-            case Keys.FLAG_RED_UNKNOWN2:
+            case Keys.FLAG_RED_GRAVITY_PULL:
 
                 break;
             case Keys.FLAG_RED_BIG_ENERGY_BONUS:

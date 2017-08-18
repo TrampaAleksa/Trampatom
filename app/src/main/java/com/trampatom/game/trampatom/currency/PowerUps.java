@@ -4,9 +4,12 @@ import android.graphics.Bitmap;
 import android.widget.ProgressBar;
 
 import com.trampatom.game.trampatom.Model.Ball;
+import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.activity.GameClassicActivity;
+import com.trampatom.game.trampatom.ball.BallHandler;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.Keys;
+import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
 /**
  * Important class that should contain all the methods for working with passive and active power Ups.
@@ -27,6 +30,8 @@ public class PowerUps {
     int i;
     int ballSpeed;
     int ballWidth, ballHeight;
+    PowerUpPool[] powerUp;
+    RandomBallVariables randomBallVariables;
 
 
     Ball[] purpleBalls = {null, null, null};
@@ -37,10 +42,14 @@ public class PowerUps {
      * Since this class manipulates the progress bar in some cases we should pass the progress bar, and keys
      * for accessing flags of every power up.
      */
-    public PowerUps(ProgressBar progressBar, Keys keys, int ballWidth, int ballHeight) {
+    public PowerUps(ProgressBar progressBar, Keys keys,PowerUpPool[] powerUp,
+                    int ballWidth, int ballHeight,RandomBallVariables randomBallVariables) {
+        // TODO make ball width and height static.
         this.ballWidth = ballWidth;
         this.ballHeight = ballHeight;
         ballSpeed = keys.DEFAULT_BALL_SPEED;
+        this.powerUp = powerUp;
+        this.randomBallVariables = randomBallVariables;
 
 
         this.progressBar = progressBar;
@@ -79,12 +88,15 @@ public class PowerUps {
 
                 break;
 
-            case Keys.FLAG_RED_LIMITING_SQUARE:
-
+            case Keys.FLAG_RED_SELECTIVE_TYPE:
+                //get the level of the power up and set the next "current level" balls to be the same type
+                keys.POWER_UP_SAME_TYPE_NEXT_BALL = powerUp[Keys.POWER_UP_INDEX_ACIVE_CONSUMABLE].getCurrentLevel();
+                ballObject.setActiveChangesType(true);
 
                 break;
-            case Keys.FLAG_RED_UNKNOWN2:
-
+            case Keys.FLAG_RED_GRAVITY_PULL:
+                ballObject.setActiveChangesAngle(true);
+                ballObject.setAngle(randomBallVariables.centeredAngle(ballObject.getX(), ballObject.getY()));
                 break;
 
             //GREEN
@@ -98,7 +110,8 @@ public class PowerUps {
 
                 break;
             case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
-                ballObject.setBallSpeed(ballObject.getBallSpeed() - 3);
+                ballObject.setActiveChangesSpeed(true);
+                ballObject.setBallSpeed(ballObject.getBallSpeed() - powerUp[1].getCurrentLevel());
 
                 break;
 
@@ -131,12 +144,19 @@ public class PowerUps {
                 }
 
 
-            case Keys.FLAG_RED_LIMITING_SQUARE:
-
+            case Keys.FLAG_RED_SELECTIVE_TYPE:
+                //get the level of the power up and set the next "current level" balls to be the same type
+                keys.POWER_UP_SAME_TYPE_NEXT_BALL = powerUp[Keys.POWER_UP_INDEX_ACIVE_CONSUMABLE].getCurrentLevel();
+                for (i = 0; i < arraySize; i++) {
+                    balls[i].setActiveChangesType(true);
+                }
 
                 break;
-            case Keys.FLAG_RED_UNKNOWN2:
-
+            case Keys.FLAG_RED_GRAVITY_PULL:
+                for (i = 0; i < arraySize; i++) {
+                    balls[i].setActiveChangesAngle(true);
+                    balls[i].setAngle(randomBallVariables.centeredAngle(balls[i].getX(), balls[i].getY()));
+                }
                 break;
 
             //GREEN
@@ -167,13 +187,15 @@ public class PowerUps {
             case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
                 if (arraySize == keys.PURPLE_BALL_NUMBER) {
                     for (i = 0; i < arraySize; i++) {
-                        balls[i].setBallSpeed(balls[i].getBallSpeed() - 3);
+                        balls[i].setActiveChangesSpeed(true);
+                        balls[i].setBallSpeed(balls[i].getBallSpeed()  - powerUp[1].getCurrentLevel());
                     }
                     return balls;
                 } else {
                     //set every ball's speed to 0 until it's reset
                     for (i = 0; i < arraySize; i++) {
-                        balls[i].setBallSpeed(balls[i].getBallSpeed() - 3);
+                        balls[i].setActiveChangesSpeed(true);
+                        balls[i].setBallSpeed(balls[i].getBallSpeed()  - powerUp[1].getCurrentLevel());
                     }
                     return balls;
                 }
@@ -207,12 +229,12 @@ public class PowerUps {
                 return ballObject;
 
 
-            case Keys.FLAG_RED_LIMITING_SQUARE:
+            case Keys.FLAG_RED_SELECTIVE_TYPE:
 
 
                 break;
-            case Keys.FLAG_RED_UNKNOWN2:
-
+            case Keys.FLAG_RED_GRAVITY_PULL:
+                ballObject.setActiveChangesAngle(false);
                 break;
 
             //GREEN
@@ -226,7 +248,10 @@ public class PowerUps {
 
                 break;
             case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
-                ballObject.setBallSpeed(ballObject.getBallSpeed() - 3);
+                // yellow ball's speed upon getting a new ball isn't reset if the power up is active, so set this to false
+                BallHandler.yellowBallSpeedChangeActive = false;
+                ballObject.setActiveChangesSpeed(false);
+                ballObject.setBallSpeed(ballObject.getBallSpeed() + powerUp[1].getCurrentLevel());
 
                 break;
 
@@ -260,11 +285,11 @@ public class PowerUps {
                 }
 
 
-            case Keys.FLAG_RED_LIMITING_SQUARE:
+            case Keys.FLAG_RED_SELECTIVE_TYPE:
 
 
                 break;
-            case Keys.FLAG_RED_UNKNOWN2:
+            case Keys.FLAG_RED_GRAVITY_PULL:
 
                 break;
 
@@ -297,13 +322,15 @@ public class PowerUps {
             case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
                 if (arraySize == keys.PURPLE_BALL_NUMBER) {
                     for (i = 0; i < arraySize; i++) {
-                        balls[i].setBallSpeed(balls[i].getBallSpeed() - 3);
+                        balls[i].setActiveChangesSpeed(false);
+                        balls[i].setBallSpeed(balls[i].getBallSpeed()  + powerUp[1].getCurrentLevel());
                     }
                     return balls;
                 } else {
                     //set every ball's speed to 0 until it's reset
                     for (i = 0; i < arraySize; i++) {
-                        balls[i].setBallSpeed(balls[i].getBallSpeed() - 3);
+                        balls[i].setActiveChangesSpeed(false);
+                        balls[i].setBallSpeed(balls[i].getBallSpeed() + powerUp[1].getCurrentLevel());
                     }
                     return balls;
                 }
@@ -317,9 +344,9 @@ public class PowerUps {
     }
 
     /**
-     * Method used to set different speeds for yellow, green and other balls
+     * Method used to set different default speeds for yellow, green and other balls
      *
-     * @param currentBallType determines what seed to set
+     * @param currentBallType determines what speed to set
      * @param ball            the ball to set the speed to
      * @return a ball object with the appropriate speed
      */
@@ -340,6 +367,11 @@ public class PowerUps {
         }
         return ball;
     }
+
+
+
+
+
 
 
 // ---------------------------------------- ACTIVE ENERGY BAR RELATED ------------------------------- \\

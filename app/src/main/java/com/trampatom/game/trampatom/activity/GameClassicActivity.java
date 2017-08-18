@@ -200,7 +200,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // --------------------------- Initialization ------------------------------- \\
 
+
     private void init() {
+        /*SimpleBallTouchListener ballTouchListener = new SimpleBallTouchListener(new SimpleBallTouchListener.BallClickedCallback() {
+            @Override
+            public void onClicked(boolean isBallClicked) {
+
+            }
+        })*/
         passivesManager = new PassivesManager();
 
         random = new Random();
@@ -217,6 +224,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //surface view
         mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
         ourHolder = mSurfaceView.getHolder();
+        //mSurfaceView.setOnTouchListener(ballTouchListener);
         mSurfaceView.setOnTouchListener(this);
         // progress bar
         energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
@@ -258,16 +266,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //set and resize all the bitmaps
             initiateBitmaps();
 
-        powerUps = new PowerUps(energyProgress,keys, ballWidth, ballHeight);
-
-        // in case we selected the power up to increase the starting energy
-        if(flagTypePassive2==4 || flagTypePassive1==4) {
-            //set the energy bar in a certain way depending on the passives we selected
-            currentEnergyLevel = powerUps.energyPassivePowerUp(selectedPassive2, currentEnergyLevel);
-        }
-        //if we selected passive that reduces speed of energy loss, this will reduce it
-            if(selectedPassive1 == Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY)
-            keys.ENERGY_DECREASE -= powerUps.energyPassivePowerUp(selectedPassive1, currentEnergyLevel);
         //HIGH SCORE
             highScore = new HighScore(this);
             previousHighScore=highScore.getHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY);
@@ -469,8 +467,21 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         ourHolder.unlockCanvasAndPost(mCanvas);
         // object instances
         randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
+
         stars = new Background(ourHolder, mCanvas, width, height);
         canvas = new CanvasGameClassic(ourHolder,mCanvas, stars);
+
+        powerUps = new PowerUps(energyProgress,keys,powerUp, ballWidth, ballHeight,randomCoordinate);
+
+        // in case we selected the power up to increase the starting energy
+        if(flagTypePassive2==4 || flagTypePassive1==4) {
+            //set the energy bar in a certain way depending on the passives we selected
+            currentEnergyLevel = powerUps.energyPassivePowerUp(selectedPassive2, currentEnergyLevel);
+        }
+        //if we selected passive that reduces speed of energy loss, this will reduce it
+        if(selectedPassive1 == Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY)
+            keys.ENERGY_DECREASE -= powerUps.energyPassivePowerUp(selectedPassive1, currentEnergyLevel);
+
 
         //get every ball object when starting a game
             ballHandler = new BallHandler(randomCoordinate, keys, ballWidth, ballHeight);
@@ -826,11 +837,17 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 ballObject.setBallWidth(ballObject.getBallWidth() - (ballObject.getBallWidth()/keys.BALL_YELLOW_SIZE_DECREASE));
                 ballObject.setBallHeight(ballObject.getBallHeight() - (ballObject.getBallWidth()/keys.BALL_YELLOW_SIZE_DECREASE));
                 ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(), ballObject.getBallWidth(), ballObject.getBallHeight(), true));
+               //yellow balls speed should change if we haven't activated a power up
                 if(!ballObject.isActiveChangesSpeed())
                 ballObject.setBallSpeed(ballObject.getBallSpeed()+keys.BALL_YELLOW_SPEED_INCREASE);
-
+                else if(selectedPowerUp1 == Keys.FLAG_GREEN_SLOW_DOWN_BALLS){
+                    //if we have activated a power up, but it slows ball's down, increase the speed
+                        BallHandler.yellowBallSpeedChangeActive = true;
+                        ballObject.setBallSpeed(ballObject.getBallSpeed()+keys.BALL_YELLOW_SPEED_INCREASE);
+                }
             }
             else {
+                BallHandler.yellowBallSpeedChangeActive = true;
                 //add some energy and update it in the energy text view
                 currentEnergyLevel +=500;
                 score+=500;
@@ -840,7 +857,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 getNewBall();
                 //reset the yellow ball to its first state for later use
                 keys.TIMES_CLICKED_YELLOW=0;
-                //ballWidth=ballHeight= blueBall.getWidth();
                 changedSize=false;
             }
         }
@@ -951,11 +967,13 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         // ------------------------------ New Ball --------------------------------- \\
 
     /**
-     * Method used for getting a new ball and setting a score
+     * Method used for getting a new ball and setting a score. Called whenever we clicked a ball for getting the next one.
      */
     private void getNewBall() {
         //get a new ball with new coordinates and angle of movement
 
+        //If we used the "same type ball power up" on any ball, don't get a new type until it expires
+        if(!(ballObject.isActiveChangesType() && purpleBallObjects[0].isActiveChangesType()&& multipleBalls[0].isActiveChangesType()))
         ballType = ballHandler.getNewBallType();
         currentBallType = setCurrentBall(ballType);
         setBallObjectByType();

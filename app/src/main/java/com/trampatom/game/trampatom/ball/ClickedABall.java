@@ -4,7 +4,7 @@ package com.trampatom.game.trampatom.ball;
 import com.trampatom.game.trampatom.Model.Ball;
 
 /**
- * Class that should contain methods for handling most mBall clicks
+ * Class that should contain methods for handling most {@link Ball} object clicks.
  */
 public class ClickedABall {
 

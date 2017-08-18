@@ -99,6 +99,21 @@ public class RandomBallVariables {
         //the angle has to be in radians if we are using sin or cos functions to determine movement
         angle= randomAngle * RADIANS;
 
+
+        return angle;
+    }
+
+    /**
+     * Method used for when the gravity pull power up is used. For moving the ball to the center of the screen
+     * @param x current x position of the ball
+     * @param y current y position of the ball
+     * @return an angle pointing to the center of the screen
+     */
+    public double centeredAngle(int x, int y){
+        float deltaX = width/2 - x;
+        float deltaY = height/2 - y;
+        double angle = Math.atan2( deltaY, deltaX );
+
         return angle;
     }
 

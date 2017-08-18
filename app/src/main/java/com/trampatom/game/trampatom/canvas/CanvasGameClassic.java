@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.view.SurfaceHolder;
 
 import com.trampatom.game.trampatom.Model.Ball;
@@ -26,6 +27,7 @@ public class CanvasGameClassic {
     Background background;
     //paint used for score
     Paint paint;
+    Path path;
 
     /**
      * Constructor that should be used to get instance of the canvas and a background
@@ -42,7 +44,15 @@ public class CanvasGameClassic {
         paint = new Paint();
         paint.setColor(Color.CYAN);
         paint.setTextSize(38);
+       // paint.setStrokeWidth(3);
+       // paint.setStyle(Paint.Style.STROKE);
         paint.setTextAlign(Paint.Align.CENTER);
+        /*path = new Path();
+        path.moveTo(10,10);
+        path.lineTo(10,300);
+        path.lineTo(300,300);
+        path.lineTo(300,10);
+        path.lineTo(10,10);*/
     }
 
     /**
@@ -57,11 +67,14 @@ public class CanvasGameClassic {
         this.score = score;
         ourCanvas=ourHolder.lockCanvas();
         drawBackground();
+        //ourCanvas.drawPath(path, paint);
+
         //draw the ball that we passed
         if(ball.getBallColor() != null)
             ourCanvas.drawBitmap(ball.getBallColor(), ball.getX(), ball.getY(), null);
         ourHolder.unlockCanvasAndPost(ourCanvas);
         return false;
+
 
     }
 
@@ -92,14 +105,6 @@ public class CanvasGameClassic {
                 ourCanvas.drawBitmap(purpleBalls[2].getBallColor(), purpleBalls[2].getX(), purpleBalls[2].getY(), null);
                 ourHolder.unlockCanvasAndPost(ourCanvas);
         }
-        /*else {
-            ourCanvas = ourHolder.lockCanvas();
-            drawBackground();
-            ourCanvas.drawBitmap(purpleBalls[0].getBallColor(), purpleBalls[0].getX(), purpleBalls[0].getY(), null);
-            ourCanvas.drawBitmap(purpleBalls[1].getBallColor(), purpleBalls[1].getX(), purpleBalls[1].getY(), null);
-            ourCanvas.drawBitmap(purpleBalls[2].getBallColor(), purpleBalls[2].getX(), purpleBalls[2].getY(), null);
-            ourHolder.unlockCanvasAndPost(ourCanvas);
-        }*/
         return false;
     }
 
