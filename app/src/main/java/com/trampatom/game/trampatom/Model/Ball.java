@@ -16,13 +16,26 @@ public class Ball {
     }
 
 
-    int x;
-    int y;
-    int ballType;
-    double angle;
-    int moveX, moveY;
-    int ballHeight, ballWidth;
-    int ballSpeed;
+    private int x;
+    private int y;
+    private int ballType;
+    private int moveX;
+    private int moveY;
+    private int ballHeight;
+    private int ballWidth;
+    private int ballSpeed;
+
+    public int getBallAtomValue() {
+        return ballAtomValue;
+    }
+
+    public void setBallAtomValue(int ballAtomValue) {
+        this.ballAtomValue = ballAtomValue;
+    }
+
+    private int ballAtomValue;
+     private double angle;
+
 
     public boolean isActiveChangesAngle() {
         return activeChangesAngle;
@@ -32,11 +45,11 @@ public class Ball {
         this.activeChangesAngle = activeChangesAngle;
     }
 
-    boolean activeChangesAngle;
+    private boolean activeChangesAngle;
 
-    boolean activeChangesSpeed;
+    private boolean activeChangesSpeed;
 
-    boolean activeChangesType;
+    private boolean activeChangesType;
 
     public boolean isActiveChangesType() {
         return activeChangesType;
@@ -54,7 +67,7 @@ public class Ball {
         this.activeChangesSize = activeChangesSize;
     }
 
-    boolean activeChangesSize;
+    private boolean activeChangesSize;
 
     public boolean isActiveChangesSpeed() {
         return activeChangesSpeed;
@@ -72,7 +85,7 @@ public class Ball {
         this.soundId = soundId;
     }
 
-    int soundId;
+    private int soundId;
 
     public int getBallSpeed() {
         return ballSpeed;
@@ -125,7 +138,7 @@ public class Ball {
         this.ballColor = ballColor;
     }
 
-    Bitmap ballColor;
+    private Bitmap ballColor;
 
     public int getX() {
         return x;

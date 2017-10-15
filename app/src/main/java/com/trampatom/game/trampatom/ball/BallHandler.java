@@ -5,15 +5,18 @@ import android.graphics.Bitmap;
 
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.activity.GameClassicActivity;
+import com.trampatom.game.trampatom.activity.MainActivity;
+import com.trampatom.game.trampatom.power.up.ChancePassivesAndEvents;
 import com.trampatom.game.trampatom.utils.Keys;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
+
+import java.util.Random;
 
 /**
  * Class that should be used to handle ball types.
  * Contains methods for getting a new ball, changing ablls whenevr we get a new one, setting ball speeds and sizes.
  */
 public class BallHandler {
-    //TODO Arrays for balls refactoring in far future
 
     private Bitmap redBall,  blueBall,  greenBall,  yellowBall,  purpleBall; Bitmap[] waveBall;
     public static boolean yellowBallSpeedChangeActive;
@@ -25,11 +28,14 @@ public class BallHandler {
     int ballWidth, ballHeight;
     Keys keys;
     Ball mBall;
+    ChancePassivesAndEvents chancePassivesAndEvents;
+    private Random random;
+    private int eventTriggerChance;
+
     Ball[] purpleBalls = {null,null,null};
     Ball[] waveBalls = {null,null,null,null,null,null,null};
 
     private RandomBallVariables randomBallVariables;
-    //TODO adequate java docs
 
     /**
      * Constructor for BallHandler. We should pass in an instance of RandomBallVariables and keys.
@@ -40,6 +46,7 @@ public class BallHandler {
         this.keys = keys;
         this.ballWidth = ballWidth;
         this.ballHeight = ballHeight;
+        random = new Random();
         mBall = new Ball();
         ballSpeed = keys.DEFAULT_BALL_SPEED;
         yellowBallSpeed = keys.BALL_YELLOW_INITIAL_SPEED;
@@ -53,6 +60,20 @@ public class BallHandler {
         for(i=0; i< keys.WAVE_BALL_NUMBER; i++){
             waveBalls[i] = new Ball();
         }
+    }
+
+    /**
+     * Method that parses a ChanceAndEvents object so that we can use it to do a random event based on our selected power up or on
+     * our pre-determined random events when handling the balls. Any event not related to balls but that happens in some time should be
+     * done in the timer of the main game.
+     * <p>
+     *     Using this method also loads the chance to trigger the event related to the selected power up into the ball handler.
+     * </p>
+     * @param chancePassivesAndEvents object needed to use some of its methods within the BallHandler.
+     */
+    public void parseChancePassivesAndEventsObject(ChancePassivesAndEvents chancePassivesAndEvents){
+        this.chancePassivesAndEvents = chancePassivesAndEvents;
+        eventTriggerChance = chancePassivesAndEvents.getPassivePowerUpEventChance();
     }
 
     /**
@@ -84,10 +105,10 @@ public class BallHandler {
                 break;
         }
         switch (flag2){
-            case Keys.FLAG_YELLOW_SLOW_DOWN_BALLS:
-                keys.DEFAULT_BALL_SPEED = 2;
+            case Keys.FLAG_YELLOW_CHANCE_ATOM_DROP_BONUS:
+               /* keys.DEFAULT_BALL_SPEED = 2;
                 keys.BALL_YELLOW_INITIAL_SPEED = 0;
-                keys.GREEN_BALL_SPEED = 5;
+                keys.GREEN_BALL_SPEED = 5;*/
                 break;
         }
 
@@ -118,6 +139,7 @@ public class BallHandler {
      * @return a ball object to be used.
      */
     public Ball getFirstBallObject(){
+
         //set the parameters used to check if a power up is active to false at the start
         mBall.setActiveChangesSpeed(false);
         mBall.setActiveChangesSize(false);
@@ -125,6 +147,7 @@ public class BallHandler {
         mBall.setActiveChangesAngle(false);
 
         // set the first mBall object
+        mBall.setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
         mBall.setX(randomBallVariables.randomX());
         mBall.setY(randomBallVariables.randomY());
         mBall.setAngle(randomBallVariables.randomAngle());
@@ -145,11 +168,37 @@ public class BallHandler {
      * @return a ball object with new coordinates and angle
      */
     public Ball getNewBallObject(Ball ball, int currentBallType){
+
+        if(keys.POWER_UP_LIMITING_SQUARE_ACTIVE &&  keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS>0){
+            keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS--;
+        }
+
+        ball.setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
+
+        // random chance for triggering the event. if it is triggered do this block of code
+        if( random.nextInt(Keys.MAX_CHANCE_FOR_EVENT) < eventTriggerChance){
+
+            if(chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_ATOM_DROP_BONUS){
+
+                    ball.setBallAtomValue(ball.getBallAtomValue()+ Keys.ATOM_DROP_VALUE_INCREASE);
+
+            }
+            else if(chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_LIMITING_SQUARE
+                    && !keys.POWER_UP_LIMITING_SQUARE_ACTIVE){
+
+                keys.POWER_UP_LIMITING_SQUARE_ACTIVE = true;
+
+            }
+
+        }
+
+        //in case we selected the active that sets the next few balls the same type, reduce the countdown.
         if(ball.isActiveChangesType()){
 
             if((keys.POWER_UP_SAME_TYPE_NEXT_BALL > 0)){
                 keys.POWER_UP_SAME_TYPE_NEXT_BALL --;
             }
+            //if we used up all the same type balls set the active to false.
             else{
                 ball.setActiveChangesType(false);
             }
@@ -226,6 +275,8 @@ public class BallHandler {
                     purpleBalls[i].setActiveChangesSize(false);
                     purpleBalls[i].setActiveChangesType(false);
                     purpleBalls[i].setActiveChangesAngle(false);
+
+                    purpleBalls[i].setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
                     purpleBalls[i].setBallSpeed(ballSpeed);
                     purpleBalls[i].setBallWidth(ballWidth);
                     purpleBalls[i].setBallHeight(ballHeight);
@@ -245,6 +296,8 @@ public class BallHandler {
                     waveBalls[i].setActiveChangesSize(false);
                     waveBalls[i].setActiveChangesType(false);
                     waveBalls[i].setActiveChangesAngle(false);
+
+                    waveBalls[i].setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
                     //every wave ball starts at the left
                     waveBalls[i].setX(0);
                     //initialize the wave balls so they are at a distance
@@ -272,6 +325,26 @@ public class BallHandler {
      * @return
      */
     public Ball[] getNewBallObjectArray(int arraySize, Ball[] balls, int currentBallType) {
+
+
+        for(int i=0; i<arraySize; i++){
+            balls[i].setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
+
+            // random chance for triggering the event. if it is triggered do this block of code
+            if( random.nextInt(Keys.MAX_CHANCE_FOR_EVENT) < eventTriggerChance){
+
+                if(chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_ATOM_DROP_BONUS){
+
+                    balls[i].setBallAtomValue(balls[i].getBallAtomValue()+ Keys.ATOM_DROP_VALUE_INCREASE);
+
+                }
+                else if(chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_LIMITING_SQUARE){
+
+                }
+
+            }
+        }
+
 
 
         if(balls[0].isActiveChangesType()){

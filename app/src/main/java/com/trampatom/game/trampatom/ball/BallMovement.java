@@ -17,8 +17,7 @@ public class BallMovement {
     private static final int RED_BALL_SPEED_UP_INTERVAL = 8;
     //used to set a speed liit to red balls in the survival game
     private static final int RED_BALL_SPEED_LIMIT = 16;
-    int width;
-    int height;
+    private int width, height, leftSide=0, topSide=0;
     Random random;
     int changeAngleGreen;
     int x, y, moveX, moveY;
@@ -38,6 +37,21 @@ public class BallMovement {
         this.width = width;
         this.height = height;
         random  = new Random();
+    }
+
+    /**
+     * method used to change the width and height values of our canvas. not teh actual width/height but the parameters that are used
+     * for ball movement and "edge" bouncing
+     * @param addWidth amount of width to change
+     * @param addHeight amount of height to change
+     */
+    public void changeWidthAndHeight(int addWidth, int addHeight){
+
+        width = width + addWidth;
+        height = height + addHeight;
+        leftSide -=  addWidth;
+        topSide -=  addHeight;
+
     }
 
 
@@ -82,13 +96,13 @@ public class BallMovement {
             moveY = -moveY;
             // too far bottom
         }
-        if(x < 0) {
-            x = 0;
+        if(x < leftSide) {
+            x = leftSide;
             moveX = -moveX;
             // too far left
         }
-        if(y < 0) {
-            y = 0;
+        if(y < topSide) {
+            y = topSide;
             moveY = -moveY;
             // too far top
         }
@@ -137,13 +151,13 @@ public class BallMovement {
                 moveY = -moveY;
                 // too far bottom
             }
-            if (x < 0) {
-                x = 0;
+            if (x < leftSide) {
+                x = leftSide;
                 moveX = -moveX;
                 // too far left
             }
-            if (y < 0) {
-                y = 0;
+            if (y < topSide) {
+                y = topSide;
                 moveY = -moveY;
                 // too far top
             }
@@ -184,13 +198,13 @@ public class BallMovement {
             moveY = -moveY;
             // too far bottom
         }
-        if(x < 0) {
-            x = 0;
+        if(x < leftSide) {
+            x = leftSide;
             moveX = -moveX;
             // too far left
         }
-        if(y < 0) {
-            y = 0;
+        if(y < topSide) {
+            y = topSide;
             moveY = -moveY;
             // too far top
         }
@@ -239,8 +253,8 @@ public class BallMovement {
             moveX = -moveX;
             // too far right
         }
-        if(x < 0) {
-            x = 0;
+        if(x < leftSide) {
+            x = leftSide;
             moveX = -moveX;
             // too far left
         }
@@ -289,13 +303,13 @@ public class BallMovement {
             moveY = -moveY;
             // too far bottom
         }
-        if(x < 0) {
-            x = 0;
+        if(x < leftSide) {
+            x = leftSide;
             moveX = -moveX;
             // too far left
         }
-        if(y < 0) {
-            y = 0;
+        if(y < topSide) {
+            y = topSide;
             moveY = -moveY;
             // too far top
         }

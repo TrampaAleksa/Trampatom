@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -36,6 +38,7 @@ import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.currency.AtomPool;
 import com.trampatom.game.trampatom.currency.PowerUps;
 import com.trampatom.game.trampatom.currency.ShopHandler;
+import com.trampatom.game.trampatom.power.up.ChancePassivesAndEvents;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.PassivesManager;
@@ -66,6 +69,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     public static final int BALL_WAVE = 6;
 
     public static final int HEIGHT_SCALE = 11;
+
 
 
     // ------------------- General Ball Variables --------------------------------------- \\
@@ -120,6 +124,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         List<PowerUpPool> powerUpPool;
         PowerUpPool[] powerUp= { null , null, null, null};
         PassivesManager passivesManager;
+        ChancePassivesAndEvents chancePassivesAndEvents;
 
 
     // ------------------- Arrays ------------------------------------------------------- \\
@@ -142,12 +147,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //used for displaying the score and setting new highScore at the end of the game
             int score=0, previousHighScore;
         //used to determine how long we will play
-            int currentEnergyLevel;
+            int currentEnergyLevel; int energySpeedUpTicks;
         //used for ending the game when the time ends, congratulations if new high score
             boolean gameover, newHighScore;
 
         //used for sounds
-            boolean lowEnergy = false;
+            boolean lowEnergy = false; boolean middleEnergy = false;
 
 
     // -------------------------------- Power Up and Shop ---------------------------------- \\
@@ -166,8 +171,15 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //For managing weather or not we can activate any of the power ups(in cooldown or used)
             boolean usedConsumable = false; boolean timeConsumable = false;
             boolean onCooldown = false;
+        //determines if we have reset the power up. used to prevent zero cooldown on power up.
+        boolean resettedPowerUp = false;
             // the duration of every coolDown, timer used to help determine when the coolDown expired
-            int coolDown, coolDownTimer=0, consumable, consumableCountDownTimer=0;
+            int coolDown, coolDownTimer=0, powerUpDuration, consumable, consumableCountDownTimer=0;
+        //For passive event chance power ups
+            //chance of the passive event from happening; ticker used for the timer to prevent events happening too often
+            int passivePowerUpEventChance, ticker;
+            //used to activate an event if a passive event was triggered
+            boolean isPassiveEventTriggerred= false;
 
 
 
@@ -228,20 +240,21 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         mSurfaceView.setOnTouchListener(this);
         // progress bar
         energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
+        energyProgress.getProgressDrawable().setTint(Color.GREEN);
         gameTimeAndScore = new GameTimeAndScore(energyProgress);
         currentEnergyLevel = keys.STARTING_ENERGY;
+        energySpeedUpTicks = Keys.ENERGY_SPEED_UP_TICKS;
         //buttons
             bPowerUp1 = (Button) findViewById(R.id.bPowerUp1);
             bPowerUp2 = (Button) findViewById(R.id.bPowerUp2);
             bPowerUp1.setOnClickListener(this);
             bPowerUp2.setOnClickListener(this);
-        //TODO use different times for cooldown and duration
             coolDown = keys.POWER_UP_COOLDOWN;
             consumable = keys.POWER_UP_COOLDOWN;
 
 
         //POWER UPS
-
+        ticker = Keys.TICKER_STARTING_VALUE;
         //load the power ups we selected in the shop from a file
         ShopHandler shopHandler = new ShopHandler(this);
         powerUpPool = shopHandler.loadSelectedPowerUps();
@@ -258,6 +271,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         flagTypePowerUp1 = passivesManager.checkCurrentFlagType(selectedPowerUp1);
         flagTypePassive1 = passivesManager.checkCurrentFlagType(selectedPassive1);
         flagTypePassive2 = passivesManager.checkCurrentFlagType(selectedPassive2);
+
+        powerUpDuration = keys.POWER_UP_DURATION;
+
+        chancePassivesAndEvents = new ChancePassivesAndEvents(powerUp[2]);
+        //get the chance for an event bound to the selected power up to happen.
+        passivePowerUpEventChance = chancePassivesAndEvents.getPassivePowerUpEventChance();
 
         // OTHER
         //get device's width and height
@@ -296,7 +315,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //configure the color patter so that the balls take less space
             options.inPreferredConfig = Bitmap.Config.RGB_565;
         //loading the bitmaps
-        // TODO change so that the bitmaps are decoded inside Ball Handler, to prevent parsing every ball there
         //get the size of the device that is running the game and scale teh balls according to this
 
             waveBall[0] = BitmapFactory.decodeResource(getResources(), R.drawable.wave1, options);
@@ -351,7 +369,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             if(initialDraw) {
                 initiateOnCanvas();
             }
-
             moveAndDraw();
             //after the timer runs out finish the game
                 endGame();
@@ -384,63 +401,16 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                             //int totalTimerTime = (int) keys.GAME_TIME/1000;
 
                             //COOLDOWN POWER UP
-                            if(onCooldown ){
-
-                                if(coolDown >  (coolDownTimer)/1000){
-                                    // has to increment equally to the millis interval of ticks
-                                    coolDownTimer += 100;
-                                }
-                                else{
-
-                                    onCooldown = false;
-                                    coolDownTimer = 0;
-                                    //if the power up is ball related, reset the balls
-                                    // , if its not, there is no need to reset the balls
-                                    if(flagTypePowerUp1 == Keys.FLAG_BALL_POWER_UP) {
-                                        //reset the ball objects after the power up expires
-                                        ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, currentBallType);
-                                        purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
-                                                selectedPowerUp1, keys.PURPLE_BALL_NUMBER, currentBallType);
-                                        multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                                                selectedPowerUp1, keys.WAVE_BALL_NUMBER, currentBallType);
-                                    }
-                                    }
-                            }
+                            cooldownPowerUpTimer();
 
                             //CONSUMABLE POWER UP DURATION
-                            //if the power up is ball related, reset the balls
-                            // , if its not, there is no need to reset the balls
-                            if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP){
-                            if(timeConsumable ) {
+                            consumablePowerUpTimer();
 
-                                if (consumable > (consumableCountDownTimer) / 1000) {
-                                    // has to increment equally to the millis interval of ticks
-                                    consumableCountDownTimer += 100;
-                                } else {
-                                    timeConsumable = false;
-                                    consumableCountDownTimer = 0;
-                                    //reset the ball objects after the power up expires
-                                    ballObject = powerUps.resetBallState(ballObject, selectedPowerUp2, currentBallType);
-                                    purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
-                                            selectedPowerUp2, keys.PURPLE_BALL_NUMBER, currentBallType);
-                                    multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                                            selectedPowerUp2, keys.WAVE_BALL_NUMBER, currentBallType);
-                                }
-                            }
-                            }
+                            //ENERGY AND GAME OVER
+                            energyAndGameOverTimer();
+                            //CHANCE EVENTS FROM PASSIVES AND RANDOM EVENTS
+                            chanceEventTimer();
 
-                            //Keep reducing energy until the game is over
-                            if(!gameover) {
-                                if (currentEnergyLevel < keys.STARTING_ENERGY/4 && !lowEnergy){
-                                    soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
-                                    lowEnergy = true;
-                                }
-                                //in case we exceed the maximum energy level, set it to the maximum
-                                if(currentEnergyLevel >= GameTimeAndScore.MAX_BALL_CLICK_TIME)
-                                    currentEnergyLevel = GameTimeAndScore.MAX_BALL_CLICK_TIME;
-                                //until the game is finished keep lowering the energy levels
-                                currentEnergyLevel -= keys.ENERGY_DECREASE;
-                            }
                         }
 
                         public void onFinish() {
@@ -453,6 +423,111 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 }
             });
         }
+    }
+
+    /**
+     * Method using a ticker and a chance variable to attempt to trigger a certain event from time to time. Used for random events and
+     * passive events
+     */
+    private void chanceEventTimer(){
+        ticker ++;
+            if(ticker == Keys.TICKS_BEFORE_EVENT_TRIGGER_CHANCE){
+                //once we tick enough times get a random number and if its lower than our chance for the event trigger the event
+            if( (random.nextInt(Keys.MAX_CHANCE_FOR_EVENT)) < passivePowerUpEventChance){
+                //used for triggering the chance event; for later development
+                    isPassiveEventTriggerred = true;
+                //if we selected the power up to give an energy boost, increase our current energy level.
+                if(selectedPassive2 == Keys.FLAG_YELLOW_CHANCE_ENERGY_FILL){
+                    currentEnergyLevel = currentEnergyLevel + Keys.ENERGY_CHANCE_EVENT_BONUS;
+                }
+            }
+                ticker = Keys.TICKER_STARTING_VALUE;
+            }
+
+
+    }
+    private void cooldownPowerUpTimer(){
+        if(onCooldown ){
+
+            if(coolDown >  (coolDownTimer)/1000){
+                // has to increment equally to the millis interval of ticks
+                coolDownTimer += 100;
+
+            }
+            else {
+
+                onCooldown = false;
+                coolDownTimer = 0;
+            }
+            if(coolDown-powerUpDuration <  (coolDownTimer)/1000 && !resettedPowerUp){
+
+                resettedPowerUp = true;
+                //if the power up is ball related, reset the balls
+                // , if its not, there is no need to reset the balls
+                if(flagTypePowerUp1 == Keys.FLAG_BALL_POWER_UP) {
+                    //reset the ball objects after the power up expires
+                    ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, currentBallType);
+                    purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
+                            selectedPowerUp1, keys.PURPLE_BALL_NUMBER, currentBallType);
+                    multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
+                            selectedPowerUp1, keys.WAVE_BALL_NUMBER, currentBallType);
+                }
+            }
+
+        }
+
+    }
+    private void consumablePowerUpTimer(){
+
+        //if the power up is ball related, reset the balls
+        // , if its not, there is no need to reset the balls
+        if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP){
+            if(timeConsumable ) {
+
+                if (consumable > (consumableCountDownTimer) / 1000) {
+                    // has to increment equally to the millis interval of ticks
+                    consumableCountDownTimer += 100;
+                } else {
+                    timeConsumable = false;
+                    consumableCountDownTimer = 0;
+                    //reset the ball objects after the power up expires
+                    ballObject = powerUps.resetBallState(ballObject, selectedPowerUp2, currentBallType);
+                    purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
+                            selectedPowerUp2, keys.PURPLE_BALL_NUMBER, currentBallType);
+                    multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
+                            selectedPowerUp2, keys.WAVE_BALL_NUMBER, currentBallType);
+                }
+            }
+        }
+
+    }
+    private void energyAndGameOverTimer(){
+
+        //Keep reducing energy until the game is over
+        if(!gameover) {
+            if (currentEnergyLevel < keys.STARTING_ENERGY/2 && !middleEnergy){
+                energyProgress.getProgressDrawable().setTint(Color.YELLOW);
+               // soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
+                middleEnergy = true;
+            }
+            if (currentEnergyLevel < keys.STARTING_ENERGY/4 && !lowEnergy){
+                energyProgress.getProgressDrawable().setTint(Color.RED);
+                soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
+                lowEnergy = true;
+            }
+            //in case we exceed the maximum energy level, set it to the maximum
+            if(currentEnergyLevel >= GameTimeAndScore.MAX_BALL_CLICK_TIME)
+                currentEnergyLevel = GameTimeAndScore.MAX_BALL_CLICK_TIME;
+            //until the game is finished keep lowering the energy levels
+            currentEnergyLevel -= keys.ENERGY_DECREASE;
+            energySpeedUpTicks++;
+            if(energySpeedUpTicks%4==0 && keys.ENERGY_DECREASE <50) {
+                keys.ENERGY_DECREASE += 1;
+                energySpeedUpTicks = 0;
+            }
+        }
+
+
     }
 
     /**
@@ -469,7 +544,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
 
         stars = new Background(ourHolder, mCanvas, width, height);
-        canvas = new CanvasGameClassic(ourHolder,mCanvas, stars);
+        canvas = new CanvasGameClassic(ourHolder,mCanvas, stars, width, height);
 
         powerUps = new PowerUps(energyProgress,keys,powerUp, ballWidth, ballHeight,randomCoordinate);
 
@@ -486,6 +561,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //get every ball object when starting a game
             ballHandler = new BallHandler(randomCoordinate, keys, ballWidth, ballHeight);
             ballHandler.parseBallBitmaps(redBall, blueBall, greenBall , yellowBall , purpleBall, waveBall);
+            ballHandler.parseChancePassivesAndEventsObject(chancePassivesAndEvents);
         //set the ball attributes if the passives we selected affect the balls
             if(flagTypePassive1== 3 || flagTypePassive2 == 3)
             ballHandler.setDefaultValuesUponPassives(selectedPassive1,selectedPassive2);
@@ -507,12 +583,13 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         clickedABall = new ClickedABall(ballWidth, ballHeight);
         ballMovement = new BallMovement(width, height);
        initialDraw = false;
+
+
     }
 
 
             // ------------------------------- Ball Movement -------------------------- \\
 
-    //TODO ball objects used to move balls, so make single method for moving a single ball object
 
     /**
      * Method that should be used to move every ball according to the type of the current ball.
@@ -526,28 +603,28 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         {
             case BALL_BLUE:
                 moveBall();
-                canvas.draw(ballObject, -1, score);
+                canvas.draw(ballObject, keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score);
                 break;
             case BALL_RED:
                 moveBall();
-                canvas.draw(ballObject, -1, score);
+                canvas.draw(ballObject,  keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score);
                 break;
             case BALL_YELLOW:
                 moveYellowBall();
-                canvas.draw(ballObject, -1, score);
+                canvas.draw(ballObject,  keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score);
                 break;
             case BALL_GREEN:
                 //this ball moves like crazy
                 moveGreenBall();
-                canvas.draw(ballObject, -1, score);
+                canvas.draw(ballObject,  keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score);
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
-                canvas.drawPurple(purpleBallObjects,-1, score, timesClickedPurple, ballClicked);
+                canvas.drawPurple(purpleBallObjects, keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score, timesClickedPurple, ballClicked);
                 break;
             case BALL_WAVE:
                 moveWave();
-                canvas.drawWave(multipleBalls, -1, score, currentWaveBall);
+                canvas.drawWave(multipleBalls,  keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score, currentWaveBall);
                 break;
         }
     }
@@ -637,7 +714,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //display our score and if we got a new high score show a text to indicate that
             gameover.gameOver(score, newHighScore);
             //add the atoms we collected during the game to the atom pool
-            //TODO save atoms in on pause or on stop method
             atomPool.addAtoms(poolArray);
             try {
                 //delay before finishing the game
@@ -699,10 +775,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                         purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
                         multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp1, keys.WAVE_BALL_NUMBER);
                         //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
+                        resettedPowerUp = false;
                         onCooldown = true;
                     }
                     //if the power up does something to the energy bar
                     else{
+                        resettedPowerUp = false;
                         currentEnergyLevel += powerUps.energyPowerUp(selectedPowerUp1);
                         onCooldown = true;
                     }
@@ -774,7 +852,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             score += 100;
             //add the atom to the atom pool
             soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
-            poolArray[0]++;
+            poolArray[0] = poolArray[0] + ballObject.getBallAtomValue();
             getNewBall();
         }
     }
@@ -790,7 +868,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             currentEnergyLevel -=100;
             score -= 100;
             //add the atom to the atom pool, even if we scored negative the atom is added to the pool
-            poolArray[1]++;
+            poolArray[1] = poolArray[1] + ballObject.getBallAtomValue();
             soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
             getNewBall();
         }
@@ -799,7 +877,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             currentEnergyLevel +=100;
             score+=100;
             //add the atom to the atom pool
-            poolArray[1]++;
+            poolArray[1] = poolArray[1] + ballObject.getBallAtomValue();
             soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
             getNewBall();
         }
@@ -815,7 +893,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             currentEnergyLevel +=400;
             score+=400;
             //add the atom to the atom pool
-            poolArray[2]++;
+            poolArray[2] = poolArray[2] + ballObject.getBallAtomValue();
             soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
             getNewBall();
         }
@@ -852,7 +930,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 currentEnergyLevel +=500;
                 score+=500;
                 //add the atom to the atom pool
-                poolArray[3]++;
+                poolArray[3] = poolArray[3] + ballObject.getBallAtomValue();
                 soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
                 getNewBall();
                 //reset the yellow ball to its first state for later use
@@ -871,8 +949,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      *  Score after we clicked all three balls and gain energy.
      */
     private void purpleBall() {
-        //TODO better way of removing purple balls from drawing
-        //TODO fix bug related to drawing purple balls when size power up increased
+
         if (timesClickedPurple == keys.BALL_PURPLE_NO_CLICK) {
             //if we clicked on the first/ original ball
             if (clickedABall.ballClicked(purpleBallObjects[0], clickedX, clickedY)) {
@@ -888,25 +965,24 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 purpleBallObjects[2].setX(purpleBallObjects[0].getX());
                 purpleBallObjects[2].setY(purpleBallObjects[0].getY());
                 //add the atom to the atom pool
-                poolArray[4]++;
+                poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
                 soundPool.play(purpleBallObjects[0].getSoundId(),1,1,0,0,1);
             }
         }
         //if we clicked on one of the split balls remove them from the screen
         else  {
-            //TODO change so that the purple balls clicked don't draw at all
             if(clickedABall.ballClicked(purpleBallObjects[0], clickedX, clickedY)){
                 //don't draw this ball
                 ballClicked[0]=true;
                 //add the atom to the atom pool
-                poolArray[4]++;
+                poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
                 soundPool.play(purpleBallObjects[0].getSoundId(),1,1,0,0,1);
             }
             if(clickedABall.ballClicked(purpleBallObjects[1], clickedX, clickedY)){
                 //don't draw this ball
                 ballClicked[1]=true;
                 //add the atom to the atom pool
-                poolArray[4]++;
+                poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
                 soundPool.play(purpleBallObjects[1].getSoundId(),1,1,0,0,1);
             }
             if(clickedABall.ballClicked(purpleBallObjects[2], clickedX, clickedY)){
@@ -915,7 +991,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 ballClicked[2]=true;
 
                 //add the atom to the atom pool
-                poolArray[4]++;
+                poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
                 soundPool.play(purpleBallObjects[2].getSoundId(),1,1,0,0,1);
             }
             //if we clicked all three, score and get a new ball
@@ -949,7 +1025,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             currentEnergyLevel += currentWaveBall*10;
             score += currentWaveBall*10;
             //adds a random atom to the pool every time we click a wave ball
-            poolArray[random.nextInt(4)]++;
+            poolArray[random.nextInt(4)]+= multipleBalls[0].getBallAtomValue();
             soundPool.play(multipleBalls[0].getSoundId(),1,1,0,0,1);
             // next ball should be clicked
             currentWaveBall ++;
@@ -970,11 +1046,31 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * Method used for getting a new ball and setting a score. Called whenever we clicked a ball for getting the next one.
      */
     private void getNewBall() {
-        //get a new ball with new coordinates and angle of movement
 
         //If we used the "same type ball power up" on any ball, don't get a new type until it expires
         if(!(ballObject.isActiveChangesType() && purpleBallObjects[0].isActiveChangesType()&& multipleBalls[0].isActiveChangesType()))
         ballType = ballHandler.getNewBallType();
+
+        if(keys.POWER_UP_LIMITING_SQUARE_ACTIVE && keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS==3){
+
+           // keys.POWER_UP_LIMITING_SQUARE_ACTIVE = false;
+            //if the chance event for the limiting square is triggered , reduce the device's width and height
+            ballMovement.changeWidthAndHeight(-width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                    -height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+            randomCoordinate.changeWidthAndHeight(-width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                    -height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+            keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS--;
+        }
+        if( keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS==0){
+
+            ballMovement.changeWidthAndHeight(width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                    height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+            randomCoordinate.changeWidthAndHeight(width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                    height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+            keys.POWER_UP_LIMITING_SQUARE_ACTIVE = false;
+            keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS=3;
+        }
+
         currentBallType = setCurrentBall(ballType);
         setBallObjectByType();
     }

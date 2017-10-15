@@ -30,8 +30,20 @@ public class RandomBallVariables {
 
         int y, x;
     //width and height of the device/canvas
-    int width ;
-    int height;
+    private int width , height;
+    //left and top side of the screen, used to draw a ball within a certain limit if we used limiting square power up.
+    private static int leftSide = 0;
+    private static int topSide = 0;
+
+    public static int getLeftSide(){
+
+        return leftSide;
+    }
+
+    public static int getTopSide(){
+
+        return topSide;
+    }
 
     int ballWidth;
     int ballHeight;
@@ -53,6 +65,21 @@ public class RandomBallVariables {
         random = new Random();
     }
 
+    /**
+     * method used to change the width and height values of our canvas. not teh actual width/height but the parameters that are used
+     * for ball movement and "edge" bouncing
+     * @param addWidth
+     * @param addHeight
+     */
+    public void changeWidthAndHeight(int addWidth, int addHeight){
+
+        width = width + addWidth;
+        height = height + addHeight;
+        leftSide += addWidth;
+        topSide += addHeight;
+
+    }
+
 
     /**
      * Method that should get a new ball type : red, blue, green, yellow, purple or wave depending on what
@@ -70,9 +97,8 @@ public class RandomBallVariables {
      * @return a random X coordinate
      */
     public int randomX() {
-        Random number= new Random();
-        x= number.nextInt( width);
-        x=offscale(x, width, ballWidth);
+        x= leftSide + random.nextInt( width - leftSide);
+        x= offscale(x, width, ballWidth);
         return x;
     }
 
@@ -81,8 +107,7 @@ public class RandomBallVariables {
      * @return a random Y coordinate
      */
     public int randomY() {
-        Random number2= new Random();
-        y= number2.nextInt( height);
+        y=topSide + random.nextInt( height - topSide);
         y=offscale(y, height, ballHeight);
          return y;
     }
@@ -94,8 +119,7 @@ public class RandomBallVariables {
     public double randomAngle(){
         int randomAngle;
         double angle;
-        Random number = new Random();
-        randomAngle = number.nextInt(360);
+        randomAngle = random.nextInt(360);
         //the angle has to be in radians if we are using sin or cos functions to determine movement
         angle= randomAngle * RADIANS;
 

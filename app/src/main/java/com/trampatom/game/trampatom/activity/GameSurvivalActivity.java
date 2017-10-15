@@ -25,6 +25,7 @@ import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.canvas.Background;
 import com.trampatom.game.trampatom.canvas.CanvasGameSurvival;
 import com.trampatom.game.trampatom.canvas.GameOver;
+import com.trampatom.game.trampatom.currency.AtomPool;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.Keys;
@@ -58,6 +59,8 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             int moveY = 1;
             double angle;
 
+            int blueAtoms;
+
 
     // ------------------- Ball type variables ------------------------------------------ \\
 
@@ -83,6 +86,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
     BallMovement ballMovement;
     Random randomNumber;
     Background stars;
+    AtomPool atomPool;
     SoundsAndEffects soundsAndEffects;
     SoundPool soundPool;
 
@@ -99,6 +103,8 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
     int[] negMoveX={1,1,1,1,1,1,1};
     int[] negMoveY={1,1,1,1,1,1,1};
     double[] angles= {0,0,0,0,0,0,0,0};
+    //for shop
+
 
 
     // ------------------- Game Variables ----------------------------------------------- \\
@@ -143,6 +149,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
 
     private void init() {
         //CLASSES
+        atomPool = new AtomPool(this);
             keys = new Keys();
             ballMovement = new BallMovement(width, height);
             randomNumber = new Random();
@@ -243,8 +250,11 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
                 gotLife = false;
                 ball = helpBall;
             }
-            else
-            gameover = true;
+            else {
+                remainingClickTime=0;
+                gameTimeAndScore.updateTimeBar(0);
+                gameover = true;
+            }
             }
 
         }
@@ -332,8 +342,10 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
                             //Every time the timer ticks reduce the progress bar a bit
                             //if a certain time passes and a positive ball isn't clicked, the game ends
                             remainingClickTime -= 50;
+                            if(!gameover)
                             gameTimeAndScore.updateTimeBar(remainingClickTime);
                             if(remainingClickTime <=0){
+                                gameTimeAndScore.updateTimeBar(0);
                                 //if we run out of time to click the ball, end the game
                                 gameover = true;
                             }
@@ -419,6 +431,8 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
 
     private void endGame(){
         if (gameover) {
+            gameTimeAndScore.updateTimeBar(0);
+            atomPool.setSingleAtomNumber(Keys.KEY_BLUE_CURRENCY,atomPool.getSingleAtomValue(-1)+blueAtoms);
             //if an event happens that changes gameover to true, end the game
             GameOver gameover = new GameOver(ourHolder,mCanvas);
             //play a sound indicating that the game is over
@@ -426,7 +440,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             // check if we got a new high score
             newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
             //display our score and if we got a new high score show a text to indicate that
-            gameTimeAndScore.updateTimeBar(0);
+
             gameover.gameOver(score, newHighScore);
             try {
                 //delay before finishing the game

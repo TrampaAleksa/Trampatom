@@ -33,11 +33,12 @@
 
     <dimen name="shop_category_categoryContainer_width">130dp</dimen>
     <dimen name="shop_category_categoryContainer_height">54dp</dimen>
-    <dimen name="shop_category_size_powerUp">38dp</dimen>
+    <dimen name="shop_category_size_powerUp_width">46dp</dimen>
+    <dimen name="shop_category_size_powerUp_height">42dp</dimen>
 
     <dimen name="shop_category_name_height">52dp</dimen>
-    <dimen name="shop_category_powerUp_marginEdge">12dp</dimen>
-    <dimen name="shop_category_powerUp_marginInner">6dp</dimen>
+    <dimen name="shop_category_powerUp_marginEdge">6dp</dimen>
+    <dimen name="shop_category_powerUp_marginInner">2dp</dimen>
 
     <dimen name="shop_category_frame_margin">14dp</dimen>
     <dimen name="shop_category_main_margin">8dp</dimen>

@@ -1,7 +1,5 @@
 package com.trampatom.game.trampatom.utils;
 
-import com.trampatom.game.trampatom.Model.PowerUpPool;
-
 /**
  * Class used for setting some initial ball stats based on passives
  */
@@ -36,7 +34,7 @@ public class PassivesManager {
                 break;
         }
         switch (flag2){
-            case Keys.FLAG_YELLOW_SLOW_DOWN_BALLS:
+            case Keys.FLAG_YELLOW_CHANCE_ATOM_DROP_BONUS:
 
                 break;
         }
@@ -54,11 +52,10 @@ public class PassivesManager {
      * @return an int value used to determine what type of power up we selected
      */
     public int checkCurrentFlagType(int flag) {
-//TODO Change return values to constants
         //if its an active power up/ lower than the key value of the first passive power up
         //active
         if(flag < Keys.FLAG_PURPLE_BIGGER_BALLS) {
-            if (flag == Keys.FLAG_RED_BIG_ENERGY_BONUS || flag == Keys.FLAG_GREEN_SMALL_ENERGY_BONUS || flag == Keys.FLAG_YELLOW_MORE_ENERGY_ON_START)
+            if (flag == Keys.FLAG_RED_BIG_ENERGY_BONUS || flag == Keys.FLAG_GREEN_SMALL_ENERGY_BONUS || flag == Keys.FLAG_YELLOW_RANDOM_EVENT_CHANCE)
                 //its energy related
                 return 1;
                 //its ball related
@@ -67,7 +64,7 @@ public class PassivesManager {
 
         //passive
         else {
-            if (flag == Keys.FLAG_YELLOW_SLOW_DOWN_BALLS || flag == Keys.FLAG_PURPLE_BIGGER_BALLS)
+            if (flag == Keys.FLAG_YELLOW_CHANCE_ATOM_DROP_BONUS || flag == Keys.FLAG_PURPLE_BIGGER_BALLS)
                 //its ball related
                 return 3;
                 // its energy related

@@ -28,7 +28,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int getHeight() {
         return height;
     }
-//screen width and height
+
+    public static void setWidth(int width) {
+        MainActivity.width = width;
+    }
+
+    public static void setHeight(int height) {
+        MainActivity.height = height;
+    }
+
+    //screen width and height
     public static int width;
     public static int height;
     //used for setting high score and seeing what game is selected
@@ -116,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.bSound:
                 if(soundOn){
-                    //TODO api <21 for drawable
                     //Mute and set sound button to "muted"
                     stopService(svc);
                     sound.setBackground(getDrawable(R.drawable.mutebuttonmuted));

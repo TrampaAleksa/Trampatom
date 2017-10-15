@@ -17,24 +17,23 @@
     <string name="description_red_freeze">Freezes the balls for a couple of seconds
     depending on how much you have upgraded it</string>
     <string name="description_red_energy_boost">Gives you a massive energy boost!</string>
-    <string name="description_red_limiting_Square">Limits the space at witch
-    the ball is able to move</string>
-    <string name="description_red_unknown4">Not finished yet</string>
+    <string name="description_red_limiting_Square">Next few balls will be the same type</string>
+    <string name="description_red_gravityPull">Coming soon</string>
 
     <string name="description_green_slow_balls">slows the balls down</string>
     <string name="description_green_energy_boost">Small boost :/!</string>
     <string name="description_green_increase_size">increases balls</string>
-    <string name="description_green_unknown4">Not finished yet</string>
+    <string name="description_green_unknown4">Coming soon</string>
 
     <string name="description_purple_bigger_balls">Makes your balls bigger</string>
-    <string name="description_purple_slow_decay">Eneeergy drooops down slooooweeer!</string>
-    <string name="description_purple_unknown3">Not finished Yet</string>
-    <string name="description_purple_unknown4">Not finished yet</string>
+    <string name="description_purple_slow_decay">Coming soon</string>
+    <string name="description_purple_unknown3">Coming soon</string>
+    <string name="description_purple_unknown4">Coming soon</string>
 
-    <string name="description_yellow_energy_on_start">Last longer with more energy</string>
-    <string name="description_yellow_slow_balls">slower ball movement</string>
-    <string name="description_yellow_unknown3">Not finished yet</string>
-    <string name="description_yellow_unknown4">Not finished yet</string>
+    <string name="description_yellow_chance_random_event">Coming soon</string>
+    <string name="description_yellow_chance_bonus_atom_drop">Chance for atom to drop more currency when clicked</string>
+    <string name="description_yellow_chance_limiting_Square">Coming soon</string>
+    <string name="description_yellow_chance_energy_refill">Chance for gaining an energy boost while playing the game</string>
 
              <!-- TITLE LAYOUT VARIABLES -->
     <string name="shop_atom_number_def_value">1000</string>

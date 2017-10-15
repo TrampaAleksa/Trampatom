@@ -44,6 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/shop_category_name_height"
 
+        android:gravity="center_horizontal"
         android:layout_toRightOf="@+id/rlCategoryContainer"
         android:layout_marginTop="1dp"
         >
@@ -51,9 +52,9 @@
 
         <ImageView
             android:id="@+id/ivPowerUp1"
-            android:background="@android:color/holo_red_light"
-            android:layout_width="@dimen/shop_category_size_powerUp"
-            android:layout_height="@dimen/shop_category_size_powerUp"
+            android:background="@drawable/power_up_red_freeze"
+            android:layout_width="@dimen/shop_category_size_powerUp_width"
+            android:layout_height="@dimen/shop_category_size_powerUp_height"
             android:layout_marginLeft="@dimen/shop_category_powerUp_marginEdge"
             android:layout_marginRight="@dimen/shop_category_powerUp_marginInner"
             android:layout_centerVertical="true"
@@ -61,9 +62,9 @@
 
         <ImageView
             android:id="@+id/ivPowerUp2"
-            android:background="@android:color/holo_red_light"
-            android:layout_width="@dimen/shop_category_size_powerUp"
-            android:layout_height="@dimen/shop_category_size_powerUp"
+            android:background="@drawable/power_up_red_boost"
+            android:layout_width="@dimen/shop_category_size_powerUp_width"
+            android:layout_height="@dimen/shop_category_size_powerUp_height"
 
             android:layout_marginLeft="@dimen/shop_category_powerUp_marginInner"
             android:layout_marginRight="@dimen/shop_category_powerUp_marginInner"
@@ -73,9 +74,9 @@
 
         <ImageView
             android:id="@+id/ivPowerUp3"
-            android:background="@android:color/holo_red_light"
-            android:layout_width="@dimen/shop_category_size_powerUp"
-            android:layout_height="@dimen/shop_category_size_powerUp"
+            android:background="@drawable/power_up_red_repeatance"
+            android:layout_width="@dimen/shop_category_size_powerUp_width"
+            android:layout_height="@dimen/shop_category_size_powerUp_height"
 
             android:layout_marginLeft="@dimen/shop_category_powerUp_marginInner"
             android:layout_marginRight="@dimen/shop_category_powerUp_marginInner"
@@ -85,9 +86,9 @@
 
         <ImageView
             android:id="@+id/ivPowerUp4"
-            android:background="@android:color/holo_red_light"
-            android:layout_width="@dimen/shop_category_size_powerUp"
-            android:layout_height="@dimen/shop_category_size_powerUp"
+            android:background="@drawable/power_up_red_gravity"
+            android:layout_width="@dimen/shop_category_size_powerUp_width"
+            android:layout_height="@dimen/shop_category_size_powerUp_height"
 
             android:layout_marginLeft="@dimen/shop_category_powerUp_marginInner"
             android:layout_marginRight="@dimen/shop_category_powerUp_marginInner"

@@ -2,7 +2,8 @@ package com.trampatom.game.trampatom.utils;
 
 
 /**
- * Important class used for storing every value that will not be changed during game runtime. Constants
+ * Important class used for storing every value that will be used during application runtime.
+ * We access this class to get constant values and to chance some of the values during runtime.
  */
 public class Keys {
 
@@ -14,8 +15,10 @@ public class Keys {
         public int GAME_TIME = 60000;
         // starting energy and the speed at witch the energy decreases
         public int STARTING_ENERGY = 5000;
-        public int ENERGY_DECREASE = 30;
+        public static final int ENERGY_SPEED_UP_TICKS = 4;
+        public int ENERGY_DECREASE = 1;
         public int DEFAULT_BALL_SPEED = 8;
+        public static final int ATOM_DROP_INITIAL_VALUE = 1;
         //balls size correction
         public int BALL_SIZE_ADAPT = 18;
 
@@ -28,14 +31,35 @@ public class Keys {
 
     // -------------------------------------- Power Ups ------------------------------------ \\
 
+    public static final int NUMBER_OF_SELECTED_POWER_UPS =4;
         // default coolDown of the power up that has a coolDown in seconds
-        public int POWER_UP_COOLDOWN = 3;
+        public int POWER_UP_COOLDOWN = 5;
+        public int POWER_UP_DURATION = 2;
+    //used to determine energy increase with those power ups
+        public static final int POWER_UPS_ENERGY_INCREASE_BASE_VALUE = 100;
         //determines how much will the balls size be increased if we use the active power up
     public int POWER_UP_BALL_SIZE_INCREASE = 30;
         //determines by how much will the energy level increase if we use the passive for it
     public int PASSIVE_STARTING_ENERGY_INCREASE = 1000;
         // how many times will the next ball be the same type if we used a power up for setting same type next few balls
     public int POWER_UP_SAME_TYPE_NEXT_BALL = 0;
+        //determines the % chance of a passive power up event occurring
+    public static final int MAX_CHANCE_FOR_EVENT = 100;
+    public static final int TICKS_BEFORE_EVENT_TRIGGER_CHANCE = 5;
+    public static final int TICKER_STARTING_VALUE = 0;
+
+    public static final int ENERGY_CHANCE_EVENT_BONUS = 1200;
+
+    public static final int ATOM_DROP_VALUE_INCREASE = 5;
+
+    public boolean POWER_UP_LIMITING_SQUARE_ACTIVE = false;
+    public int POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS = 3;
+    public static final int POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH = 10;
+    public static final int POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT = 10;
+
+
+
+
 
 
     // ----------------------------------------- Ball Types ------------------------------------------ \\
@@ -97,6 +121,11 @@ public class Keys {
 
             // -------------------------- Main currency variables ------------------------ \\
 
+        public static final int KEY_RED_TRADE_INDEX = 0;
+        public static final int KEY_GREEN_TRADE_INDEX = 1;
+        public static final int KEY_YELLOW_TRADE_INDEX = 2;
+        public static final int KEY_PURPLE_TRADE_INDEX = 3;
+
         //keys for getting and setting currency with shared preferences
         public static final String KEY_BLUE_CURRENCY = "blue currency";
         public static final String KEY_RED_CURRENCY = "red currency";
@@ -105,6 +134,7 @@ public class Keys {
         public static final String KEY_PURPLE_CURRENCY = "purple currency";
 
         //keys for getting a specific category for shop purposes
+        public static final int CATEGORY_BLUE = 0;
         public static final int CATEGORY_RED = 1;
         public static final int CATEGORY_GREEN = 2;
         public static final int CATEGORY_YELLOW = 3;
@@ -141,23 +171,25 @@ public class Keys {
         public static final int FLAG_PURPLE_UNKNOWN3 = 11;
         public static final int FLAG_PURPLE_UNKNOWN4 = 12;
         //yellow
-        public static final int FLAG_YELLOW_MORE_ENERGY_ON_START = 13;
-        public static final int FLAG_YELLOW_SLOW_DOWN_BALLS = 14;
-        public static final int FLAG_YELLOW_UNKNOWN3 = 15;
-        public static final int FLAG_YELLOW_UNKNOWN4 = 16;
+        public static final int FLAG_YELLOW_RANDOM_EVENT_CHANCE = 13;
+        public static final int FLAG_YELLOW_CHANCE_ATOM_DROP_BONUS = 14;
+        public static final int FLAG_YELLOW_CHANCE_LIMITING_SQUARE = 15;
+        public static final int FLAG_YELLOW_CHANCE_ENERGY_FILL = 16;
 
         //used to determine what the power up does
         // and do something in game based on that
         public static final int FLAG_PROGRESS_BAR_POWER_UP = 1;
         public static final int FLAG_BALL_POWER_UP = 2;
 
+        public static final int FLAG_LIMITING_SQUARE_ACTIVE = 0;
+
 
     //-------------------- POWER UP INDEXES ------------------------\\
 
         public static final int POWER_UP_INDEX_ACIVE_COOLDOWN = 1;
         public static final int POWER_UP_INDEX_ACIVE_CONSUMABLE = 0;
-        public static final int POWER_UP_INDEX_PASSIVE_EFFECT = 2;
-        public static final int POWER_UP_INDEX_PASSIVE_CHANCE = 3;
+        public static final int POWER_UP_INDEX_PASSIVE_EFFECT = 3;
+        public static final int POWER_UP_INDEX_PASSIVE_CHANCE = 2;
 
 
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -402,7 +403,18 @@
                 android:layout_marginRight="@dimen/shop_selected_image_marginRight"
                 android:layout_below="@+id/frameSelectedPowerUp"
                 />
+            <!-- android:background="@android:drawable/checkbox_off_background" -->
+            <CheckBox
+                android:id="@+id/ibSelectedStatus"
+                android:layout_width="30dp"
 
+
+                android:layout_height="30dp"
+                android:background="@android:drawable/checkbox_off_background"
+                android:layout_alignBottom="@+id/ivSelectedPowerUp"
+                android:layout_alignRight="@+id/ivSelectedPowerUp"
+
+                android:layout_toLeftOf="@+id/tvDescription" />
             <TextView
                 android:id="@+id/tvPowerUpTitle"
                 android:layout_width="@dimen/shop_selected_powerUp_title_width"

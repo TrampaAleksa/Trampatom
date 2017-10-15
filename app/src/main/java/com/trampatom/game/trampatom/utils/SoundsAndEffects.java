@@ -68,10 +68,10 @@ public class SoundsAndEffects {
      */
     public SoundPool getShopSounds(){
 
-        soundPool.load(context, soundEnteredShopId, 1);
-        soundPool.load(context, soundInvalidActionId, 1);
-        soundPool.load(context, soundBoughtShopItemId, 1);
-        soundPool.load(context, soundSelectedPowerUp, 1);
+        soundEnteredShopId= soundPool.load(context, soundEnteredShopId, 1);
+        soundInvalidActionId= soundPool.load(context, soundInvalidActionId, 1);
+        soundBoughtShopItemId = soundPool.load(context, soundBoughtShopItemId, 1);
+        soundSelectedPowerUp = soundPool.load(context, soundSelectedPowerUp, 1);
 
         return soundPool;
     }

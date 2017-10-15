@@ -90,7 +90,7 @@ public class PowerUps {
 
             case Keys.FLAG_RED_SELECTIVE_TYPE:
                 //get the level of the power up and set the next "current level" balls to be the same type
-                keys.POWER_UP_SAME_TYPE_NEXT_BALL = powerUp[Keys.POWER_UP_INDEX_ACIVE_CONSUMABLE].getCurrentLevel();
+                keys.POWER_UP_SAME_TYPE_NEXT_BALL = powerUp[Keys.POWER_UP_INDEX_ACIVE_CONSUMABLE].getCurrentLevel()+1;
                 ballObject.setActiveChangesType(true);
 
                 break;
@@ -110,8 +110,8 @@ public class PowerUps {
 
                 break;
             case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
-                ballObject.setActiveChangesSpeed(true);
-                ballObject.setBallSpeed(ballObject.getBallSpeed() - powerUp[1].getCurrentLevel());
+               /* ballObject.setActiveChangesSpeed(true);
+                ballObject.setBallSpeed(ballObject.getBallSpeed() - powerUp[1].getCurrentLevel());*/
 
                 break;
 
@@ -146,7 +146,7 @@ public class PowerUps {
 
             case Keys.FLAG_RED_SELECTIVE_TYPE:
                 //get the level of the power up and set the next "current level" balls to be the same type
-                keys.POWER_UP_SAME_TYPE_NEXT_BALL = powerUp[Keys.POWER_UP_INDEX_ACIVE_CONSUMABLE].getCurrentLevel();
+                keys.POWER_UP_SAME_TYPE_NEXT_BALL = powerUp[Keys.POWER_UP_INDEX_ACIVE_CONSUMABLE].getCurrentLevel()+1;
                 for (i = 0; i < arraySize; i++) {
                     balls[i].setActiveChangesType(true);
                 }
@@ -184,8 +184,8 @@ public class PowerUps {
                 }
 
 
-            case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
-                if (arraySize == keys.PURPLE_BALL_NUMBER) {
+            case Keys.FLAG_GREEN_SLOW_DOWN_BALLS: //RADI ALI ISKLJUCENO JE , nebalansirano
+               /* if (arraySize == keys.PURPLE_BALL_NUMBER) {
                     for (i = 0; i < arraySize; i++) {
                         balls[i].setActiveChangesSpeed(true);
                         balls[i].setBallSpeed(balls[i].getBallSpeed()  - powerUp[1].getCurrentLevel());
@@ -198,7 +198,8 @@ public class PowerUps {
                         balls[i].setBallSpeed(balls[i].getBallSpeed()  - powerUp[1].getCurrentLevel());
                     }
                     return balls;
-                }
+                }*/
+               break;
 
             case Keys.FLAG_GREEN_UNKNOWN2:
 
@@ -249,9 +250,9 @@ public class PowerUps {
                 break;
             case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
                 // yellow ball's speed upon getting a new ball isn't reset if the power up is active, so set this to false
-                BallHandler.yellowBallSpeedChangeActive = false;
+                /*BallHandler.yellowBallSpeedChangeActive = false;
                 ballObject.setActiveChangesSpeed(false);
-                ballObject.setBallSpeed(ballObject.getBallSpeed() + powerUp[1].getCurrentLevel());
+                ballObject.setBallSpeed(ballObject.getBallSpeed() + powerUp[1].getCurrentLevel());*/
 
                 break;
 
@@ -294,7 +295,7 @@ public class PowerUps {
                 break;
 
             //GREEN
-            case Keys.FLAG_GREEN_INCREASE_BALL_SIZE:
+            case Keys.FLAG_GREEN_INCREASE_BALL_SIZE: //RADI ALI BALANS
 
                 //reset every ball's size to its previous size
                 if (arraySize == keys.PURPLE_BALL_NUMBER) {
@@ -319,8 +320,8 @@ public class PowerUps {
                 }
 
 
-            case Keys.FLAG_GREEN_SLOW_DOWN_BALLS:
-                if (arraySize == keys.PURPLE_BALL_NUMBER) {
+            case Keys.FLAG_GREEN_SLOW_DOWN_BALLS: //RADI ALI BALANS
+               /* if (arraySize == keys.PURPLE_BALL_NUMBER) {
                     for (i = 0; i < arraySize; i++) {
                         balls[i].setActiveChangesSpeed(false);
                         balls[i].setBallSpeed(balls[i].getBallSpeed()  + powerUp[1].getCurrentLevel());
@@ -333,7 +334,8 @@ public class PowerUps {
                         balls[i].setBallSpeed(balls[i].getBallSpeed() + powerUp[1].getCurrentLevel());
                     }
                     return balls;
-                }
+                }*/
+               break;
 
             case Keys.FLAG_GREEN_UNKNOWN2:
 
@@ -389,10 +391,11 @@ public class PowerUps {
         switch (flag) {
 
             case Keys.FLAG_GREEN_SMALL_ENERGY_BONUS:
-                energyValue += 500;
+                energyValue += Keys.POWER_UPS_ENERGY_INCREASE_BASE_VALUE*5 + powerUp[Keys.POWER_UP_INDEX_ACIVE_COOLDOWN].getCurrentLevel()*Keys.POWER_UPS_ENERGY_INCREASE_BASE_VALUE;
                 break;
             case Keys.FLAG_RED_BIG_ENERGY_BONUS:
-                energyValue += 2000;
+                energyValue += Keys.POWER_UPS_ENERGY_INCREASE_BASE_VALUE*25 + powerUp[Keys.POWER_UP_INDEX_ACIVE_COOLDOWN].getCurrentLevel()*Keys.POWER_UPS_ENERGY_INCREASE_BASE_VALUE*5;
+
                 break;
         }
 
@@ -414,9 +417,10 @@ public class PowerUps {
         //returns the value that will reduce the amount of energy we lose every second by a certain amount
             case Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY:
                 int energyDecreaseReduceAmount = 200;
-                return energyDecreaseReduceAmount;
+                //do nothing. Disabled power up for now
+                return 0;
 
-            case Keys.FLAG_YELLOW_MORE_ENERGY_ON_START:
+            case Keys.FLAG_YELLOW_RANDOM_EVENT_CHANCE:
                 //changes the max energy we can have
                 GameTimeAndScore gameTimeAndScore= new GameTimeAndScore(progressBar);
                 currentEnergy = gameTimeAndScore.increaseEnergyCapacity(keys.PASSIVE_STARTING_ENERGY_INCREASE, currentEnergy);

@@ -102,31 +102,70 @@ public class AtomPool {
     }
 
     /**
+     * Method used to save into shared preferences the current atom array, updating the old one. Called after we changed the atm number
+     * in some way and need to save it for the next time we open the shop.
+     * @param atomArray the current atom array containing the blue,red,green,yellow and purple atoms.
+     */
+    public void updateAtoms(int[] atomArray){
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(keys.KEY_BLUE_CURRENCY, atomArray[Keys.CATEGORY_BLUE]);
+        editor.putInt(keys.KEY_RED_CURRENCY, atomArray[Keys.CATEGORY_RED]);
+        editor.putInt(keys.KEY_GREEN_CURRENCY, atomArray[Keys.CATEGORY_GREEN]);
+        editor.putInt(keys.KEY_YELLOW_CURRENCY, atomArray[Keys.CATEGORY_YELLOW]);
+        editor.putInt(keys.KEY_PURPLE_CURRENCY, atomArray[Keys.CATEGORY_PURPLE]);
+        editor.apply();
+    }
+
+
+
+
+    /**
      * Method used to trade blue atoms for any other atom type depending on what category we selected
      * @param selectedCategory the category we will trade blues into
      */
     public int[] transferBlueAtoms(int selectedCategory, int[] atomPool){
 
         // if we have blue atoms, trade them
-        if(atomPool[0]>0) {
-            atomPool[0]--;
+        if(atomPool[0]>20 ) {
+            atomPool[0]= atomPool[0]-20;
             // 0 - red ; 1 - green ; 2 - yellow ; 3 - purple
             switch (selectedCategory) {
 
                 case 0:
-                    atomPool[1]++;
+                    atomPool[1]+=20;
                     break;
                 case 1:
-                    atomPool[2]++;
+                    atomPool[2]+=20;
                     break;
                 case 2:
-                    atomPool[3]++;
+                    atomPool[3]+=20;
                     break;
                 case 3:
-                    atomPool[4]++;
+                    atomPool[4]+=20;
                     break;
             }
         }
+        else if(atomPool[0]>0 && atomPool[0]<=20){
+
+            switch (selectedCategory) {
+
+                case 0:
+                    atomPool[1]+=atomPool[0];
+                    break;
+                case 1:
+                    atomPool[2]+=atomPool[0];
+                    break;
+                case 2:
+                    atomPool[3]+=atomPool[0];
+                    break;
+                case 3:
+                    atomPool[4]+=atomPool[0];
+                    break;
+            }
+            atomPool[0]= 0;
+        }
+
         return atomPool;
     }
 

@@ -12,7 +12,6 @@ public class GameTimeAndScore {
     //in survival game this is the interval at witch we have to click the positive ball in milliseconds
     //Must be equal to SURVIVAL CLICK TIMER in Keys class
     public static final int MAX_BALL_CLICK_TIME = 5000;
-    //TODO remove unneeded methods
     private static final int BALL_GOLD_DURATION = 3;
     private ProgressBar energyProgress;
 
