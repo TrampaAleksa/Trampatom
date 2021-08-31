@@ -220,8 +220,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         // SOUNDS
             //get a sound pool instance with all the required sounds
             //sound id's are located inside SoundsAndEffects object
-            soundsAndEffects = new SoundsAndEffects(this);
-            soundsAndEffects.getGameClassicSounds();
+            soundsAndEffects = new SoundsAndEffects(this).getGameClassicSounds();
 
         //GAME VIEWS
         //surface view

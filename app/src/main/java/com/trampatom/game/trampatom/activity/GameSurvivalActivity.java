@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.ClickedABall;
@@ -88,8 +89,6 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
     Background stars;
     AtomPool atomPool;
     SoundsAndEffects soundsAndEffects;
-    SoundPool soundPool;
-
 
     // ------------------- Arrays ------------------------------------------------------- \\
 
@@ -155,9 +154,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             randomNumber = new Random();
 
         //SOUND
-            soundsAndEffects = new SoundsAndEffects(this);
-            soundPool = soundsAndEffects.getGameSurvivalSounds();
-
+            soundsAndEffects = new SoundsAndEffects(this).getGameSurvivalSounds();
         //SURFACE VIEW
             mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
             ourHolder = mSurfaceView.getHolder();
@@ -230,7 +227,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             angle =  randomCoordinate.randomAngle();
             x = randomCoordinate.randomX();
             y = randomCoordinate.randomY();
-            soundPool.play(soundsAndEffects.soundClickedId,1,1,0,0,1);
+            playBallClickedSound(null);
         }
     }
 
@@ -243,7 +240,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
         //check if you clicked any negative ball
         for(j=0; j<BALL_NEGATIVE_NUMBER; j++){
         if(clickedABall.negativeBallClicked(XY[j], XY[j+BALL_NEGATIVE_NUMBER], clickedX, clickedY, negWidth[j], negHeight[j])) {
-            soundPool.play(soundsAndEffects.soundClickedId,1,1,0,0,1);
+            playBallClickedSound(null);
             //if you had a life lose it, but don't lose the game
             if(gotLife) {
                 //lose a life and set the ball back to blue signalling that we lost a life
@@ -273,7 +270,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             //make the blue ball appear green signalling that we have a spare life
             helpBall = ball;
             ball = lifeBall;
-            soundPool.play(soundsAndEffects.soundClickedId,1,1,0,0,1);
+            playBallClickedSound(null);
         }
     }
 
@@ -436,7 +433,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             //if an event happens that changes gameover to true, end the game
             GameOver gameover = new GameOver(ourHolder,mCanvas);
             //play a sound indicating that the game is over
-            soundPool.play(soundsAndEffects.soundGameOverId,1,1,0,0,1);
+            soundsAndEffects.play(soundsAndEffects.soundGameOverId);
             // check if we got a new high score
             newHighScore=highScore.isHighScore(HighScore.GAME_THREE_HIGH_SCORE_KEY, score);
             //display our score and if we got a new high score show a text to indicate that
@@ -450,6 +447,12 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             }
             finish();
         }
+    }
+
+    //----------------------- Refactor and Helper Methods -------------------------------- \\
+
+    private void playBallClickedSound(Ball ball){
+        soundsAndEffects.playBallClickedSound(ball);
     }
 
 
@@ -490,7 +493,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        soundsAndEffects.releaseSoundPool(soundPool);
+        soundsAndEffects.releaseSoundPool();
     }
 }
 

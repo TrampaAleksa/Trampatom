@@ -64,14 +64,14 @@ public class SoundsAndEffects {
      * Fills a sound pool with the required sounds
      * @return a sound pool object containing loaded sounds
      */
-    public SoundPool getGameClassicSounds(){
+    public SoundsAndEffects getGameClassicSounds(){
 
         soundClickedId = soundPool.load(context, soundClickedId, 1);
         soundGameOverId = soundPool.load(context, soundGameOverId, 1);
         soundNearlyGameOverId = soundPool.load(context, soundNearlyGameOverId, 1);
         soundPowerUpUsedId = soundPool.load(context, soundPowerUpUsedId, 1);
 
-        return soundPool;
+        return this;
     }
 
     /**
@@ -79,14 +79,14 @@ public class SoundsAndEffects {
      * Fills a sound pool with the required sounds
      * @return a sound pool object containing loaded sounds
      */
-    public SoundPool getShopSounds(){
+    public SoundsAndEffects getShopSounds(){
 
         soundEnteredShopId= soundPool.load(context, soundEnteredShopId, 1);
         soundInvalidActionId= soundPool.load(context, soundInvalidActionId, 1);
         soundBoughtShopItemId = soundPool.load(context, soundBoughtShopItemId, 1);
         soundSelectedPowerUp = soundPool.load(context, soundSelectedPowerUp, 1);
 
-        return soundPool;
+        return this;
     }
 
     /**
@@ -94,12 +94,11 @@ public class SoundsAndEffects {
      * Fills a sound pool with the required sounds
      * @return a sound pool object containing loaded sounds
      */
-    public SoundPool getGameSurvivalSounds(){
+    public SoundsAndEffects getGameSurvivalSounds(){
 
         soundClickedId =  soundPool.load(context, soundClickedId, 1);
         soundGameOverId = soundPool.load(context, soundGameOverId, 1);
-
-        return soundPool;
+        return this;
     }
 
 

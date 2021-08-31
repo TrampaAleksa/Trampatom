@@ -57,7 +57,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     AtomPool atomPool;
     ShopHandler shopHandler;
     SoundsAndEffects soundsAndEffects;
-    SoundPool soundPool;
     PowerUpPool[] powerUp;
     List<PowerUpPool> powerUpPool;
     int[] currentlySelectedPowerUpsIds = {0,0,0,0};
@@ -123,8 +122,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //SOUNDS
-        soundsAndEffects = new SoundsAndEffects(this);
-        soundPool = soundsAndEffects.getShopSounds();
+        soundsAndEffects = new SoundsAndEffects(this).getShopSounds();
         //soundPool.play(soundsAndEffects.soundEnteredShopId,1,1,0,0,1);
 
         //FUNCTIONALITY
@@ -276,7 +274,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                 if(powerUp[selectedPowerUpIndex].getCurrentLevel()<5
                         && (powerUp[selectedPowerUpIndex].getBaseCost()*powerUp[selectedPowerUpIndex].getCurrentLevel()+1)
                         <atomArray[category]) {
-                    soundPool.play(soundsAndEffects.soundBoughtShopItemId,1,1,0,0,1);
+                    soundsAndEffects.play(soundsAndEffects.soundBoughtShopItemId);
                     //If we havent maxed the level and if we have enough atoms, buy the power up
                     atomArray[category]-= powerUp[selectedPowerUpIndex].getCurrentLevel()*powerUp[selectedPowerUpIndex].getBaseCost();
                    // atomArray[category]--;
@@ -301,7 +299,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                     ibSelectedStatus.setChecked(true);
                     currentlySelectedPowerUpsIds[selectedCategory] = powerUp[selectedPowerUpIndex].getId();
                     shopHandler.saveSelectedPowerUps(powerUp[selectedPowerUpIndex]);
-                    soundPool.play(soundsAndEffects.soundSelectedPowerUp,1,1,0,0,1);
+                    soundsAndEffects.play(soundsAndEffects.soundSelectedPowerUp);
 
                 }
                 else ibSelectedStatus.setChecked(true);
@@ -388,7 +386,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        soundsAndEffects.releaseSoundPool(soundPool);
+        soundsAndEffects.releaseSoundPool();
     }
 
     @Override
