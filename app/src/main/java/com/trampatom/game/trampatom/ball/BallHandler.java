@@ -95,6 +95,19 @@ public class BallHandler {
     }
 
     /**
+     * Since we will manipulate with ball types during the game, we have to pass every bitmap so that we can set it inside the handler
+     * Theese bitmaps will later be used to change the balls sizes and colors depending on a power up or type of the ball
+     */
+    public void parseBallBitmaps(BallBitmaps ballBitmaps){
+        this.redBall = ballBitmaps.getRedBall();
+        this.blueBall = ballBitmaps.getBlueBall();
+        this.greenBall = ballBitmaps.getGreenBall();
+        this.yellowBall = ballBitmaps.getYellowBall();
+        this.purpleBall = ballBitmaps.getPurpleBall();
+        this.waveBall = ballBitmaps.getWaveBall();
+    }
+
+    /**
      * Method that is used to set the default values of balls, like width, height or speed, based on selected passives
      * <p>
      *     NOTE: This method is used to change default Ball attributes, for passives that do not affect the ball, use other methods.

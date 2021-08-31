@@ -70,9 +70,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //coordinates of the currently drawn ball, coordinates where we clicked
                 int  clickedX;
                 int  clickedY;
-        //Balls and Background Bitmaps
-                Bitmap blueBall, redBall, greenBall, yellowBall, purpleBall;
-
 
     // ------------------- Ball type variables ------------------------------------------ \\
 
@@ -121,9 +118,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         Ball[] purpleBallObjects = {null, null, null};
     //array for moving the ball
             int i;
-        //array for wave balls
-            Bitmap[] waveBall;
-
 
     // ------------------- Game Variables ----------------------------------------------- \\
 
@@ -303,13 +297,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         ballBitmaps.setBallWidth(ballWidth);
         ballBitmaps.setBallHeight(ballHeight);
         ballBitmaps.initiateBitmaps();
-
-        blueBall = ballBitmaps.getBlueBall();
-        redBall = ballBitmaps.getRedBall();
-        greenBall = ballBitmaps.getGreenBall();
-        yellowBall = ballBitmaps.getYellowBall();
-        purpleBall = ballBitmaps.getPurpleBall();
-        waveBall = ballBitmaps.getWaveBall();
     }
 
     // --------------------------- Main Game Loop ------------------------------- \\
@@ -524,7 +511,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //get every ball object when starting a game
             ballHandler = new BallHandler(randomCoordinate, keys, getBaseBallWidth(), getBaseBallHeight());
-            ballHandler.parseBallBitmaps(redBall, blueBall, greenBall , yellowBall , purpleBall, waveBall);
+            ballHandler.parseBallBitmaps(ballBitmaps);
             ballHandler.parseChancePassivesAndEventsObject(chancePassivesAndEvents);
         //set the ball attributes if the passives we selected affect the balls
             if(flagTypePassive1== 3 || flagTypePassive2 == 3)
@@ -537,10 +524,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //the colors of purple and wave don't have to be be changed so initiate them once
         for(i=0; i<numberOfWaveAtoms(); i++){
-            multipleBalls[i].setBallColor(waveBall[i]);
+            multipleBalls[i].setBallColor(ballBitmaps.getWaveBall()[i]);
         }
         for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
-            purpleBallObjects[i].setBallColor(purpleBall);
+            purpleBallObjects[i].setBallColor(ballBitmaps.getPurpleBall());
         }
         getNewBall();
 
