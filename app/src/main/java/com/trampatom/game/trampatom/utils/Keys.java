@@ -99,7 +99,7 @@ public class Keys {
 
             // ------------------------------- Wave balls --------------------------------- \\
 
-                public int WAVE_BALL_NUMBER = 7;
+                public static final int WAVE_BALL_NUMBER = 7;
 
 
 

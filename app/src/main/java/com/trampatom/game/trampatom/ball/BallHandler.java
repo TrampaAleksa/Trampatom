@@ -62,7 +62,7 @@ public class BallHandler {
         for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
             purpleBalls[i] = new Ball();
         }
-        for(i=0; i< keys.WAVE_BALL_NUMBER; i++){
+        for(i=0; i< numberOfWaveAtoms(); i++){
             waveBalls[i] = new Ball();
         }
     }
@@ -129,7 +129,7 @@ public class BallHandler {
         yellowBall = Bitmap.createScaledBitmap(yellowBall,ballWidth,ballHeight,true);
         blueBall = Bitmap.createScaledBitmap(blueBall,ballWidth,ballHeight,true);
         purpleBall = Bitmap.createScaledBitmap(purpleBall, ballWidth, ballHeight, true);
-        for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
+        for(i=0; i<numberOfWaveAtoms(); i++){
             waveBall[i]=  Bitmap.createScaledBitmap(waveBall[i], ballWidth, ballHeight, true);
         }
     }
@@ -290,7 +290,7 @@ public class BallHandler {
                 }
                 return purpleBalls;
             }
-            else if(arraySize == keys.WAVE_BALL_NUMBER){
+            else if(arraySize == numberOfWaveAtoms()){
                 waveBalls[0].setY(ballHeight/3);
                 waveBalls[0].setX(0);
                 waveBalls[0].setBallWidth(ballWidth);
@@ -416,7 +416,7 @@ public class BallHandler {
                 }
             }
         }
-        else if(arraySize == keys.WAVE_BALL_NUMBER){
+        else if(arraySize == numberOfWaveAtoms()){
             balls[0].setY(ballHeight/3);
             balls[0].setX(0);
             balls[0].setMoveX(1);
@@ -593,7 +593,6 @@ public class BallHandler {
 
     private Ball[] setBallArrayColorByType (int currentBallType, Ball[] balls){
 
-
         // PURPLE BALL
         if(currentBallType == BALL_PURPLE){
             for(i=0; i<keys.PURPLE_BALL_NUMBER; i++) {
@@ -603,12 +602,10 @@ public class BallHandler {
 
         // WAVE BALL
         if(currentBallType == BALL_WAVE){
-            for(i=0; i<keys.WAVE_BALL_NUMBER; i++) {
+            for(i=0; i<numberOfWaveAtoms(); i++) {
                 balls[i].setBallColor(waveBall[i]);
             }
         }
-
-
 
 
         return balls;
@@ -616,12 +613,17 @@ public class BallHandler {
 
     private Ball[] setWaveSpeed(Ball[] balls){
 
-            for(int i=0; i<keys.WAVE_BALL_NUMBER;i++){
+            for(int i=0; i<numberOfWaveAtoms();i++){
 
                 balls[i].setBallSpeed(keys.DEFAULT_BALL_SPEED+i);
 
             }
 
             return balls;
+    }
+
+
+    private int numberOfWaveAtoms(){
+        return Keys.WAVE_BALL_NUMBER;
     }
 }

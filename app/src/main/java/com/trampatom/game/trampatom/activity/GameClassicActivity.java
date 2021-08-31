@@ -79,7 +79,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         int currentBallType;
         //used for yellow ball;
                 int timesClicked;
-                int yellowBallSpeed;
                 boolean changedSize=false;
         //used for purple ball
             //initially there is only one purple ball
@@ -88,7 +87,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 int timesClickedPurple=0;
             //used to determine how many and what ball to draw on screen
                 boolean[] ballClicked = {false,false,false};
-                boolean originalBallClicked= false; boolean secondBallClicked=false; boolean thirdBallClicked=false;
         //used for wave ball
                 int currentWaveBall = 0;
 
@@ -334,7 +332,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             greenBall = Bitmap.createScaledBitmap(greenBall, ballWidth, ballHeight, true);
             yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
             purpleBall = Bitmap.createScaledBitmap(purpleBall, ballWidth, ballHeight, true);
-            for (i = 0; i < keys.WAVE_BALL_NUMBER; i++) {
+            for (i = 0; i < numberOfWaveAtoms(); i++) {
                 waveBall[i] = Bitmap.createScaledBitmap(waveBall[i], ballWidth, ballHeight, true);
             }
     }
@@ -461,7 +459,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
                             selectedPowerUp1, keys.PURPLE_BALL_NUMBER, currentBallType);
                     multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                            selectedPowerUp1, keys.WAVE_BALL_NUMBER, currentBallType);
+                            selectedPowerUp1, numberOfWaveAtoms(), currentBallType);
                 }
             }
 
@@ -486,7 +484,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
                             selectedPowerUp2, keys.PURPLE_BALL_NUMBER, currentBallType);
                     multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                            selectedPowerUp2, keys.WAVE_BALL_NUMBER, currentBallType);
+                            selectedPowerUp2, numberOfWaveAtoms(), currentBallType);
                 }
             }
         }
@@ -561,10 +559,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //get the ball objects for the first time with the default attributes
             ballObject = ballHandler.getFirstBallObject();
             purpleBallObjects = ballHandler.getFirstBallObjectArray(keys.PURPLE_BALL_NUMBER);
-            multipleBalls = ballHandler.getFirstBallObjectArray(keys.WAVE_BALL_NUMBER);
+            multipleBalls = ballHandler.getFirstBallObjectArray(numberOfWaveAtoms());
 
         //the colors of purple and wave don't have to be be changed so initiate them once
-        for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
+        for(i=0; i<numberOfWaveAtoms(); i++){
             multipleBalls[i].setBallColor(waveBall[i]);
         }
         for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
@@ -682,7 +680,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //draw and move number of balls equal to the difference of total balls and the balls we clicked
         //current wave ball is the ball we should click, move every next ball after the current ball
         //every ball before the current ball will not be moved or drawn
-        for(int i=currentWaveBall; i<keys.WAVE_BALL_NUMBER; i++){
+        for(int i = currentWaveBall; i< numberOfWaveAtoms(); i++){
             multipleBalls[i] = ballMovement.moveWave(multipleBalls[i]);
         }
     }
@@ -765,7 +763,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     if(flagTypePowerUp1 == Keys.FLAG_BALL_POWER_UP) {
                         ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, selectedPowerUp1);
                         purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
-                        multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp1, keys.WAVE_BALL_NUMBER);
+                        multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp1, numberOfWaveAtoms());
                         //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
                         resettedPowerUp = false;
                         onCooldown = true;
@@ -786,7 +784,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP) {
                         ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, selectedPowerUp2);
                         purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
-                        multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp2, keys.WAVE_BALL_NUMBER);
+                        multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp2, numberOfWaveAtoms());
                         timeConsumable = true;
                         usedConsumable = true;
                     }
@@ -1022,7 +1020,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             // next ball should be clicked
             currentWaveBall ++;
 
-            if(currentWaveBall == keys.WAVE_BALL_NUMBER){
+            if(currentWaveBall == numberOfWaveAtoms()){
                 currentWaveBall = 0;
                 // to round up the gain; with *10 you gain 420 score total
                 score -=20;
@@ -1100,7 +1098,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //WAVE BALL
         if(currentBallType == BALL_WAVE){
-            multipleBalls = ballHandler.getNewBallObjectArray(keys.WAVE_BALL_NUMBER,multipleBalls, currentBallType);
+            multipleBalls = ballHandler.getNewBallObjectArray(numberOfWaveAtoms(),multipleBalls, currentBallType);
             currentWaveBall = 0;
         }
     }
@@ -1109,6 +1107,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     private void playBallClickedSound(Ball ball){
         soundsAndEffects.playBallClickedSound(ball);
+    }
+    private int numberOfWaveAtoms() {
+        return Keys.WAVE_BALL_NUMBER;
     }
 
 
@@ -1157,7 +1158,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             greenBall=null;
             yellowBall.recycle();
             yellowBall=null;
-            for(i=0; i<keys.WAVE_BALL_NUMBER; i++){
+            for(i=0; i<numberOfWaveAtoms(); i++){
                 waveBall[i].recycle();
                 waveBall[i] = null;
             }
