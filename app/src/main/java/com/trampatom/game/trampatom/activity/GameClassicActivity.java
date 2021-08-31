@@ -1123,9 +1123,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             balls[i].setSoundId(soundsAndEffects.soundClickedId);
         }
     }
-
     private void playBallClickedSound(Ball ball){
-        soundsAndEffects.play(ball.getSoundId());
+        soundsAndEffects.playBallClickedSound(ball);
     }
 
 

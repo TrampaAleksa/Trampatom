@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 
+import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.R;
 
 /**
@@ -52,6 +53,9 @@ public class SoundsAndEffects {
     public void play(int soundId, int priority){
         if (soundPool == null) return;
         soundPool.play(soundId, 1,1,priority,0,1);
+    }
+    public void playBallClickedSound(Ball ball){
+        play(soundClickedId);
     }
 
 
