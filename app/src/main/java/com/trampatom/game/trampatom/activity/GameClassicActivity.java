@@ -1,7 +1,6 @@
 package com.trampatom.game.trampatom.activity;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
@@ -113,6 +112,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         PowerUpPool[] powerUp= { null , null, null, null};
         PassivesManager passivesManager;
         ChancePassivesAndEvents chancePassivesAndEvents;
+        BallBitmaps ballBitmaps;
 
 
     // ------------------- Arrays ------------------------------------------------------- \\
@@ -130,8 +130,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //width and height of the canvas
             int width, height;
-        //every ball should have the same width and height, but we can change this if needed
-            static int ballWidth, ballHeight;
         //used for displaying the score and setting new highScore at the end of the game
             int score=0, previousHighScore;
         //used to determine how long we will play
@@ -272,8 +270,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();
         //set and resize all the bitmaps
-        initiateBallSize();
-        initiateBitmaps(ballWidth, ballHeight);
+        initiateBitmaps();
 
         //HIGH SCORE
             highScore = new HighScore(this);
@@ -291,22 +288,18 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         setCurrentBall(ballType);
     }
 
-    private void initiateBallSize() {
-        ballHeight = height/ HEIGHT_SCALE;
-        // in case we selected a passive to increase the balls size change it
-        ballHeight = passivesManager.setNewBallSizeFromPassives(ballHeight,selectedPassive1,
-                selectedPassive2,powerUp[2].getCurrentLevel(), powerUp[3].getCurrentLevel());
-        ballWidth = ballHeight;
-    }
-
     /**
      * Method for decoding every Bitmap into memory and
      * rescaling every ball into a certain size.
      * Gets a standard ball height and width variable to be used
      */
-    private void initiateBitmaps(int ballWidth, int ballHeight){
+    private void initiateBitmaps(){
 
-        BallBitmaps ballBitmaps = new BallBitmaps(this);
+        int ballWidth, ballHeight;
+        ballHeight = ballWidth = passivesManager.setNewBallSizeFromPassives(height/ HEIGHT_SCALE, selectedPassive1,
+                selectedPassive2,powerUp[2].getCurrentLevel(), powerUp[3].getCurrentLevel());
+
+        this.ballBitmaps = new BallBitmaps(this);
         ballBitmaps.setBallWidth(ballWidth);
         ballBitmaps.setBallHeight(ballHeight);
         ballBitmaps.initiateBitmaps();
@@ -318,7 +311,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         purpleBall = ballBitmaps.getPurpleBall();
         waveBall = ballBitmaps.getWaveBall();
     }
-
 
     // --------------------------- Main Game Loop ------------------------------- \\
 
@@ -513,12 +505,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         height = mCanvas.getHeight();
         ourHolder.unlockCanvasAndPost(mCanvas);
         // object instances
-        randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
+        randomCoordinate = new RandomBallVariables(width, height, getBaseBallWidth(), getBaseBallHeight());
 
         stars = new Background(ourHolder, mCanvas, width, height);
         canvas = new CanvasGameClassic(ourHolder,mCanvas, stars, width, height);
 
-        powerUps = new PowerUps(energyProgress,keys,powerUp, ballWidth, ballHeight,randomCoordinate);
+        powerUps = new PowerUps(energyProgress,keys,powerUp, getBaseBallWidth(), getBaseBallHeight(),randomCoordinate);
 
         // in case we selected the power up to increase the starting energy
         if(flagTypePassive2==4 || flagTypePassive1==4) {
@@ -531,7 +523,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
 
         //get every ball object when starting a game
-            ballHandler = new BallHandler(randomCoordinate, keys, ballWidth, ballHeight);
+            ballHandler = new BallHandler(randomCoordinate, keys, getBaseBallWidth(), getBaseBallHeight());
             ballHandler.parseBallBitmaps(redBall, blueBall, greenBall , yellowBall , purpleBall, waveBall);
             ballHandler.parseChancePassivesAndEventsObject(chancePassivesAndEvents);
         //set the ball attributes if the passives we selected affect the balls
@@ -552,7 +544,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         }
         getNewBall();
 
-        clickedABall = new ClickedABall(ballWidth, ballHeight);
+        clickedABall = new ClickedABall(getBaseBallWidth(), getBaseBallHeight());
         ballMovement = new BallMovement(width, height);
        initialDraw = false;
 
@@ -1093,7 +1085,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private int numberOfWaveAtoms() {
         return Keys.WAVE_BALL_NUMBER;
     }
-
+    private int getBaseBallWidth(){
+        return ballBitmaps.getBallWidth();
+    }
+    private int getBaseBallHeight(){
+        return ballBitmaps.getBallHeight();
+    }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
     public void pause()
