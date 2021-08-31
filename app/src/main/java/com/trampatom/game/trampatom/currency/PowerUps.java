@@ -11,6 +11,9 @@ import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.Keys;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_GREEN;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_YELLOW;
+
 /**
  * Important class that should contain all the methods for working with passive and active power Ups.
  * <p>
@@ -356,10 +359,10 @@ public class PowerUps {
 
         switch (currentBallType) {
 
-            case GameClassicActivity.BALL_GREEN:
+            case BALL_GREEN:
                 ball.setBallSpeed(keys.GREEN_BALL_SPEED);
                 break;
-            case GameClassicActivity.BALL_YELLOW:
+            case BALL_YELLOW:
                 //after resetting yellow balls speed set it depending on how many times we clicked it
                 ball.setBallSpeed(keys.BALL_YELLOW_INITIAL_SPEED+(keys.TIMES_CLICKED_YELLOW*keys.BALL_YELLOW_SPEED_INCREASE));
                 break;

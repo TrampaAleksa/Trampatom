@@ -4,13 +4,18 @@ package com.trampatom.game.trampatom.ball;
 import android.graphics.Bitmap;
 
 import com.trampatom.game.trampatom.Model.Ball;
-import com.trampatom.game.trampatom.activity.GameClassicActivity;
-import com.trampatom.game.trampatom.activity.MainActivity;
 import com.trampatom.game.trampatom.power.up.ChancePassivesAndEvents;
 import com.trampatom.game.trampatom.utils.Keys;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
 import java.util.Random;
+
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_BLUE;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_GREEN;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_PURPLE;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_RED;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_WAVE;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_YELLOW;
 
 /**
  * Class that should be used to handle ball types.
@@ -211,7 +216,7 @@ public class BallHandler {
             ball = setBallSpeedByType(currentBallType, ball);
         }
         //in case a power up is active that slows the ball down, to prevent a bug set the initial speed
-        else if (currentBallType == GameClassicActivity.BALL_YELLOW && yellowBallSpeedChangeActive ){
+        else if (currentBallType == BALL_YELLOW && yellowBallSpeedChangeActive ){
             ball.setBallSpeed(0);
         }
 
@@ -542,10 +547,10 @@ public class BallHandler {
 
         switch(currentBallType){
 
-            case GameClassicActivity.BALL_GREEN:
+            case BALL_GREEN:
                 ball.setBallSpeed(keys.GREEN_BALL_SPEED);
                 break;
-            case GameClassicActivity.BALL_YELLOW:
+            case BALL_YELLOW:
                 ball.setBallSpeed(keys.BALL_YELLOW_INITIAL_SPEED);
                 break;
             //most balls have this default speed, the other two cases are for green and yellow ball's
@@ -557,18 +562,18 @@ public class BallHandler {
 
     private Ball setBallColorByType(int currentBallType, Ball ball){
 
-        if(currentBallType == GameClassicActivity.BALL_RED){
+        if(currentBallType == BALL_RED){
             ball.setBallColor(redBall);
         }
 
         // RED BALL
-        if(currentBallType == GameClassicActivity.BALL_BLUE){
+        if(currentBallType == BALL_BLUE){
             ball.setBallColor(blueBall);
 
         }
 
         // YELLOW BALL
-        if(currentBallType == GameClassicActivity.BALL_YELLOW){
+        if(currentBallType == BALL_YELLOW){
             //if its a yellow ball set the width and height to be bigger by 50%
             ball.setBallColor(yellowBall);
             ball.setBallWidth(ballWidth + (ballWidth/2));
@@ -578,7 +583,7 @@ public class BallHandler {
         }
 
         // GREEN BALL
-        if(currentBallType == GameClassicActivity.BALL_GREEN){
+        if(currentBallType == BALL_GREEN){
             ball.setBallColor(greenBall);
 
         }
@@ -590,14 +595,14 @@ public class BallHandler {
 
 
         // PURPLE BALL
-        if(currentBallType == GameClassicActivity.BALL_PURPLE){
+        if(currentBallType == BALL_PURPLE){
             for(i=0; i<keys.PURPLE_BALL_NUMBER; i++) {
                 balls[i].setBallColor(purpleBall);
             }
         }
 
         // WAVE BALL
-        if(currentBallType == GameClassicActivity.BALL_WAVE){
+        if(currentBallType == BALL_WAVE){
             for(i=0; i<keys.WAVE_BALL_NUMBER; i++) {
                 balls[i].setBallColor(waveBall[i]);
             }

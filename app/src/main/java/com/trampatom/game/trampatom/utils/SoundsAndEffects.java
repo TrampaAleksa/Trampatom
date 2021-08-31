@@ -110,4 +110,13 @@ public class SoundsAndEffects {
         soundPool = null;
         return soundPool;
     }
+
+    /**
+     * Method that SHOULD be called when the activity running/using a soundpool is done working
+     * @return a null sound pool object
+     */
+    public void releaseSoundPool(){
+        soundPool.release();
+        soundPool = null;
+    }
 }

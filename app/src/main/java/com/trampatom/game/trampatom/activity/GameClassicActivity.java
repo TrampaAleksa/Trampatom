@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -107,7 +106,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         Ball ballObject;
         BallHandler ballHandler;
         SoundsAndEffects soundsAndEffects;
-        SoundPool soundPool;
         PowerUps powerUps;
         ProgressBar energyProgress;
         List<PowerUpPool> powerUpPool;
@@ -219,7 +217,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //get a sound pool instance with all the required sounds
             //sound id's are located inside SoundsAndEffects object
             soundsAndEffects = new SoundsAndEffects(this);
-            soundPool = soundsAndEffects.getGameClassicSounds();
+            soundsAndEffects.getGameClassicSounds();
 
         //GAME VIEWS
         //surface view
@@ -501,7 +499,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             }
             if (currentEnergyLevel < keys.STARTING_ENERGY/4 && !lowEnergy){
                 energyProgress.getProgressDrawable().setTint(Color.RED);
-                soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
+                soundsAndEffects.play(soundsAndEffects.soundNearlyGameOverId,3);
                 lowEnergy = true;
             }
             //in case we exceed the maximum energy level, set it to the maximum
@@ -697,7 +695,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if (gameover) {
             GameOver gameover = new GameOver(ourHolder,mCanvas);
             //plat a sound once the game is over
-            soundPool.play(soundsAndEffects.soundGameOverId,1,1,2,0,1);
+            soundsAndEffects.play(soundsAndEffects.soundGameOverId, 2);
             // check if we got a new high score
             newHighScore=highScore.isHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY, score);
             //display our score and if we got a new high score show a text to indicate that
@@ -840,7 +838,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             currentEnergyLevel +=100;
             score += 100;
             //add the atom to the atom pool
-            soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
+            soundsAndEffects.play(ballObject.getSoundId());
             poolArray[0] = poolArray[0] + ballObject.getBallAtomValue();
             getNewBall();
         }
@@ -858,7 +856,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             score -= 100;
             //add the atom to the atom pool, even if we scored negative the atom is added to the pool
             poolArray[1] = poolArray[1] + ballObject.getBallAtomValue();
-            soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
+            soundsAndEffects.play(ballObject.getSoundId());
             getNewBall();
         }
         else {
@@ -867,7 +865,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             score+=100;
             //add the atom to the atom pool
             poolArray[1] = poolArray[1] + ballObject.getBallAtomValue();
-            soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
+            soundsAndEffects.play(ballObject.getSoundId());
             getNewBall();
         }
     }
@@ -883,7 +881,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             score+=400;
             //add the atom to the atom pool
             poolArray[2] = poolArray[2] + ballObject.getBallAtomValue();
-            soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
+            soundsAndEffects.play(ballObject.getSoundId());
             getNewBall();
         }
     }
@@ -920,7 +918,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 score+=500;
                 //add the atom to the atom pool
                 poolArray[3] = poolArray[3] + ballObject.getBallAtomValue();
-                soundPool.play(ballObject.getSoundId(),1,1,0,0,1);
+                soundsAndEffects.play(ballObject.getSoundId());
                 getNewBall();
                 //reset the yellow ball to its first state for later use
                 keys.TIMES_CLICKED_YELLOW=0;
@@ -955,7 +953,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 purpleBallObjects[2].setY(purpleBallObjects[0].getY());
                 //add the atom to the atom pool
                 poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
-                soundPool.play(purpleBallObjects[0].getSoundId(),1,1,0,0,1);
+                soundsAndEffects.play(purpleBallObjects[0].getSoundId());
             }
         }
         //if we clicked on one of the split balls remove them from the screen
@@ -965,14 +963,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 ballClicked[0]=true;
                 //add the atom to the atom pool
                 poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
-                soundPool.play(purpleBallObjects[0].getSoundId(),1,1,0,0,1);
+                soundsAndEffects.play(purpleBallObjects[0].getSoundId());
             }
             if(clickedABall.ballClicked(purpleBallObjects[1], clickedX, clickedY)){
                 //don't draw this ball
                 ballClicked[1]=true;
                 //add the atom to the atom pool
                 poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
-                soundPool.play(purpleBallObjects[1].getSoundId(),1,1,0,0,1);
+                soundsAndEffects.play(purpleBallObjects[1].getSoundId());
             }
             if(clickedABall.ballClicked(purpleBallObjects[2], clickedX, clickedY)){
 
@@ -981,7 +979,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
                 //add the atom to the atom pool
                 poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
-                soundPool.play(purpleBallObjects[2].getSoundId(),1,1,0,0,1);
+                soundsAndEffects.play(purpleBallObjects[2].getSoundId());
             }
             //if we clicked all three, score and get a new ball
             if(ballClicked[0] && ballClicked[1] && ballClicked[2]){
@@ -1015,7 +1013,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             score += currentWaveBall*10;
             //adds a random atom to the pool every time we click a wave ball
             poolArray[random.nextInt(4)]+= multipleBalls[0].getBallAtomValue();
-            soundPool.play(multipleBalls[0].getSoundId(),1,1,0,0,1);
+            soundsAndEffects.play(multipleBalls[0].getSoundId());
             // next ball should be clicked
             currentWaveBall ++;
 
@@ -1170,7 +1168,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 waveBall[i] = null;
             }
         }
-        soundsAndEffects.releaseSoundPool(soundPool);
+        soundsAndEffects.releaseSoundPool();
     }
 
 }
