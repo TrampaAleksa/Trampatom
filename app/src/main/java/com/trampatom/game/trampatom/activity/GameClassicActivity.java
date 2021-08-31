@@ -1,22 +1,16 @@
 package com.trampatom.game.trampatom.activity;
 
-
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -50,6 +44,12 @@ import java.util.Random;
 import com.trampatom.game.trampatom.utils.Keys;
 import com.trampatom.game.trampatom.utils.SoundsAndEffects;
 
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_BLUE;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_GREEN;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_PURPLE;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_RED;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_WAVE;
+import static com.trampatom.game.trampatom.ball.AtomId.BALL_YELLOW;
 import static java.lang.Thread.sleep;
 
 /**
@@ -57,16 +57,6 @@ import static java.lang.Thread.sleep;
  * Whenever changing any ball's properties, probablly change code in: move method, draw method, new ball method
  */
 public class GameClassicActivity extends AppCompatActivity implements Runnable, View.OnTouchListener, View.OnClickListener{
-
-    //RED - don't click on the ball ; BLUE - click on the ball
-    //GREEN - super crazy ball ; YELLOW - click it a few times
-    //PURPLE splits into two after first click
-    public static final int BALL_RED = 1;
-    public static final int BALL_BLUE = 2;
-    public static final int BALL_GREEN = 3;
-    public static final int BALL_YELLOW = 4;
-    public static final int BALL_PURPLE = 5;
-    public static final int BALL_WAVE = 6;
 
     public static final int HEIGHT_SCALE = 11;
 
