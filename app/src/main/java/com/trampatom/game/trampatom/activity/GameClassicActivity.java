@@ -61,7 +61,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     public static final int HEIGHT_SCALE = 11;
 
 
-
     // ------------------- General Ball Variables --------------------------------------- \\
 
         //Used for scoring

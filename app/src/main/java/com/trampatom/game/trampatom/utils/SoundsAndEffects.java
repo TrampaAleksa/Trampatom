@@ -45,6 +45,15 @@ public class SoundsAndEffects {
         this.context = context;
     }
 
+    public void play(int soundId){
+        if (soundPool == null) return;
+        soundPool.play(soundId, 1,1,0,0,1);
+    }
+    public void play(int soundId, int priority){
+        if (soundPool == null) return;
+        soundPool.play(soundId, 1,1,priority,0,1);
+    }
+
 
     /**
      * method that should be called every time the classic game activity is started.
