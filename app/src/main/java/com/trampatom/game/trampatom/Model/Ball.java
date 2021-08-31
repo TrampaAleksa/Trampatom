@@ -77,14 +77,6 @@ public class Ball {
         this.activeChangesSpeed = activeChangesSpeed;
     }
 
-    public int getSoundId() {
-        return soundId;
-    }
-
-    public void setSoundId(int soundId) {
-        this.soundId = soundId;
-    }
-
     private int soundId;
 
     public int getBallSpeed() {

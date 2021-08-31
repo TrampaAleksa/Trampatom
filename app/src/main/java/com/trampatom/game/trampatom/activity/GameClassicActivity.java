@@ -1076,59 +1076,41 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         // BLUE BALL
         if(currentBallType == BALL_RED){
             ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
-            setBallSound(ballObject);
         }
 
         // RED BALL
         if(currentBallType == BALL_BLUE){
 
             ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
-            setBallSound(ballObject);
         }
 
         // YELLOW BALL
         if(currentBallType == BALL_YELLOW){
             ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
-            setBallSound(ballObject);
-
         }
 
         // GREEN BALL
         if(currentBallType == BALL_GREEN){
             ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
-            setBallSound(ballObject);
         }
 
         // PURPLE BALL
         if(currentBallType == BALL_PURPLE){
             purpleBallObjects = ballHandler.getNewBallObjectArray(keys.PURPLE_BALL_NUMBER,purpleBallObjects, currentBallType);
-            setBallArraySound(purpleBallObjects);
         }
 
         //WAVE BALL
         if(currentBallType == BALL_WAVE){
             multipleBalls = ballHandler.getNewBallObjectArray(keys.WAVE_BALL_NUMBER,multipleBalls, currentBallType);
             currentWaveBall = 0;
-            setBallArraySound(multipleBalls);
         }
     }
 
     //------------------- Refactor and New Helper methods ---------------------------- \\
 
-    private void setBallSound(Ball ball){
-        ball.setSoundId(soundsAndEffects.soundClickedId);
-    }
-    private void setBallArraySound(Ball[] balls){
-        for(i=0; i<balls.length; i++){
-            balls[i].setSoundId(soundsAndEffects.soundClickedId);
-        }
-    }
     private void playBallClickedSound(Ball ball){
         soundsAndEffects.playBallClickedSound(ball);
     }
-
-
-
 
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
