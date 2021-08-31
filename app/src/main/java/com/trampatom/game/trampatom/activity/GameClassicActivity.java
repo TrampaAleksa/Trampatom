@@ -1126,22 +1126,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     protected void onDestroy() {
         super.onDestroy();
         stopService(MainActivity.svc);
-        //after leaving this game we need to clear the memory from the stored bitmaps
-        if(blueBall!=null)
-        {
-            blueBall.recycle();
-            blueBall=null;
-            redBall.recycle();
-            redBall=null;
-            greenBall.recycle();
-            greenBall=null;
-            yellowBall.recycle();
-            yellowBall=null;
-            for(i=0; i<numberOfWaveAtoms(); i++){
-                waveBall[i].recycle();
-                waveBall[i] = null;
-            }
-        }
+        ballBitmaps.clearBitmapMemory();
         soundsAndEffects.releaseSoundPool();
     }
 

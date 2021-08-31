@@ -72,6 +72,27 @@ public class BallBitmaps {
         }
     }
 
+    /**
+     * After leaving this game we need to clear the memory from the stored bitmaps to avoid memory leaks
+     */
+    public void clearBitmapMemory(){
+        if(blueBall!=null)
+        {
+            blueBall.recycle();
+            blueBall=null;
+            redBall.recycle();
+            redBall=null;
+            greenBall.recycle();
+            greenBall=null;
+            yellowBall.recycle();
+            yellowBall=null;
+            for(int i=0; i<Keys.WAVE_BALL_NUMBER; i++){
+                waveBall[i].recycle();
+                waveBall[i] = null;
+            }
+        }
+    }
+
     public int getBallWidth() {
         return ballWidth;
     }
