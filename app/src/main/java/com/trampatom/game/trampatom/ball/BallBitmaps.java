@@ -6,19 +6,14 @@ import android.graphics.BitmapFactory;
 
 import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.utils.Keys;
-import com.trampatom.game.trampatom.utils.PassivesManager;
 
 public class BallBitmaps {
-
-    public static final int HEIGHT_SCALE = 11;
 
     Bitmap blueBall, redBall, greenBall, yellowBall, purpleBall;
     Bitmap[] waveBall;
 
     //every ball should have the same width and height, but we can change this if needed
-    static int ballWidth, ballHeight;
-    //width and height of the canvas
-    int width, height;
+    int ballWidth, ballHeight;
 
     private Context context;
 
@@ -44,16 +39,14 @@ public class BallBitmaps {
      * rescaling every ball into a certain size.
      * Gets a standard ball height and width variable to be used
      */
-    private void initiateBitmaps(){
-        //initiate bitmaps
+    public void initiateBitmaps(){
+
         waveBall = new Bitmap[7];
         BitmapFactory.Options options = new BitmapFactory.Options();
         //used to rescale bitmaps without creating a new bitmap
         //options.inSampleSize = 4;
         //configure the color patter so that the balls take less space
         options.inPreferredConfig = Bitmap.Config.RGB_565;
-        //loading the bitmaps
-        //get the size of the device that is running the game and scale teh balls according to this
 
         waveBall[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.wave1, options);
         waveBall[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.wave2, options);
@@ -79,36 +72,20 @@ public class BallBitmaps {
         }
     }
 
-    public static int getBallWidth() {
+    public int getBallWidth() {
         return ballWidth;
     }
 
-    public static void setBallWidth(int ballWidth) {
-        BallBitmaps.ballWidth = ballWidth;
+    public void setBallWidth(int ballWidth) {
+        this.ballWidth = ballWidth;
     }
 
-    public static int getBallHeight() {
+    public int getBallHeight() {
         return ballHeight;
     }
 
-    public static void setBallHeight(int ballHeight) {
-        BallBitmaps.ballHeight = ballHeight;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
+    public void setBallHeight(int ballHeight) {
+        this.ballHeight = ballHeight;
     }
 
     // ---------------- BITMAPS -------------------------- \\
@@ -151,5 +128,13 @@ public class BallBitmaps {
 
     public void setPurpleBall(Bitmap purpleBall) {
         this.purpleBall = purpleBall;
+    }
+
+    public Bitmap[] getWaveBall() {
+        return waveBall;
+    }
+
+    public void setWaveBall(Bitmap[] waveBall) {
+        this.waveBall = waveBall;
     }
 }

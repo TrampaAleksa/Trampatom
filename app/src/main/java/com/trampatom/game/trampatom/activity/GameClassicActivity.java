@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.R;
+import com.trampatom.game.trampatom.ball.BallBitmaps;
 import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.BallHandler;
 import com.trampatom.game.trampatom.ball.ClickedABall;
@@ -271,7 +272,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             width= MainActivity.getWidth();
             height = MainActivity.getHeight();
         //set and resize all the bitmaps
-            initiateBitmaps();
+        initiateBallSize();
+        initiateBitmaps(ballWidth, ballHeight);
 
         //HIGH SCORE
             highScore = new HighScore(this);
@@ -289,52 +291,32 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         setCurrentBall(ballType);
     }
 
+    private void initiateBallSize() {
+        ballHeight = height/ HEIGHT_SCALE;
+        // in case we selected a passive to increase the balls size change it
+        ballHeight = passivesManager.setNewBallSizeFromPassives(ballHeight,selectedPassive1,
+                selectedPassive2,powerUp[2].getCurrentLevel(), powerUp[3].getCurrentLevel());
+        ballWidth = ballHeight;
+    }
+
     /**
      * Method for decoding every Bitmap into memory and
      * rescaling every ball into a certain size.
      * Gets a standard ball height and width variable to be used
      */
-    private void initiateBitmaps(){
-        //initiate bitmaps
-            waveBall = new Bitmap[7];
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        //used to rescale bitmaps without creating a new bitmap
-            //options.inSampleSize = 4;
-        //configure the color patter so that the balls take less space
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-        //loading the bitmaps
-        //get the size of the device that is running the game and scale teh balls according to this
+    private void initiateBitmaps(int ballWidth, int ballHeight){
 
-            waveBall[0] = BitmapFactory.decodeResource(getResources(), R.drawable.wave1, options);
-            waveBall[1] = BitmapFactory.decodeResource(getResources(), R.drawable.wave2, options);
-            waveBall[2] = BitmapFactory.decodeResource(getResources(), R.drawable.wave3, options);
-            waveBall[3] = BitmapFactory.decodeResource(getResources(), R.drawable.wave4, options);
-            waveBall[4] = BitmapFactory.decodeResource(getResources(), R.drawable.wave5, options);
-            waveBall[5] = BitmapFactory.decodeResource(getResources(), R.drawable.wave6, options);
-            waveBall[6] = BitmapFactory.decodeResource(getResources(), R.drawable.wave7, options);
-            blueBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomplava, options);
-            redBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomcrvena, options);
-            greenBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomzelena, options);
-            yellowBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomzuta, options);
-            purpleBall = BitmapFactory.decodeResource(getResources(), R.drawable.atomroze, options);
-            //ball Height and Width
-            //ballHeight = blueBall.getHeight() + keys.BALL_SIZE_ADAPT;
-            //ballWidth = blueBall.getWidth() + keys.BALL_SIZE_ADAPT;
-            ballHeight = height/ HEIGHT_SCALE;
-            ballWidth = ballHeight;
-        // in case we selected a passive to increase the balls size change it
-            ballHeight = passivesManager.setNewBallSizeFromPassives(ballHeight,selectedPassive1,
-                    selectedPassive2,powerUp[2].getCurrentLevel(), powerUp[3].getCurrentLevel());
-            ballWidth = ballHeight;
-            //resize all balls to the new ball width and height
-            blueBall = Bitmap.createScaledBitmap(blueBall, ballWidth, ballHeight, true);
-            redBall = Bitmap.createScaledBitmap(redBall, ballWidth, ballHeight, true);
-            greenBall = Bitmap.createScaledBitmap(greenBall, ballWidth, ballHeight, true);
-            yellowBall = Bitmap.createScaledBitmap(yellowBall, ballWidth, ballHeight, true);
-            purpleBall = Bitmap.createScaledBitmap(purpleBall, ballWidth, ballHeight, true);
-            for (i = 0; i < numberOfWaveAtoms(); i++) {
-                waveBall[i] = Bitmap.createScaledBitmap(waveBall[i], ballWidth, ballHeight, true);
-            }
+        BallBitmaps ballBitmaps = new BallBitmaps(this);
+        ballBitmaps.setBallWidth(ballWidth);
+        ballBitmaps.setBallHeight(ballHeight);
+        ballBitmaps.initiateBitmaps();
+
+        blueBall = ballBitmaps.getBlueBall();
+        redBall = ballBitmaps.getRedBall();
+        greenBall = ballBitmaps.getGreenBall();
+        yellowBall = ballBitmaps.getYellowBall();
+        purpleBall = ballBitmaps.getPurpleBall();
+        waveBall = ballBitmaps.getWaveBall();
     }
 
 
