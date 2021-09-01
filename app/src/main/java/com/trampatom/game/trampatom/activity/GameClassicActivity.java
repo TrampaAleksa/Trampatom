@@ -196,24 +196,39 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void init() {
-        /*SimpleBallTouchListener ballTouchListener = new SimpleBallTouchListener(new SimpleBallTouchListener.BallClickedCallback() {
-            @Override
-            public void onClicked(boolean isBallClicked) {
-
-            }
-        })*/
         passivesManager = new PassivesManager();
-
         random = new Random();
         keys = new Keys();
         atomPool = new AtomPool(this);
+        width= MainActivity.getWidth();
+        height = MainActivity.getHeight();
 
         // SOUNDS
-            //get a sound pool instance with all the required sounds
-            //sound id's are located inside SoundsAndEffects object
-            soundsAndEffects = new SoundsAndEffects(this).getGameClassicSounds();
+        initSounds();
 
         //GAME VIEWS
+        initGameViews();
+
+        //POWER UPS
+        initPowerUps();
+
+        //BALL BITMAPS
+        initiateBitmaps();
+
+        //HIGH SCORE
+        initHighScore();
+
+        //BALL
+        initBall();
+    }
+
+    private void initSounds() {
+        //get a sound pool instance with all the required sounds
+        //sound id's are located inside SoundsAndEffects object
+        soundsAndEffects = new SoundsAndEffects(this).getGameClassicSounds();
+    }
+
+    private void initGameViews() {
         //surface view
         mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
         ourHolder = mSurfaceView.getHolder();
@@ -226,15 +241,15 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         currentEnergyLevel = keys.STARTING_ENERGY;
         energySpeedUpTicks = Keys.ENERGY_SPEED_UP_TICKS;
         //buttons
-            bPowerUp1 = (Button) findViewById(R.id.bPowerUp1);
-            bPowerUp2 = (Button) findViewById(R.id.bPowerUp2);
-            bPowerUp1.setOnClickListener(this);
-            bPowerUp2.setOnClickListener(this);
-            coolDown = keys.POWER_UP_COOLDOWN;
-            consumable = keys.POWER_UP_COOLDOWN;
+        bPowerUp1 = (Button) findViewById(R.id.bPowerUp1);
+        bPowerUp2 = (Button) findViewById(R.id.bPowerUp2);
+        bPowerUp1.setOnClickListener(this);
+        bPowerUp2.setOnClickListener(this);
+        coolDown = keys.POWER_UP_COOLDOWN;
+        consumable = keys.POWER_UP_COOLDOWN;
+    }
 
-
-        //POWER UPS
+    private void initPowerUps() {
         ticker = Keys.TICKER_STARTING_VALUE;
         //load the power ups we selected in the shop from a file
         ShopHandler shopHandler = new ShopHandler(this);
@@ -258,28 +273,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         chancePassivesAndEvents = new ChancePassivesAndEvents(powerUp[2]);
         //get the chance for an event bound to the selected power up to happen.
         passivePowerUpEventChance = chancePassivesAndEvents.getPassivePowerUpEventChance();
-
-        // OTHER
-        //get device's width and height
-            width= MainActivity.getWidth();
-            height = MainActivity.getHeight();
-        //set and resize all the bitmaps
-        initiateBitmaps();
-
-        //HIGH SCORE
-            highScore = new HighScore(this);
-            previousHighScore=highScore.getHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY);
-            newHighScore=false;
-
-        //BALL
-            //sets the required times to click a yellow ball and its speed
-            timesClicked=0;
-            // sets only one purple ball to be displayed initially
-            timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
-        //the first ball is always blue;
-            currentBall= BALL_BLUE;
-            initialDraw=true;
-        setCurrentBall(ballType);
     }
 
     /**
@@ -297,6 +290,23 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         ballBitmaps.setBallWidth(ballWidth);
         ballBitmaps.setBallHeight(ballHeight);
         ballBitmaps.initiateBitmaps();
+    }
+
+    private void initHighScore() {
+        highScore = new HighScore(this);
+        previousHighScore=highScore.getHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY);
+        newHighScore=false;
+    }
+
+    private void initBall() {
+        //sets the required times to click a yellow ball and its speed
+        timesClicked=0;
+        // sets only one purple ball to be displayed initially
+        timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
+        //the first ball is always blue;
+        currentBall= BALL_BLUE;
+        initialDraw=true;
+        setCurrentBall(ballType);
     }
 
     // --------------------------- Main Game Loop ------------------------------- \\
