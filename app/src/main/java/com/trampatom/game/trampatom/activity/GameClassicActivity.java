@@ -1009,32 +1009,21 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void getNewBall() {
 
         //If we used the "same type ball power up" on any ball, don't get a new type until it expires
-        if(!(ballObject.isActiveChangesType() && purpleBallObjects[0].isActiveChangesType()&& multipleBalls[0].isActiveChangesType()))
+        if(!isSameTypeBallPowerUpActive())
         ballType = ballHandler.getNewBallType();
 
-        if(keys.POWER_UP_LIMITING_SQUARE_ACTIVE && keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS==3){
+        if(isLimitingSquareTriggered())
+            triggerLimitingSquarePowerUp();
 
-           // keys.POWER_UP_LIMITING_SQUARE_ACTIVE = false;
-            //if the chance event for the limiting square is triggered , reduce the device's width and height
-            ballMovement.changeWidthAndHeight(-width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                    -height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
-            randomCoordinate.changeWidthAndHeight(-width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                    -height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
-            keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS--;
-        }
-        if( keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS==0){
-
-            ballMovement.changeWidthAndHeight(width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                    height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
-            randomCoordinate.changeWidthAndHeight(width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                    height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
-            keys.POWER_UP_LIMITING_SQUARE_ACTIVE = false;
-            keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS=3;
-        }
+        if(isLimitingSquareExpired())
+            turnOffLimitingSquarePowerUp();
 
         currentBallType = setCurrentBall(ballType);
         setBallObjectByType();
     }
+
+
+
 
     /**
      * helper method used to load the right bitmap into the ball based on its type.
@@ -1076,6 +1065,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     //------------------- Refactor and New Helper methods ---------------------------- \\
 
+    // BALL BITMAPS
     private void playBallClickedSound(Ball ball){
         soundsAndEffects.playBallClickedSound(ball);
     }
@@ -1087,6 +1077,36 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private int getBaseBallHeight(){
         return ballBitmaps.getBallHeight();
+    }
+
+    // GET NEW BALL METHOD
+    private boolean isLimitingSquareTriggered() {
+        return keys.POWER_UP_LIMITING_SQUARE_ACTIVE && keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS==3;
+    }
+    private boolean isLimitingSquareExpired() {
+        return keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS==0;
+    }
+
+    private void turnOffLimitingSquarePowerUp() {
+        ballMovement.changeWidthAndHeight(width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+        randomCoordinate.changeWidthAndHeight(width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+        keys.POWER_UP_LIMITING_SQUARE_ACTIVE = false;
+        keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS=3;
+    }
+    private void triggerLimitingSquarePowerUp() {
+        // keys.POWER_UP_LIMITING_SQUARE_ACTIVE = false;
+        //if the chance event for the limiting square is triggered , reduce the device's width and height
+        ballMovement.changeWidthAndHeight(-width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                -height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+        randomCoordinate.changeWidthAndHeight(-width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                -height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+        keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS--;
+    }
+
+    private boolean isSameTypeBallPowerUpActive() {
+        return ballObject.isActiveChangesType() && purpleBallObjects[0].isActiveChangesType()&& multipleBalls[0].isActiveChangesType();
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
