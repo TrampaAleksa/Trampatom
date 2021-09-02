@@ -228,6 +228,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         soundsAndEffects = new SoundsAndEffects(this).getGameClassicSounds();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initGameViews() {
         //surface view
         mSurfaceView = (SurfaceView) findViewById(R.id.SV1);
