@@ -14,10 +14,6 @@ import java.util.Random;
 public class RandomBallVariables {
     //used for converting an angle into radians
     private static final double RADIANS = 3.14/180;
-    //left and top side of the screen, used to draw a ball within a certain limit if we used limiting square power up.
-    private static int leftSide = 0;
-    private static int topSide = 0;
-
     int ballWidth;
     int ballHeight;
     Random random;
@@ -43,8 +39,8 @@ public class RandomBallVariables {
     public void changeWidthAndHeight(int widthToAdd, int heightToAdd){
         getGameWindow().setWidth(getWidth() + widthToAdd);
         getGameWindow().setHeight(getHeight() + heightToAdd);
-        leftSide += widthToAdd;
-        topSide += heightToAdd;
+        getGameWindow().setLeftSide(getLeftSide() + widthToAdd);
+        getGameWindow().setTopSide(getTopSide() + heightToAdd);
     }
 
 
@@ -153,10 +149,10 @@ public class RandomBallVariables {
     }
 
     public static int getLeftSide(){
-        return leftSide;
+        return getGameWindow().getLeftSide();
     }
     public static int getTopSide(){
-        return topSide;
+        return getGameWindow().getTopSide();
     }
 
     private static GameWindow getGameWindow(){

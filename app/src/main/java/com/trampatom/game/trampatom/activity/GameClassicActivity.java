@@ -504,7 +504,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         randomCoordinate = new RandomBallVariables(getBaseBallWidth(), getBaseBallHeight());
 
         stars = new Background(ourHolder, mCanvas, getWidth(), getHeight());
-        canvas = new CanvasGameClassic(ourHolder,mCanvas, stars, getWidth(), getHeight());
+        canvas = new CanvasGameClassic(ourHolder,mCanvas, stars);
 
         powerUps = new PowerUps(energyProgress,keys,powerUp, getBaseBallWidth(), getBaseBallHeight());
 
@@ -563,28 +563,28 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         {
             case BALL_BLUE:
                 moveBall();
-                canvas.draw(ballObject, keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score);
+                canvas.draw(ballObject, score);
                 break;
             case BALL_RED:
                 moveBall();
-                canvas.draw(ballObject,  keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score);
+                canvas.draw(ballObject, score);
                 break;
             case BALL_YELLOW:
                 moveYellowBall();
-                canvas.draw(ballObject,  keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score);
+                canvas.draw(ballObject, score);
                 break;
             case BALL_GREEN:
                 //this ball moves like crazy
                 moveGreenBall();
-                canvas.draw(ballObject,  keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score);
+                canvas.draw(ballObject, score);
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
-                canvas.drawPurple(purpleBallObjects, keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score, timesClickedPurple, ballClicked);
+                canvas.drawPurple(purpleBallObjects, score, timesClickedPurple, ballClicked);
                 break;
             case BALL_WAVE:
                 moveWave();
-                canvas.drawWave(multipleBalls,  keys.POWER_UP_LIMITING_SQUARE_ACTIVE, score, currentWaveBall);
+                canvas.drawWave(multipleBalls, score, currentWaveBall);
                 break;
         }
     }
