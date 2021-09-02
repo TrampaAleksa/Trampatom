@@ -26,6 +26,7 @@ import com.trampatom.game.trampatom.canvas.Background;
 import com.trampatom.game.trampatom.canvas.CanvasGameSurvival;
 import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.currency.AtomPool;
+import com.trampatom.game.trampatom.utils.Angles;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.Keys;
@@ -223,12 +224,13 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
             remainingClickTime = keys.SURVIVAL_CLICK_TIMER;
             //get score and a new ball
             score+=100;
-            angle =  randomCoordinate.randomAngle();
+            angle = getRandomAngle();
             x = randomCoordinate.randomX();
             y = randomCoordinate.randomY();
             playBallClickedSound(null);
         }
     }
+
 
 
     /**
@@ -378,9 +380,9 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
         clickedABall= new ClickedABall(ballWidth, ballHeight);
         goldX = randomCoordinate.randomX();
         goldY = randomCoordinate.randomY();
-        angle = randomCoordinate.randomAngle();
+        angle = getRandomAngle();
         for(i=0; i<BALL_NEGATIVE_NUMBER; i++){
-            angles[i]= randomCoordinate.randomAngle();
+            angles[i]= getRandomAngle();
         }
         x=randomCoordinate.randomX();
         y=randomCoordinate.randomY();
@@ -455,7 +457,9 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
     private void playBallClickedSound(Ball ball){
         soundsAndEffects.playBallClickedSound(ball);
     }
-
+    private double getRandomAngle() {
+        return Angles.randomAngle();
+    }
 
 
     // ----------------------------------- Handling Threads and Music -------------------- \\

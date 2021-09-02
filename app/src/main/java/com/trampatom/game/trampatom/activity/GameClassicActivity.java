@@ -34,6 +34,7 @@ import com.trampatom.game.trampatom.currency.AtomPool;
 import com.trampatom.game.trampatom.currency.PowerUps;
 import com.trampatom.game.trampatom.currency.ShopHandler;
 import com.trampatom.game.trampatom.power.up.ChancePassivesAndEvents;
+import com.trampatom.game.trampatom.utils.Angles;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.GameWindow;
 import com.trampatom.game.trampatom.utils.HighScore;
@@ -93,7 +94,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         Keys keys;
         GameTimeAndScore gameTimeAndScore;
-        RandomBallVariables randomCoordinate;
         CanvasGameClassic canvas;
         HighScore highScore;
         ClickedABall clickedABall;
@@ -501,8 +501,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         setHeight(mCanvas.getHeight());
         ourHolder.unlockCanvasAndPost(mCanvas);
         // object instances
-        randomCoordinate = new RandomBallVariables(getBaseBallWidth(), getBaseBallHeight());
-
         stars = new Background(ourHolder, mCanvas, getWidth(), getHeight());
         canvas = new CanvasGameClassic(ourHolder,mCanvas, stars);
 
@@ -916,9 +914,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 //used to determine how many balls to draw
                 timesClickedPurple = keys.BALL_PURPLE_ONE_CLICK;
                 //get new angles and set every ball to start moving from the sae spot
-                purpleBallObjects[0].setAngle(randomCoordinate.randomAngle());
-                purpleBallObjects[1].setAngle(randomCoordinate.randomAngle());
-                purpleBallObjects[2].setAngle(randomCoordinate.randomAngle());
+                purpleBallObjects[0].setAngle(getRandomAngle());
+                purpleBallObjects[1].setAngle(getRandomAngle());
+                purpleBallObjects[2].setAngle(getRandomAngle());
                 //set th balls to start splitting from the clicked ball
                 purpleBallObjects[1].setX(purpleBallObjects[0].getX());
                 purpleBallObjects[1].setY(purpleBallObjects[0].getY());
@@ -968,6 +966,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             }
         }
         }
+
 
     /**
      * <p>Method for handling wave ball actions.</p>
@@ -1092,6 +1091,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private GameWindow getGameWindow(){
         return GameWindow.getInstance();
+    }
+    private double getRandomAngle() {
+        return Angles.randomAngle();
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\

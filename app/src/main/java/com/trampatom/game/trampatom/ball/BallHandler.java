@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.power.up.ChancePassivesAndEvents;
+import com.trampatom.game.trampatom.utils.Angles;
 import com.trampatom.game.trampatom.utils.Keys;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
@@ -168,7 +169,7 @@ public class BallHandler {
         mBall.setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
         mBall.setX(randomBallVariables.randomX());
         mBall.setY(randomBallVariables.randomY());
-        mBall.setAngle(randomBallVariables.randomAngle());
+        mBall.setAngle(getRandomAngle());
         mBall.setBallWidth(ballWidth);
         mBall.setBallHeight(ballHeight);
         mBall.setMoveX(1);  mBall.setMoveY(1);
@@ -243,7 +244,7 @@ public class BallHandler {
         //if the angle of the ball shouldn't be changed put a random angle. If it should then its the
         //gravity pull power up and the angle is set to the center
         if(!ball.isActiveChangesAngle()){
-            ball.setAngle(randomBallVariables.randomAngle());
+            ball.setAngle(getRandomAngle());
         }
         else {
             ball.setAngle(randomBallVariables.centeredAngle(ball.getX(), ball.getY()));
@@ -275,7 +276,7 @@ public class BallHandler {
                 purpleBalls[1].setY(-ballHeight);
                 purpleBalls[2].setX(-ballWidth);
                 purpleBalls[2].setY(-ballHeight);
-                angle = randomBallVariables.randomAngle();
+                angle = getRandomAngle();
                 purpleBalls[0].setAngle(angle);
                 for(i=0; i< arraySize; i++) {
                     purpleBalls[i].setActiveChangesSpeed(false);
@@ -386,7 +387,7 @@ public class BallHandler {
 
                 // if a power up changes the angle set it differently ( gravity pull )
                 if(!balls[i].isActiveChangesAngle()){
-                    balls[i].setAngle(randomBallVariables.randomAngle());
+                    balls[i].setAngle(getRandomAngle());
                 }
                 else {
                     balls[i].setAngle(randomBallVariables.centeredAngle(balls[i].getX(), balls[i].getY()));
@@ -622,6 +623,10 @@ public class BallHandler {
             }
 
             return balls;
+    }
+
+    private double getRandomAngle(){
+        return Angles.randomAngle();
     }
 
 

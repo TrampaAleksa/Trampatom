@@ -64,20 +64,6 @@ public class RandomBallVariables {
     }
 
     /**
-     * method used for getting a random angle for a ball's movement
-     * @return
-     */
-    public double randomAngle(){
-        int randomAngle;
-        double angle;
-        randomAngle = random.nextInt(360);
-        //the angle has to be in radians if we are using sin or cos functions to determine movement
-        angle= randomAngle * RADIANS;
-
-        return angle;
-    }
-
-    /**
      * Method used for when the gravity pull power up is used. For moving the ball to the center of the screen
      * @param x current x position of the ball
      * @param y current y position of the ball
