@@ -18,7 +18,6 @@ public class BallMovement {
     private static final int RED_BALL_SPEED_UP_INTERVAL = 8;
     //used to set a speed limit to red balls in the survival game
     private static final int RED_BALL_SPEED_LIMIT = 16;
-    private int width, height;
     Random random;
     int changeAngleGreen;
     int x, y, moveX, moveY;
@@ -31,12 +30,12 @@ public class BallMovement {
     /**
      * Constructor that contains and gets the canvas's width adn height to
      * use so that balls don't fall off screen
-     * @param width screen's width
-     * @param height screen's height
+     * @param screenWidth screen's width
+     * @param screenHeight screen's height
      */
-    public BallMovement(int width, int height) {
-        setWidth(width);
-        setHeight(height);
+    public BallMovement(int screenWidth, int screenHeight) {
+        setWidth(screenWidth);
+        setHeight(screenHeight);
         random  = new Random();
     }
 
@@ -322,22 +321,25 @@ public class BallMovement {
         return ballHeight;
     }
     private int getWidth() {
-        return width;
+        return getGameWindow().getWidth();
     }
     private int getHeight() {
-        return height;
+        return getGameWindow().getHeight();
     }
     private void setWidth(int width) {
-        this.width = width;
+        getGameWindow().setWidth(width);
     }
     private void setHeight(int height) {
-        this.height = height;
+        getGameWindow().setHeight(height);
+    }
+    private GameWindow getGameWindow(){
+        return GameWindow.getInstance();
     }
 
     public int getLeftSide() {
-        return GameWindow.getInstance().getLeftSide();
+        return getGameWindow().getLeftSide();
     }
     public int getTopSide() {
-        return GameWindow.getInstance().getTopSide();
+        return getGameWindow().getTopSide();
     }
 }

@@ -540,8 +540,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         clickedABall = new ClickedABall(getBaseBallWidth(), getBaseBallHeight());
         ballMovement = new BallMovement(getWidth(), getHeight());
-       initialDraw = false;
-
+        initialDraw = false;
 
     }
 
