@@ -14,36 +14,11 @@ import java.util.Random;
 public class RandomBallVariables {
     //used for converting an angle into radians
     private static final double RADIANS = 3.14/180;
-
-    //used for checking if the ball is over a screen's edge
-    private final static int OVER_LEFT = 1;
-    private final static int OVER_TOP = 2;
-    private final static int OVER_RIGHT = 3;
-    private final static int OVER_BOTTOM = 4;
-    private final static int OVER_NOTHING = 5;
-    //used for determining what quarter is the ball in
-    private final static int QUARTER_ONE = 1;
-    private final static int QUARTER_TWO = 2;
-    private final static int QUARTER_THREE = 3;
-    private final static int QUARTER_FOUR = 4;
-    private final static int QUARTER_UNKNOWN = 0;
-
-        int y, x;
     //width and height of the device/canvas
     private static int width , height;
     //left and top side of the screen, used to draw a ball within a certain limit if we used limiting square power up.
     private static int leftSide = 0;
     private static int topSide = 0;
-
-    public static int getLeftSide(){
-
-        return leftSide;
-    }
-
-    public static int getTopSide(){
-
-        return topSide;
-    }
 
     int ballWidth;
     int ballHeight;
@@ -95,7 +70,8 @@ public class RandomBallVariables {
      * @return a random X coordinate
      */
     public int randomX() {
-        x= leftSide + random.nextInt( getWidth() - leftSide);
+        int x;
+        x= getLeftSide() + random.nextInt( getWidth() - getLeftSide());
         x= offscale(x, getWidth(), ballWidth);
         return x;
     }
@@ -105,7 +81,8 @@ public class RandomBallVariables {
      * @return a random Y coordinate
      */
     public int randomY() {
-        y=topSide + random.nextInt( getHeight() - topSide);
+        int y;
+        y=getTopSide() + random.nextInt( getHeight() - getTopSide());
         y=offscale(y, getHeight(), ballHeight);
          return y;
     }
@@ -120,7 +97,6 @@ public class RandomBallVariables {
         randomAngle = random.nextInt(360);
         //the angle has to be in radians if we are using sin or cos functions to determine movement
         angle= randomAngle * RADIANS;
-
 
         return angle;
     }
@@ -152,7 +128,6 @@ public class RandomBallVariables {
             XY[i+ GameSurvivalActivity.BALL_NEGATIVE_NUMBER] = randomY();
         }
 
-        // int[] XY = {x1,x2,x3,y1,y2,y3...};
         return XY;
     }
 
@@ -176,79 +151,6 @@ public class RandomBallVariables {
         return value;
     }
 
-    /**
-     * Method used for determining in which quarter the ball is
-     * @param x coordinate of the ball
-     * @param y coordinate of the ball
-     * @return the quarter in witch the ball is
-     */
-    public int quarter(int x, int y){
-
-        int xHalf = getWidth() / 2;
-        int yHalf = getHeight() / 2;
-
-        if(x > xHalf && y < yHalf){
-            return QUARTER_ONE;
-        }
-        if(x < xHalf && y < yHalf){
-            return QUARTER_TWO;
-        }
-        if(x < xHalf && y > yHalf){
-            return QUARTER_THREE;
-        }
-        if(x > xHalf && y > yHalf){
-            return QUARTER_FOUR;
-        }
-
-        return QUARTER_UNKNOWN;
-    }
-
-    private int[] moveBall(int x, int y){
-        int[] XY= {x,y};
-        switch(quarter(x,y))
-        {
-            //move it left
-            case QUARTER_ONE:
-                XY[0]= x-ballWidth*2;
-                break;
-            //move it down
-            case QUARTER_TWO:
-                XY[1]= y+ballHeight*2;
-                break;
-            //move it right
-            case QUARTER_THREE:
-                XY[0]= x+ballHeight*2;
-                break;
-            //move it up
-            case QUARTER_FOUR:
-                XY[1]= y-ballHeight*2;
-                break;
-        }
-        return XY;
-    }
-
-    /**
-     * Method used for determining if the ball is over an edge
-     * @param x coordinate of the ball
-     * @param y coordinate of the ball
-     * @return over what side of the screen is the ball
-     */
-    private int overEdge(int x, int y){
-        if(x<0){
-            return OVER_LEFT;
-        }
-        if(y<0){
-            return OVER_TOP;
-        }
-        if(x>getWidth()-ballWidth){
-            return OVER_RIGHT;
-        }
-        if(y>getHeight()-ballHeight){
-            return OVER_BOTTOM;
-        }
-        return OVER_NOTHING;
-    }
-
     public static int getWidth() {
         return width;
     }
@@ -263,5 +165,11 @@ public class RandomBallVariables {
 
     public static void setHeight(int height) {
         RandomBallVariables.height = height;
+    }
+    public static int getLeftSide(){
+        return leftSide;
+    }
+    public static int getTopSide(){
+        return topSide;
     }
 }
