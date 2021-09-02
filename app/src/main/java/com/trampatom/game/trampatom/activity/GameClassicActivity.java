@@ -26,6 +26,7 @@ import com.trampatom.game.trampatom.R;
 import com.trampatom.game.trampatom.ball.BallBitmaps;
 import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.BallHandler;
+import com.trampatom.game.trampatom.ball.BallTypeHandler;
 import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.canvas.Background;
 import com.trampatom.game.trampatom.canvas.CanvasGameClassic;
@@ -39,7 +40,6 @@ import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.GameWindow;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.PassivesManager;
-import com.trampatom.game.trampatom.utils.RandomBallVariables;
 
 import java.util.List;
 import java.util.Random;
@@ -68,7 +68,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //Used for scoring
             //determines what ball will be/is currently drawn
-                int ballType=4, currentBall;
+                int ballType=4;
         //coordinates of the currently drawn ball, coordinates where we clicked
                 int  clickedX;
                 int  clickedY;
@@ -110,7 +110,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         PowerUpPool[] powerUp= { null , null, null, null};
         PassivesManager passivesManager;
         ChancePassivesAndEvents chancePassivesAndEvents;
+
         BallBitmaps ballBitmaps;
+        BallTypeHandler ballTypeHandler;
 
 
     // ------------------- Arrays ------------------------------------------------------- \\
@@ -302,10 +304,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         timesClicked=0;
         // sets only one purple ball to be displayed initially
         timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
-        //the first ball is always blue;
-        currentBall= BALL_BLUE;
+
+        ballTypeHandler = new BallTypeHandler();
+        ballTypeHandler.setCurrentBallType(ballType);
+
         initialDraw=true;
-        setCurrentBall(ballType);
     }
 
     // --------------------------- Main Game Loop ------------------------------- \\
@@ -556,7 +559,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //after we run out of energy, end the game
             gameover = true;
         }
-        switch(currentBall)
+        switch(ballTypeHandler.getCurrentType())
         {
             case BALL_BLUE:
                 moveBall();
@@ -571,7 +574,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 canvas.draw(ballObject, score);
                 break;
             case BALL_GREEN:
-                //this ball moves like crazy
                 moveGreenBall();
                 canvas.draw(ballObject, score);
                 break;
@@ -691,7 +693,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //get coordinates where we touched
             clickedX = (int) event.getX();
             clickedY = (int) event.getY();
-            currentBallType = setCurrentBall(ballType);
+            currentBallType = ballTypeHandler.setCurrentBallType(ballType);
             //if we click on the ball do something depending on the ball type
                 if(currentBallType == BALL_RED){
                     redBall();
@@ -711,7 +713,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 if(currentBallType == BALL_WAVE){
                     waveBall();
                 }
-            setCurrentBall(ballType);
+            ballTypeHandler.setCurrentType(currentBallType);
         }
         return false;
     }
@@ -767,33 +769,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
 
         // ------------------------------ Ball Actions --------------------------------- \\
-
-    /**
-     * used to set the ball type to be drawn
-     * <p>@param ballType used to determine what color to draw.</p>
-     */
-    private int setCurrentBall(int ballType){
-        //if we click on the ball do something depending on the ball type
-        if(ballType<=keys.TYPE_BALL_RED_CHANCE){
-            currentBall=BALL_RED;
-        }
-        if(ballType>keys.TYPE_BALL_RED_CHANCE && ballType<=keys.TYPE_BALL_BLUE_CHANCE){
-            currentBall=BALL_BLUE;
-        }
-        if(ballType>keys.TYPE_BALL_BLUE_CHANCE && ballType<=keys.TYPE_BALL_YELLOW_CHANCE){
-            currentBall=BALL_YELLOW;
-        }
-        if(ballType>keys.TYPE_BALL_YELLOW_CHANCE && ballType<=keys.TYPE_BALL_GREEN_CHANCE){
-            currentBall=BALL_GREEN;
-        }
-        if(ballType>keys.TYPE_BALL_GREEN_CHANCE && ballType<=keys.TYPE_BALL_PURPLE_CHANCE){
-            currentBall=BALL_PURPLE;
-        }
-        if(ballType>keys.TYPE_BALL_PURPLE_CHANCE && ballType<=keys.TYPE_BALL_WAVE_CHANCE){
-            currentBall=BALL_WAVE;
-        }
-        return currentBall;
-    }
 
 
     /**
@@ -1009,7 +984,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if(!isSameTypeBallPowerUpActive())
         ballType = ballHandler.getNewBallType();
 
-        currentBallType = setCurrentBall(ballType);
+        currentBallType = ballTypeHandler.setCurrentBallType(ballType);
         setBallObjectByType();
     }
 

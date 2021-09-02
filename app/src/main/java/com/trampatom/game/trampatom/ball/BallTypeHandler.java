@@ -7,7 +7,7 @@ import static com.trampatom.game.trampatom.ball.AtomId.BALL_RED;
 import static com.trampatom.game.trampatom.ball.AtomId.BALL_WAVE;
 import static com.trampatom.game.trampatom.ball.AtomId.BALL_YELLOW;
 
-public class BallTypeHelper {
+public class BallTypeHandler {
 
     public int TYPE_BALL_RED_CHANCE = 2;
     public int TYPE_BALL_BLUE_CHANCE = 10;
@@ -17,7 +17,9 @@ public class BallTypeHelper {
     public int TYPE_BALL_WAVE_CHANCE = 21;
 
     private int currentType;
-    public BallTypeHelper(){
+
+    public BallTypeHandler(){
+        //the first ball is always blue;
         currentType = BALL_BLUE;
     }
 
@@ -42,5 +44,12 @@ public class BallTypeHelper {
             currentType=BALL_WAVE;
         }
         return currentType;
+    }
+
+    public int getCurrentType() {
+        return currentType;
+    }
+    public void setCurrentType(int currentType) {
+        this.currentType = currentType;
     }
 }
