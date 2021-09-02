@@ -121,9 +121,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // ------------------- Game Variables ----------------------------------------------- \\
 
-
         //width and height of the canvas
-            int width, height;
+            int width;
+            int height;
         //used for displaying the score and setting new highScore at the end of the game
             int score=0, previousHighScore;
         //used to determine how long we will play
@@ -200,8 +200,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         random = new Random();
         keys = new Keys();
         atomPool = new AtomPool(this);
-        width= MainActivity.getWidth();
-        height = MainActivity.getHeight();
+        setWidth(MainActivity.getWidth());
+        setHeight(MainActivity.getHeight());
 
         // SOUNDS
         initSounds();
@@ -283,7 +283,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void initiateBitmaps(){
 
         int ballWidth, ballHeight;
-        ballHeight = ballWidth = passivesManager.setNewBallSizeFromPassives(height/ HEIGHT_SCALE, selectedPassive1,
+        ballHeight = ballWidth = passivesManager.setNewBallSizeFromPassives(getHeight()/ HEIGHT_SCALE, selectedPassive1,
                 selectedPassive2,powerUp[2].getCurrentLevel(), powerUp[3].getCurrentLevel());
 
         this.ballBitmaps = new BallBitmaps(this);
@@ -499,15 +499,15 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void initiateOnCanvas(){
         //needed to get the height of the canvas
         mCanvas = ourHolder.lockCanvas();
-        height = mCanvas.getHeight();
+        setHeight(mCanvas.getHeight());
         ourHolder.unlockCanvasAndPost(mCanvas);
         // object instances
-        RandomBallVariables.setWidth(width);
-        RandomBallVariables.setHeight(height);
+        RandomBallVariables.setWidth(getWidth());
+        RandomBallVariables.setHeight(getHeight());
         randomCoordinate = new RandomBallVariables(getBaseBallWidth(), getBaseBallHeight());
 
-        stars = new Background(ourHolder, mCanvas, width, height);
-        canvas = new CanvasGameClassic(ourHolder,mCanvas, stars, width, height);
+        stars = new Background(ourHolder, mCanvas, getWidth(), getHeight());
+        canvas = new CanvasGameClassic(ourHolder,mCanvas, stars, getWidth(), getHeight());
 
         powerUps = new PowerUps(energyProgress,keys,powerUp, getBaseBallWidth(), getBaseBallHeight());
 
@@ -544,7 +544,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         getNewBall();
 
         clickedABall = new ClickedABall(getBaseBallWidth(), getBaseBallHeight());
-        ballMovement = new BallMovement(width, height);
+        ballMovement = new BallMovement(getWidth(), getHeight());
        initialDraw = false;
 
 
@@ -1090,25 +1090,40 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
     private void turnOffLimitingSquarePowerUp() {
-        ballMovement.changeWidthAndHeight(width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
-        randomCoordinate.changeWidthAndHeight(width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+        ballMovement.changeWidthAndHeight(getWidth()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                getHeight()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+        randomCoordinate.changeWidthAndHeight(getWidth()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                getHeight()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
         keys.POWER_UP_LIMITING_SQUARE_ACTIVE = false;
         keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS=3;
     }
     private void triggerLimitingSquarePowerUp() {
         // keys.POWER_UP_LIMITING_SQUARE_ACTIVE = false;
         //if the chance event for the limiting square is triggered , reduce the device's width and height
-        ballMovement.changeWidthAndHeight(-width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                -height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
-        randomCoordinate.changeWidthAndHeight(-width/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                -height/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+        ballMovement.changeWidthAndHeight(-getWidth()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                -getHeight()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
+        randomCoordinate.changeWidthAndHeight(-getWidth()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
+                -getHeight()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
         keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS--;
     }
 
     private boolean isSameTypeBallPowerUpActive() {
         return ballObject.isActiveChangesType() && purpleBallObjects[0].isActiveChangesType()&& multipleBalls[0].isActiveChangesType();
+    }
+
+    // WIDTH AND HEIGHT
+
+    public int getWidth() {
+        return width;
+    }
+    public void setWidth(int width) {
+        this.width = width;
+    }
+    public int getHeight() {
+        return height;
+    }
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
