@@ -12,8 +12,6 @@ import java.util.Random;
  * and methods for preventing sprite off screen bugs.
  */
 public class RandomBallVariables {
-    //used for converting an angle into radians
-    private static final double RADIANS = 3.14/180;
     int ballWidth;
     int ballHeight;
     Random random;
