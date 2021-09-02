@@ -162,10 +162,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent start = new Intent(this, GameSurvivalActivity.class);
             startActivity(start);
         }
-        if(selectedGame==3){
-            Intent start = new Intent(this, Game2.class);
-            startActivity(start);
-        }
     }
 
     @Override

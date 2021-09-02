@@ -372,7 +372,11 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
         //prevents drawing over screen
         stars = new Background(ourHolder, mCanvas, width, height);
         canvas = new CanvasGameSurvival(ourHolder,mCanvas, stars);
-        randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
+
+        RandomBallVariables.setWidth(width);
+        RandomBallVariables.setHeight(height);
+        randomCoordinate = new RandomBallVariables(ballWidth, ballHeight);
+
         clickedABall= new ClickedABall(ballWidth, ballHeight);
         goldX = randomCoordinate.randomX();
         goldY = randomCoordinate.randomY();

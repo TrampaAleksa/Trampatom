@@ -25,16 +25,12 @@ public class RandomBallVariables {
     Random random;
 
     /**
-     * Constructor for inserting device width, height and ball width and height
+     * Constructor for inserting ball width and height
      * only once instead of on every method call
-     * @param width device width
-     * @param height canvas height
      * @param ballWidth general ball width
      * @param ballHeight general ball height
      */
-    public RandomBallVariables(int width, int height, int ballWidth, int ballHeight){
-        setWidth(width);
-        setHeight(height);
+    public RandomBallVariables(int ballWidth, int ballHeight){
         this.ballWidth=ballWidth;
         this.ballHeight=ballHeight;
         random = new Random();

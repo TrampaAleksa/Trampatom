@@ -502,12 +502,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         height = mCanvas.getHeight();
         ourHolder.unlockCanvasAndPost(mCanvas);
         // object instances
-        randomCoordinate = new RandomBallVariables(width, height, getBaseBallWidth(), getBaseBallHeight());
+        RandomBallVariables.setWidth(width);
+        RandomBallVariables.setHeight(height);
+        randomCoordinate = new RandomBallVariables(getBaseBallWidth(), getBaseBallHeight());
 
         stars = new Background(ourHolder, mCanvas, width, height);
         canvas = new CanvasGameClassic(ourHolder,mCanvas, stars, width, height);
 
-        powerUps = new PowerUps(energyProgress,keys,powerUp, getBaseBallWidth(), getBaseBallHeight(),randomCoordinate);
+        powerUps = new PowerUps(energyProgress,keys,powerUp, getBaseBallWidth(), getBaseBallHeight());
 
         // in case we selected the power up to increase the starting energy
         if(flagTypePassive2==4 || flagTypePassive1==4) {
@@ -520,7 +522,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
 
         //get every ball object when starting a game
-            ballHandler = new BallHandler(randomCoordinate, keys, getBaseBallWidth(), getBaseBallHeight());
+            ballHandler = new BallHandler(keys, getBaseBallWidth(), getBaseBallHeight());
             ballHandler.parseBallBitmaps(ballBitmaps);
             ballHandler.parseChancePassivesAndEventsObject(chancePassivesAndEvents);
         //set the ball attributes if the passives we selected affect the balls

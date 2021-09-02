@@ -45,15 +45,14 @@ public class PowerUps {
      * Since this class manipulates the progress bar in some cases we should pass the progress bar, and keys
      * for accessing flags of every power up.
      */
-    public PowerUps(ProgressBar progressBar, Keys keys,PowerUpPool[] powerUp,
-                    int ballWidth, int ballHeight,RandomBallVariables randomBallVariables) {
+    public PowerUps(ProgressBar progressBar, Keys keys, PowerUpPool[] powerUp,
+                    int ballWidth, int ballHeight) {
         // TODO make ball width and height static.
         this.ballWidth = ballWidth;
         this.ballHeight = ballHeight;
         ballSpeed = keys.DEFAULT_BALL_SPEED;
         this.powerUp = powerUp;
-        this.randomBallVariables = randomBallVariables;
-
+        this.randomBallVariables = new RandomBallVariables(ballWidth, ballHeight);
 
         this.progressBar = progressBar;
         this.keys = keys;

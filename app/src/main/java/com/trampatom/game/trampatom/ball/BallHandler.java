@@ -46,8 +46,8 @@ public class BallHandler {
      * Constructor for BallHandler. We should pass in an instance of RandomBallVariables and keys.
      * Also the mBall width and height initially used
      */
-    public BallHandler(RandomBallVariables randomBallVariables, Keys keys,int ballWidth,int ballHeight){
-        this.randomBallVariables = randomBallVariables;
+    public BallHandler(Keys keys, int ballWidth, int ballHeight){
+        this.randomBallVariables = new RandomBallVariables(ballWidth, ballHeight);
         this.keys = keys;
         this.ballWidth = ballWidth;
         this.ballHeight = ballHeight;
