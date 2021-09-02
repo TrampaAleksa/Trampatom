@@ -35,6 +35,7 @@ import com.trampatom.game.trampatom.currency.PowerUps;
 import com.trampatom.game.trampatom.currency.ShopHandler;
 import com.trampatom.game.trampatom.power.up.ChancePassivesAndEvents;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
+import com.trampatom.game.trampatom.utils.GameWindow;
 import com.trampatom.game.trampatom.utils.HighScore;
 import com.trampatom.game.trampatom.utils.PassivesManager;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
@@ -121,9 +122,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // ------------------- Game Variables ----------------------------------------------- \\
 
-        //width and height of the canvas
-            int width;
-            int height;
         //used for displaying the score and setting new highScore at the end of the game
             int score=0, previousHighScore;
         //used to determine how long we will play
@@ -1115,16 +1113,19 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     // WIDTH AND HEIGHT
 
     public int getWidth() {
-        return width;
+        return getGameWindow().getWidth();
     }
     public void setWidth(int width) {
-        this.width = width;
+        getGameWindow().setWidth(width);
     }
     public int getHeight() {
-        return height;
+        return getGameWindow().getHeight();
     }
     public void setHeight(int height) {
-        this.height = height;
+        getGameWindow().setHeight(height);
+    }
+    private GameWindow getGameWindow(){
+        return GameWindow.getInstance();
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
