@@ -16,7 +16,7 @@ import java.util.Random;
 public class BallMovement {
     //used for determining in how many seconds will the red balls speed up
     private static final int RED_BALL_SPEED_UP_INTERVAL = 8;
-    //used to set a speed liit to red balls in the survival game
+    //used to set a speed limit to red balls in the survival game
     private static final int RED_BALL_SPEED_LIMIT = 16;
     private int width, height;
     Random random;
@@ -35,10 +35,12 @@ public class BallMovement {
      * @param height screen's height
      */
     public BallMovement(int width, int height) {
-        this.width = width;
-        this.height = height;
+        setWidth(width);
+        setHeight(height);
         random  = new Random();
     }
+
+
 
     /**
      * Method that uses a passed mBall object to manipulate its coordinates and move it.
@@ -67,13 +69,13 @@ public class BallMovement {
         y += moveY*ballSpeed * Math.sin(angle);
 
         //if the mBall is off screen change its direction
-        if(x > width-ballWidth) {
-            x = width-ballWidth;
+        if(x > getWidth() - getBallWidth()) {
+            x = getWidth() - getBallWidth();
             moveX = -moveX;
             // too far right
         }
-        if(y > height-ballHeight) {
-            y = height-ballHeight;
+        if(y > getHeight() - getBallHeight()) {
+            y = getHeight() - getBallHeight();
             moveY = -moveY;
             // too far bottom
         }
@@ -92,6 +94,7 @@ public class BallMovement {
         ballObject.setMoveX(moveX); ballObject.setMoveY(moveY);
         return ballObject;
     }
+
 
 
 
@@ -122,13 +125,13 @@ public class BallMovement {
             y += moveY * ballSpeed * Math.cos(angle);
 
             //if the mBall is off screen change its direction
-            if (x > width - ballWidth) {
-                x = width - ballWidth;
+            if (x > getWidth() - getBallWidth()) {
+                x = getWidth() - getBallWidth();
                 moveX = -moveX;
                 // too far right
             }
-            if (y > height - ballHeight) {
-                y = height - ballHeight;
+            if (y > getHeight() - getBallHeight()) {
+                y = getHeight() - getBallHeight();
                 moveY = -moveY;
                 // too far bottom
             }
@@ -169,13 +172,13 @@ public class BallMovement {
         y += moveY*ballSpeed * Math.cos(angle);
 
         //if the mBall is off screen change its direction
-        if(x > width-ballWidth) {
-            x = width-ballWidth;
+        if(x > getWidth() -ballWidth) {
+            x = getWidth() -ballWidth;
             moveX = -moveX;
             // too far right
         }
-        if(y > height-ballHeight) {
-            y = height-ballHeight;
+        if(y > getHeight() -ballHeight) {
+            y = getHeight() -ballHeight;
             moveY = -moveY;
             // too far bottom
         }
@@ -229,8 +232,8 @@ public class BallMovement {
         }
 
         //if the mBall is off screen change its direction
-        if(x > width-ballWidth) {
-            x = width-ballWidth;
+        if(x > getWidth() - getBallWidth()) {
+            x = getWidth() - getBallWidth();
             moveX = -moveX;
             // too far right
         }
@@ -274,13 +277,13 @@ public class BallMovement {
         y += moveY*ballSpeed * Math.cos(angle);
 
         //if the mBall is off screen change its direction
-        if(x > width-ballWidth) {
-            x = width-ballWidth;
+        if(x > getWidth() -ballWidth) {
+            x = getWidth() -ballWidth;
             moveX = -moveX;
             // too far right
         }
-        if(y > height-ballHeight) {
-            y = height-ballHeight;
+        if(y > getHeight() -ballHeight) {
+            y = getHeight() -ballHeight;
             moveY = -moveY;
             // too far bottom
         }
@@ -306,10 +309,29 @@ public class BallMovement {
      * @return true if its near the center
      */
     private boolean checkIfCenter(int x, int y) {
-        if(x>(width/2-ballWidth) && x<(width/2+ballWidth) && y>(height/2 - ballHeight) && y<(height/2 + ballHeight))
+        if(x>(getWidth() /2- getBallWidth()) && x<(getWidth() /2+ getBallWidth()) && y>(getHeight() /2 - getBallHeight()) && y<(getHeight() /2 + getBallHeight()))
             return true;
 
         return false;
+    }
+
+    private int getBallWidth() {
+        return ballWidth;
+    }
+    private int getBallHeight() {
+        return ballHeight;
+    }
+    private int getWidth() {
+        return width;
+    }
+    private int getHeight() {
+        return height;
+    }
+    private void setWidth(int width) {
+        this.width = width;
+    }
+    private void setHeight(int height) {
+        this.height = height;
     }
 
     public int getLeftSide() {
