@@ -160,7 +160,7 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
         if(ballclick1 && ballclick2 && ballclick3){
             ballclick1=ballclick2=ballclick3=false;
             score +=300;
-            XY= randomCoordinate.randomnegativeBallsCoordinates();
+            XY= randomCoordinate.randomNegativeBallsCoordinates();
             for(i=0; i<BALL_NUMBER; i++){
                 angles[i]= randomCoordinate.randomAngle();
             }
@@ -185,7 +185,7 @@ public class Game2 extends AppCompatActivity implements View.OnTouchListener, Ru
                 //prevents drawing over screen
                 randomCoordinate = new RandomBallVariables(width, height, ballWidth, ballHeight);
                 clickedABall = new ClickedABall(ballWidth, ballHeight);
-                XY= randomCoordinate.randomnegativeBallsCoordinates();
+                XY= randomCoordinate.randomNegativeBallsCoordinates();
                 for(i=0; i<BALL_NUMBER; i++){
                     angles[i]= randomCoordinate.randomAngle();
                 }

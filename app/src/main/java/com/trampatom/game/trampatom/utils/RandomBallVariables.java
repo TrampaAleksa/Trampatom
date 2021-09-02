@@ -30,7 +30,7 @@ public class RandomBallVariables {
 
         int y, x;
     //width and height of the device/canvas
-    private int width , height;
+    private static int width , height;
     //left and top side of the screen, used to draw a ball within a certain limit if we used limiting square power up.
     private static int leftSide = 0;
     private static int topSide = 0;
@@ -58,8 +58,8 @@ public class RandomBallVariables {
      * @param ballHeight general ball height
      */
     public RandomBallVariables(int width, int height, int ballWidth, int ballHeight){
-        this.width=width;
-        this.height=height;
+        setWidth(width);
+        setHeight(height);
         this.ballWidth=ballWidth;
         this.ballHeight=ballHeight;
         random = new Random();
@@ -68,16 +68,14 @@ public class RandomBallVariables {
     /**
      * method used to change the width and height values of our canvas. not teh actual width/height but the parameters that are used
      * for ball movement and "edge" bouncing
-     * @param addWidth
-     * @param addHeight
+     * @param widthToAdd
+     * @param heightToAdd
      */
-    public void changeWidthAndHeight(int addWidth, int addHeight){
-
-        width = width + addWidth;
-        height = height + addHeight;
-        leftSide += addWidth;
-        topSide += addHeight;
-
+    public void changeWidthAndHeight(int widthToAdd, int heightToAdd){
+        setWidth(getWidth() + widthToAdd);
+        setHeight(getHeight() + heightToAdd);
+        leftSide += widthToAdd;
+        topSide += heightToAdd;
     }
 
 
@@ -97,8 +95,8 @@ public class RandomBallVariables {
      * @return a random X coordinate
      */
     public int randomX() {
-        x= leftSide + random.nextInt( width - leftSide);
-        x= offscale(x, width, ballWidth);
+        x= leftSide + random.nextInt( getWidth() - leftSide);
+        x= offscale(x, getWidth(), ballWidth);
         return x;
     }
 
@@ -107,8 +105,8 @@ public class RandomBallVariables {
      * @return a random Y coordinate
      */
     public int randomY() {
-        y=topSide + random.nextInt( height - topSide);
-        y=offscale(y, height, ballHeight);
+        y=topSide + random.nextInt( getHeight() - topSide);
+        y=offscale(y, getHeight(), ballHeight);
          return y;
     }
 
@@ -134,8 +132,8 @@ public class RandomBallVariables {
      * @return an angle pointing to the center of the screen
      */
     public double centeredAngle(int x, int y){
-        float deltaX = width/2 - x;
-        float deltaY = height/2 - y;
+        float deltaX = getWidth()/2 - x;
+        float deltaY = getHeight()/2 - y;
         double angle = Math.atan2( deltaY, deltaX );
 
         return angle;
@@ -145,7 +143,7 @@ public class RandomBallVariables {
      * Method that should be used in survival game. Gets random coordinates for every red ball
      * @return a set of coordinates for red balls: x1,x2,x3... xN, y1, y2 ,y3 ... yN
      */
-    public int[] randomnegativeBallsCoordinates(){
+    public int[] randomNegativeBallsCoordinates(){
         int[] XY= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
         //draw the first ball
@@ -186,16 +184,19 @@ public class RandomBallVariables {
      */
     public int quarter(int x, int y){
 
-        if(x> width/2 && y<height/2){
+        int xHalf = getWidth() / 2;
+        int yHalf = getHeight() / 2;
+
+        if(x > xHalf && y < yHalf){
             return QUARTER_ONE;
         }
-        if(x< width/2 && y<height/2){
+        if(x < xHalf && y < yHalf){
             return QUARTER_TWO;
         }
-        if(x< width/2 && y>height/2){
+        if(x < xHalf && y > yHalf){
             return QUARTER_THREE;
         }
-        if(x> width/2 && y>height/2){
+        if(x > xHalf && y > yHalf){
             return QUARTER_FOUR;
         }
 
@@ -239,12 +240,28 @@ public class RandomBallVariables {
         if(y<0){
             return OVER_TOP;
         }
-        if(x>width-ballWidth){
+        if(x>getWidth()-ballWidth){
             return OVER_RIGHT;
         }
-        if(y>height-ballHeight){
+        if(y>getHeight()-ballHeight){
             return OVER_BOTTOM;
         }
         return OVER_NOTHING;
+    }
+
+    public static int getWidth() {
+        return width;
+    }
+
+    public static void setWidth(int width) {
+        RandomBallVariables.width = width;
+    }
+
+    public static int getHeight() {
+        return height;
+    }
+
+    public static void setHeight(int height) {
+        RandomBallVariables.height = height;
     }
 }

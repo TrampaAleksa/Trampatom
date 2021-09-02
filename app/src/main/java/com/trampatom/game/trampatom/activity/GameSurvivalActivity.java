@@ -4,7 +4,6 @@ package com.trampatom.game.trampatom.activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -383,7 +382,7 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
         }
         x=randomCoordinate.randomX();
         y=randomCoordinate.randomY();
-        XY=randomCoordinate.randomnegativeBallsCoordinates();
+        XY=randomCoordinate.randomNegativeBallsCoordinates();
         //first draw
         initialDraw= canvas.draw(ball,negativeBall,x,y, XY, score);
     }
