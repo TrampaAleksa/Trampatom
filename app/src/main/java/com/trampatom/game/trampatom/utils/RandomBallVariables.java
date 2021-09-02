@@ -31,20 +31,6 @@ public class RandomBallVariables {
     }
 
     /**
-     * method used to change the width and height values of our canvas. not teh actual width/height but the parameters that are used
-     * for ball movement and "edge" bouncing
-     * @param widthToAdd
-     * @param heightToAdd
-     */
-    public void changeWidthAndHeight(int widthToAdd, int heightToAdd){
-        getGameWindow().setWidth(getWidth() + widthToAdd);
-        getGameWindow().setHeight(getHeight() + heightToAdd);
-        getGameWindow().setLeftSide(getLeftSide() + widthToAdd);
-        getGameWindow().setTopSide(getTopSide() + heightToAdd);
-    }
-
-
-    /**
      * Method that should get a new ball type : red, blue, green, yellow, purple or wave depending on what
      * number it returns.
      * @return a random int value that is used to get a new ball
@@ -72,7 +58,7 @@ public class RandomBallVariables {
      */
     public int randomY() {
         int y;
-        y=getTopSide() + random.nextInt( getHeight() - getTopSide());
+        y= getTopSide() + random.nextInt( getHeight() - getTopSide());
         y=offscale(y, getHeight(), ballHeight);
          return y;
     }

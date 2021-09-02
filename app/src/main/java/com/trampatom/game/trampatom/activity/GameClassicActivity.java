@@ -1011,12 +1011,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if(!isSameTypeBallPowerUpActive())
         ballType = ballHandler.getNewBallType();
 
-        if(isLimitingSquareTriggered())
-            triggerLimitingSquarePowerUp();
-
-        if(isLimitingSquareExpired())
-            turnOffLimitingSquarePowerUp();
-
         currentBallType = setCurrentBall(ballType);
         setBallObjectByType();
     }
@@ -1076,32 +1070,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private int getBaseBallHeight(){
         return ballBitmaps.getBallHeight();
-    }
-
-    // GET NEW BALL METHOD
-    private boolean isLimitingSquareTriggered() {
-        return keys.POWER_UP_LIMITING_SQUARE_ACTIVE && keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS==3;
-    }
-    private boolean isLimitingSquareExpired() {
-        return keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS==0;
-    }
-
-    private void turnOffLimitingSquarePowerUp() {
-        ballMovement.changeWidthAndHeight(getWidth()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                getHeight()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
-        randomCoordinate.changeWidthAndHeight(getWidth()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                getHeight()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
-        keys.POWER_UP_LIMITING_SQUARE_ACTIVE = false;
-        keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS=3;
-    }
-    private void triggerLimitingSquarePowerUp() {
-        // keys.POWER_UP_LIMITING_SQUARE_ACTIVE = false;
-        //if the chance event for the limiting square is triggered , reduce the device's width and height
-        ballMovement.changeWidthAndHeight(-getWidth()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                -getHeight()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
-        randomCoordinate.changeWidthAndHeight(-getWidth()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_WIDTH,
-                -getHeight()/Keys.POWER_UP_LIMITING_SQUARE_REDUCTION_AMOUNT_HEIGHT);
-        keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS--;
     }
 
     private boolean isSameTypeBallPowerUpActive() {

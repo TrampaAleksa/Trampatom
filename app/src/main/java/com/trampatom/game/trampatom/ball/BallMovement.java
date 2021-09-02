@@ -2,6 +2,7 @@ package com.trampatom.game.trampatom.ball;
 
 
 import com.trampatom.game.trampatom.Model.Ball;
+import com.trampatom.game.trampatom.utils.GameWindow;
 import com.trampatom.game.trampatom.utils.Keys;
 
 import java.util.Random;
@@ -17,7 +18,7 @@ public class BallMovement {
     private static final int RED_BALL_SPEED_UP_INTERVAL = 8;
     //used to set a speed liit to red balls in the survival game
     private static final int RED_BALL_SPEED_LIMIT = 16;
-    private int width, height, leftSide=0, topSide=0;
+    private int width, height;
     Random random;
     int changeAngleGreen;
     int x, y, moveX, moveY;
@@ -40,29 +41,11 @@ public class BallMovement {
     }
 
     /**
-     * method used to change the width and height values of our canvas. not teh actual width/height but the parameters that are used
-     * for ball movement and "edge" bouncing
-     * @param addWidth amount of width to change
-     * @param addHeight amount of height to change
-     */
-    public void changeWidthAndHeight(int addWidth, int addHeight){
-
-        width = width + addWidth;
-        height = height + addHeight;
-        leftSide -=  addWidth;
-        topSide -=  addHeight;
-
-    }
-
-
-    /**
      * Method that uses a passed mBall object to manipulate its coordinates and move it.
      * @param ballObject the mBall object we want to move
      * @return the now moved mBall
      */
     public Ball moveBall(Ball ballObject){
-
-
 
          x = ballObject.getX();
          y = ballObject.getY();
@@ -82,8 +65,6 @@ public class BallMovement {
 
         x += moveX*ballSpeed * Math.cos(angle);
         y += moveY*ballSpeed * Math.sin(angle);
-        // x =(int) (moveX*(x+ (ballSpeed * Math.cos(angle))));
-         //y =(int) (moveY*(y + (ballSpeed * Math.sin(angle))));
 
         //if the mBall is off screen change its direction
         if(x > width-ballWidth) {
@@ -96,13 +77,13 @@ public class BallMovement {
             moveY = -moveY;
             // too far bottom
         }
-        if(x < leftSide) {
-            x = leftSide;
+        if(x < getLeftSide()) {
+            x = getLeftSide();
             moveX = -moveX;
             // too far left
         }
-        if(y < topSide) {
-            y = topSide;
+        if(y < getTopSide()) {
+            y = getTopSide();
             moveY = -moveY;
             // too far top
         }
@@ -151,13 +132,13 @@ public class BallMovement {
                 moveY = -moveY;
                 // too far bottom
             }
-            if (x < leftSide) {
-                x = leftSide;
+            if (x < getLeftSide()) {
+                x = getLeftSide();
                 moveX = -moveX;
                 // too far left
             }
-            if (y < topSide) {
-                y = topSide;
+            if (y < getTopSide()) {
+                y = getTopSide();
                 moveY = -moveY;
                 // too far top
             }
@@ -198,13 +179,13 @@ public class BallMovement {
             moveY = -moveY;
             // too far bottom
         }
-        if(x < leftSide) {
-            x = leftSide;
+        if(x < getLeftSide()) {
+            x = getLeftSide();
             moveX = -moveX;
             // too far left
         }
-        if(y < topSide) {
-            y = topSide;
+        if(y < getTopSide()) {
+            y = getTopSide();
             moveY = -moveY;
             // too far top
         }
@@ -253,8 +234,8 @@ public class BallMovement {
             moveX = -moveX;
             // too far right
         }
-        if(x < leftSide) {
-            x = leftSide;
+        if(x < getLeftSide()) {
+            x = getTopSide();
             moveX = -moveX;
             // too far left
         }
@@ -303,13 +284,13 @@ public class BallMovement {
             moveY = -moveY;
             // too far bottom
         }
-        if(x < leftSide) {
-            x = leftSide;
+        if(x < getLeftSide()) {
+            x = getLeftSide();
             moveX = -moveX;
             // too far left
         }
-        if(y < topSide) {
-            y = topSide;
+        if(y < getTopSide()) {
+            y = getTopSide();
             moveY = -moveY;
             // too far top
         }
@@ -329,5 +310,12 @@ public class BallMovement {
             return true;
 
         return false;
+    }
+
+    public int getLeftSide() {
+        return GameWindow.getInstance().getLeftSide();
+    }
+    public int getTopSide() {
+        return GameWindow.getInstance().getTopSide();
     }
 }

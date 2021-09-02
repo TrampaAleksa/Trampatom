@@ -187,10 +187,6 @@ public class BallHandler {
      */
     public Ball getNewBallObject(Ball ball, int currentBallType){
 
-        if(keys.POWER_UP_LIMITING_SQUARE_ACTIVE &&  keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS>0){
-            keys.POWER_UP_LIMITING_SQUARE_BALL_COUNT_UNTIL_SQUARE_DISSAPEARS--;
-        }
-
         ball.setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
 
         // random chance for triggering the event. if it is triggered do this block of code
@@ -201,13 +197,6 @@ public class BallHandler {
                     ball.setBallAtomValue(ball.getBallAtomValue()+ Keys.ATOM_DROP_VALUE_INCREASE);
 
             }
-            else if(chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_LIMITING_SQUARE
-                    && !keys.POWER_UP_LIMITING_SQUARE_ACTIVE){
-
-                keys.POWER_UP_LIMITING_SQUARE_ACTIVE = true;
-
-            }
-
         }
 
         //in case we selected the active that sets the next few balls the same type, reduce the countdown.
