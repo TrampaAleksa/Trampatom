@@ -373,8 +373,6 @@ public class GameSurvivalActivity extends AppCompatActivity implements Runnable,
         stars = new Background(ourHolder, mCanvas, width, height);
         canvas = new CanvasGameSurvival(ourHolder,mCanvas, stars);
 
-        RandomBallVariables.setWidth(width);
-        RandomBallVariables.setHeight(height);
         randomCoordinate = new RandomBallVariables(ballWidth, ballHeight);
 
         clickedABall= new ClickedABall(ballWidth, ballHeight);

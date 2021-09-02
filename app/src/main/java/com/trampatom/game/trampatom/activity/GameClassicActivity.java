@@ -501,8 +501,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         setHeight(mCanvas.getHeight());
         ourHolder.unlockCanvasAndPost(mCanvas);
         // object instances
-        RandomBallVariables.setWidth(getWidth());
-        RandomBallVariables.setHeight(getHeight());
         randomCoordinate = new RandomBallVariables(getBaseBallWidth(), getBaseBallHeight());
 
         stars = new Background(ourHolder, mCanvas, getWidth(), getHeight());

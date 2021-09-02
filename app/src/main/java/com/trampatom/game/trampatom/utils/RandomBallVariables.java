@@ -41,8 +41,8 @@ public class RandomBallVariables {
      * @param heightToAdd
      */
     public void changeWidthAndHeight(int widthToAdd, int heightToAdd){
-        setWidth(getWidth() + widthToAdd);
-        setHeight(getHeight() + heightToAdd);
+        getGameWindow().setWidth(getWidth() + widthToAdd);
+        getGameWindow().setHeight(getHeight() + heightToAdd);
         leftSide += widthToAdd;
         topSide += heightToAdd;
     }
@@ -148,14 +148,8 @@ public class RandomBallVariables {
     public static int getWidth() {
         return getGameWindow().getWidth();
     }
-    public static void setWidth(int width) {
-        getGameWindow().setWidth(width);
-    }
     public static int getHeight() {
         return getGameWindow().getHeight();
-    }
-    public static void setHeight(int height) {
-        getGameWindow().setHeight(height);
     }
 
     public static int getLeftSide(){
