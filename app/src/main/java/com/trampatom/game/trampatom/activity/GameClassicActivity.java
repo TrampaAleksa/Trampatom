@@ -66,16 +66,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // ------------------- General Ball Variables --------------------------------------- \\
 
-        //Used for scoring
             //determines what ball will be/is currently drawn
-                int ballType=4;
+                int ballType=4; //seed
         //coordinates of the currently drawn ball, coordinates where we clicked
                 int  clickedX;
                 int  clickedY;
 
     // ------------------- Ball type variables ------------------------------------------ \\
 
-        int currentBallType;
         //used for yellow ball;
                 int timesClicked;
                 boolean changedSize=false;
@@ -306,10 +304,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
 
         ballTypeHandler = new BallTypeHandler();
-        ballTypeHandler.setCurrentBallType(ballType);
+        setCurrentBallType();
 
         initialDraw=true;
     }
+
 
     // --------------------------- Main Game Loop ------------------------------- \\
 
@@ -428,11 +427,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 // , if its not, there is no need to reset the balls
                 if(flagTypePowerUp1 == Keys.FLAG_BALL_POWER_UP) {
                     //reset the ball objects after the power up expires
-                    ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, currentBallType);
+                    ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, getCurrentBallType());
                     purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
-                            selectedPowerUp1, keys.PURPLE_BALL_NUMBER, currentBallType);
+                            selectedPowerUp1, keys.PURPLE_BALL_NUMBER, getCurrentBallType());
                     multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                            selectedPowerUp1, numberOfWaveAtoms(), currentBallType);
+                            selectedPowerUp1, numberOfWaveAtoms(), getCurrentBallType());
                 }
             }
 
@@ -453,11 +452,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     timeConsumable = false;
                     consumableCountDownTimer = 0;
                     //reset the ball objects after the power up expires
-                    ballObject = powerUps.resetBallState(ballObject, selectedPowerUp2, currentBallType);
+                    ballObject = powerUps.resetBallState(ballObject, selectedPowerUp2, getCurrentBallType());
                     purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
-                            selectedPowerUp2, keys.PURPLE_BALL_NUMBER, currentBallType);
+                            selectedPowerUp2, keys.PURPLE_BALL_NUMBER, getCurrentBallType());
                     multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                            selectedPowerUp2, numberOfWaveAtoms(), currentBallType);
+                            selectedPowerUp2, numberOfWaveAtoms(), getCurrentBallType());
                 }
             }
         }
@@ -559,7 +558,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //after we run out of energy, end the game
             gameover = true;
         }
-        switch(ballTypeHandler.getCurrentType())
+        switch(getCurrentBallType())
         {
             case BALL_BLUE:
                 moveBall();
@@ -693,30 +692,33 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //get coordinates where we touched
             clickedX = (int) event.getX();
             clickedY = (int) event.getY();
-            currentBallType = ballTypeHandler.setCurrentBallType(ballType);
+            setCurrentBallType();
+//            currentBallType = ballTypeHandler.setCurrentBallType(ballType);
             //if we click on the ball do something depending on the ball type
-                if(currentBallType == BALL_RED){
+                if(getCurrentBallType() == BALL_RED){
                     redBall();
                 }
-                if(currentBallType == BALL_BLUE){
+                if(getCurrentBallType() == BALL_BLUE){
                     blueBall();
                 }
-                if(currentBallType == BALL_YELLOW){
+                if(getCurrentBallType() == BALL_YELLOW){
                     yellowBall();
                 }
-                if(currentBallType == BALL_GREEN){
+                if(getCurrentBallType() == BALL_GREEN){
                     greenBall();
                 }
-                if(currentBallType == BALL_PURPLE){
+                if(getCurrentBallType() == BALL_PURPLE){
                     purpleBall();
                 }
-                if(currentBallType == BALL_WAVE){
+                if(getCurrentBallType() == BALL_WAVE){
                     waveBall();
                 }
-            ballTypeHandler.setCurrentType(currentBallType);
+            ballTypeHandler.setCurrentType(getCurrentBallType());
         }
         return false;
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -984,7 +986,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if(!isSameTypeBallPowerUpActive())
         ballType = ballHandler.getNewBallType();
 
-        currentBallType = ballTypeHandler.setCurrentBallType(ballType);
+        setCurrentBallType();
         setBallObjectByType();
     }
 
@@ -997,34 +999,34 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void setBallObjectByType(){
         // BLUE BALL
-        if(currentBallType == BALL_RED){
-            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
+        if(getCurrentBallType() == BALL_RED){
+            ballObject = ballHandler.getNewBallObject(ballObject, getCurrentBallType());
         }
 
         // RED BALL
-        if(currentBallType == BALL_BLUE){
+        if(getCurrentBallType() == BALL_BLUE){
 
-            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
+            ballObject = ballHandler.getNewBallObject(ballObject, getCurrentBallType());
         }
 
         // YELLOW BALL
-        if(currentBallType == BALL_YELLOW){
-            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
+        if(getCurrentBallType() == BALL_YELLOW){
+            ballObject = ballHandler.getNewBallObject(ballObject, getCurrentBallType());
         }
 
         // GREEN BALL
-        if(currentBallType == BALL_GREEN){
-            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
+        if(getCurrentBallType() == BALL_GREEN){
+            ballObject = ballHandler.getNewBallObject(ballObject, getCurrentBallType());
         }
 
         // PURPLE BALL
-        if(currentBallType == BALL_PURPLE){
-            purpleBallObjects = ballHandler.getNewBallObjectArray(keys.PURPLE_BALL_NUMBER,purpleBallObjects, currentBallType);
+        if(getCurrentBallType() == BALL_PURPLE){
+            purpleBallObjects = ballHandler.getNewBallObjectArray(keys.PURPLE_BALL_NUMBER,purpleBallObjects, getCurrentBallType());
         }
 
         //WAVE BALL
-        if(currentBallType == BALL_WAVE){
-            multipleBalls = ballHandler.getNewBallObjectArray(numberOfWaveAtoms(),multipleBalls, currentBallType);
+        if(getCurrentBallType() == BALL_WAVE){
+            multipleBalls = ballHandler.getNewBallObjectArray(numberOfWaveAtoms(),multipleBalls, getCurrentBallType());
             currentWaveBall = 0;
         }
     }
@@ -1068,6 +1070,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private double getRandomAngle() {
         return Angles.randomAngle();
+    }
+
+    // BALL TYPE
+    private int getCurrentBallType() {
+        return ballTypeHandler.getCurrentType();
+    }
+    private void setCurrentBallType() {
+        ballTypeHandler.setCurrentBallType(ballType);
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
