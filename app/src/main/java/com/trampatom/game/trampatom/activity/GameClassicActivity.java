@@ -66,8 +66,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // ------------------- General Ball Variables --------------------------------------- \\
 
-            //determines what ball will be/is currently drawn
-                int ballTypeSeed =4; //seed
         //coordinates of the currently drawn ball, coordinates where we clicked
                 int  clickedX;
                 int  clickedY;
@@ -983,7 +981,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //If we used the "same type ball power up" on any ball, don't get a new type until it expires
         if(!isSameTypeBallPowerUpActive())
-        ballTypeSeed = ballTypeHandler.getRandomBallTypeSeed();
+        ballTypeHandler.setRandomBallTypeSeed();
         setCurrentBallTypeBySeed();
         setBallObjectByType();
     }
@@ -1075,7 +1073,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         return ballTypeHandler.getCurrentType();
     }
     private void setCurrentBallTypeBySeed() {
-        ballTypeHandler.setCurrentBallTypeBySeed(ballTypeSeed);
+        ballTypeHandler.setCurrentBallTypeBySeed();
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\

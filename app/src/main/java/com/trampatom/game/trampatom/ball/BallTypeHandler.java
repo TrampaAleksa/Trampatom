@@ -19,34 +19,38 @@ public class BallTypeHandler {
     public int TYPE_BALL_WAVE_CHANCE = 21;
 
     private int currentType;
+    private int ballTypeSeed = 4;
 
     public BallTypeHandler(){
         //the first ball is always blue;
         currentType = BALL_BLUE;
     }
 
-    public void setCurrentBallTypeBySeed(int ballType){
+    public void setCurrentBallTypeBySeed(){
         //if we click on the ball do something depending on the ball type
-        if(ballType<=TYPE_BALL_RED_CHANCE){
+        if(ballTypeSeed<=TYPE_BALL_RED_CHANCE){
             currentType=BALL_RED;
         }
-        if(ballType>TYPE_BALL_RED_CHANCE && ballType<=TYPE_BALL_BLUE_CHANCE){
+        if(ballTypeSeed>TYPE_BALL_RED_CHANCE && ballTypeSeed<=TYPE_BALL_BLUE_CHANCE){
             currentType=BALL_BLUE;
         }
-        if(ballType>TYPE_BALL_BLUE_CHANCE && ballType<=TYPE_BALL_YELLOW_CHANCE){
+        if(ballTypeSeed>TYPE_BALL_BLUE_CHANCE && ballTypeSeed<=TYPE_BALL_YELLOW_CHANCE){
             currentType=BALL_YELLOW;
         }
-        if(ballType>TYPE_BALL_YELLOW_CHANCE && ballType<=TYPE_BALL_GREEN_CHANCE){
+        if(ballTypeSeed>TYPE_BALL_YELLOW_CHANCE && ballTypeSeed<=TYPE_BALL_GREEN_CHANCE){
             currentType=BALL_GREEN;
         }
-        if(ballType>TYPE_BALL_GREEN_CHANCE && ballType<=TYPE_BALL_PURPLE_CHANCE){
+        if(ballTypeSeed>TYPE_BALL_GREEN_CHANCE && ballTypeSeed<=TYPE_BALL_PURPLE_CHANCE){
             currentType=BALL_PURPLE;
         }
-        if(ballType>TYPE_BALL_PURPLE_CHANCE && ballType<=TYPE_BALL_WAVE_CHANCE){
+        if(ballTypeSeed>TYPE_BALL_PURPLE_CHANCE && ballTypeSeed<=TYPE_BALL_WAVE_CHANCE){
             currentType=BALL_WAVE;
         }
     }
-    public int getRandomBallTypeSeed(){
+    public void setRandomBallTypeSeed(){
+        ballTypeSeed = getRandomBallTypeSeed();
+    }
+    private int getRandomBallTypeSeed(){
         int seed;
         seed= new Random().nextInt(21);
         return seed;
