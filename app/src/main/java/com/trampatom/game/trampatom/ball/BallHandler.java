@@ -466,17 +466,6 @@ public class BallHandler {
         return balls;
     }
 
-
-        /**
-         * Important method that should be called before getting a new ball object to determine what object to get
-         */
-    public int getNewBallType(){
-        return randomBallVariables.getRandomBallType();
-        //return 12;
-    }
-
-
-
     /**
      * Method used to reset every ball object into its default state, aka removing power up's
      * @param balls the object that needs to be reset

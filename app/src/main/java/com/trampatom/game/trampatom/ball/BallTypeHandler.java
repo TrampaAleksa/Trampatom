@@ -1,5 +1,7 @@
 package com.trampatom.game.trampatom.ball;
 
+import java.util.Random;
+
 import static com.trampatom.game.trampatom.ball.AtomId.BALL_BLUE;
 import static com.trampatom.game.trampatom.ball.AtomId.BALL_GREEN;
 import static com.trampatom.game.trampatom.ball.AtomId.BALL_PURPLE;
@@ -23,7 +25,7 @@ public class BallTypeHandler {
         currentType = BALL_BLUE;
     }
 
-    public int setCurrentBallType(int ballType){
+    public void setCurrentBallTypeBySeed(int ballType){
         //if we click on the ball do something depending on the ball type
         if(ballType<=TYPE_BALL_RED_CHANCE){
             currentType=BALL_RED;
@@ -43,7 +45,11 @@ public class BallTypeHandler {
         if(ballType>TYPE_BALL_PURPLE_CHANCE && ballType<=TYPE_BALL_WAVE_CHANCE){
             currentType=BALL_WAVE;
         }
-        return currentType;
+    }
+    public int getRandomBallTypeSeed(){
+        int seed;
+        seed= new Random().nextInt(21);
+        return seed;
     }
 
     public int getCurrentType() {

@@ -67,7 +67,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     // ------------------- General Ball Variables --------------------------------------- \\
 
             //determines what ball will be/is currently drawn
-                int ballType=4; //seed
+                int ballTypeSeed =4; //seed
         //coordinates of the currently drawn ball, coordinates where we clicked
                 int  clickedX;
                 int  clickedY;
@@ -304,7 +304,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
 
         ballTypeHandler = new BallTypeHandler();
-        setCurrentBallType();
+        setCurrentBallTypeBySeed();
 
         initialDraw=true;
     }
@@ -692,8 +692,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //get coordinates where we touched
             clickedX = (int) event.getX();
             clickedY = (int) event.getY();
-            setCurrentBallType();
-//            currentBallType = ballTypeHandler.setCurrentBallType(ballType);
+            setCurrentBallTypeBySeed();
             //if we click on the ball do something depending on the ball type
                 if(getCurrentBallType() == BALL_RED){
                     redBall();
@@ -713,7 +712,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 if(getCurrentBallType() == BALL_WAVE){
                     waveBall();
                 }
-            ballTypeHandler.setCurrentType(getCurrentBallType());
+//            ballTypeHandler.setCurrentType(getCurrentBallType());
         }
         return false;
     }
@@ -984,9 +983,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //If we used the "same type ball power up" on any ball, don't get a new type until it expires
         if(!isSameTypeBallPowerUpActive())
-        ballType = ballHandler.getNewBallType();
-
-        setCurrentBallType();
+        ballTypeSeed = ballTypeHandler.getRandomBallTypeSeed();
+        setCurrentBallTypeBySeed();
         setBallObjectByType();
     }
 
@@ -1076,8 +1074,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private int getCurrentBallType() {
         return ballTypeHandler.getCurrentType();
     }
-    private void setCurrentBallType() {
-        ballTypeHandler.setCurrentBallType(ballType);
+    private void setCurrentBallTypeBySeed() {
+        ballTypeHandler.setCurrentBallTypeBySeed(ballTypeSeed);
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\

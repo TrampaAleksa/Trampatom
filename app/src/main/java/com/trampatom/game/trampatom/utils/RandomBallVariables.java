@@ -29,17 +29,6 @@ public class RandomBallVariables {
     }
 
     /**
-     * Method that should get a new ball type : red, blue, green, yellow, purple or wave depending on what
-     * number it returns.
-     * @return a random int value that is used to get a new ball
-     */
-    public int getRandomBallType(){
-        int ballType;
-        ballType= random.nextInt(21);
-        return ballType;
-    }
-
-    /**
      * Method for getting a random X coordinate
      * @return a random X coordinate
      */
