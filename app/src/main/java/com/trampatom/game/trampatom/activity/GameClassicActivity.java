@@ -327,9 +327,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             if(initialDraw) {
                 initiateOnCanvas();
             }
-            moveAndDraw();
+            canvas.setScore(score);
+            listenForGameOver();
+            moveBalls();
+            drawBalls();
             //after the timer runs out finish the game
-                endGame();
+            endGame();
         }
     }
 
@@ -551,36 +554,56 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     /**
      * Method that should be used to move every ball according to the type of the current ball.
      */
-    public void moveAndDraw(){
+    public void listenForGameOver(){
         if(currentEnergyLevel<=0) {
             //after we run out of energy, end the game
             gameover = true;
         }
+    }
+
+    public void moveBalls(){
         switch(getCurrentBallType())
         {
             case BALL_BLUE:
                 moveBall();
-                canvas.draw(ballObject, score);
                 break;
             case BALL_RED:
                 moveBall();
-                canvas.draw(ballObject, score);
                 break;
             case BALL_YELLOW:
                 moveYellowBall();
-                canvas.draw(ballObject, score);
                 break;
             case BALL_GREEN:
                 moveGreenBall();
-                canvas.draw(ballObject, score);
                 break;
             case BALL_PURPLE:
                 movePurpleBall();
-                canvas.drawPurple(purpleBallObjects, score, timesClickedPurple, ballClicked);
                 break;
             case BALL_WAVE:
                 moveWave();
-                canvas.drawWave(multipleBalls, score, currentWaveBall);
+                break;
+        }
+    }
+    public void drawBalls(){
+        switch(getCurrentBallType())
+        {
+            case BALL_BLUE:
+                canvas.draw(ballObject);
+                break;
+            case BALL_RED:
+                canvas.draw(ballObject);
+                break;
+            case BALL_YELLOW:
+                canvas.draw(ballObject);
+                break;
+            case BALL_GREEN:
+                canvas.draw(ballObject);
+                break;
+            case BALL_PURPLE:
+                canvas.drawPurple(purpleBallObjects, timesClickedPurple, ballClicked);
+                break;
+            case BALL_WAVE:
+                canvas.drawWave(multipleBalls, currentWaveBall);
                 break;
         }
     }

@@ -48,12 +48,10 @@ public class CanvasGameClassic {
     /**
      * method used for drawing balls depending on the type of the ball.
      * @param ball ball object containing coordinates and other values used to draw it correctly
-     * @param score
      * @return
      */
-    public boolean draw(Ball ball, int score){
+    public boolean draw(Ball ball){
 
-        this.score = score;
         ourCanvas=ourHolder.lockCanvas();
         drawBackground();
         drawScore();
@@ -70,12 +68,10 @@ public class CanvasGameClassic {
     /**
      * Method used for drawing purple balls based on an ball object array containing every balls info
      * @param purpleBalls the ball objects that we are drawing
-     * @param score the score to display
      * @param timesClicked used to determine how many purple balls to draw
      * @return always false
      */
-    public boolean drawPurple(Ball[] purpleBalls, int score, int timesClicked, boolean[] ballClicked){
-        this.score = score;
+    public boolean drawPurple(Ball[] purpleBalls, int timesClicked, boolean[] ballClicked){
         if(timesClicked == BALL_PURPLE_NO_CLICK) {
             ourCanvas = ourHolder.lockCanvas();
             drawBackground();
@@ -103,11 +99,9 @@ public class CanvasGameClassic {
     /**
      * Method for drawing the wave ball type
      * @param multipleBalls an array of ball objects to be drawn
-     * @param score the current score to be shown
      * @param drawnBalls number indicating how many balls we have clicked, so that we don't draw those balls
      */
-    public boolean drawWave(Ball[] multipleBalls, int score, int drawnBalls){
-        this.score = score;
+    public boolean drawWave(Ball[] multipleBalls, int drawnBalls){
         ourCanvas = ourHolder.lockCanvas();
         drawBackground();
         drawScore();
@@ -142,9 +136,10 @@ public class CanvasGameClassic {
     }
 
     private void drawScore(){
-
         //draw the current score
         ourCanvas.drawText(Integer.toString(score), ourCanvas.getWidth()/2, 50, paint);
-
+    }
+    public void setScore(int score){
+        this.score = score;
     }
 }
