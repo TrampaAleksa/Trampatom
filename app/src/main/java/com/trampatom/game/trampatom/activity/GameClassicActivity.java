@@ -427,9 +427,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     //reset the ball objects after the power up expires
                     ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, getCurrentBallType());
                     purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
-                            selectedPowerUp1, keys.PURPLE_BALL_NUMBER, getCurrentBallType());
+                            selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
                     multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                            selectedPowerUp1, numberOfWaveAtoms(), getCurrentBallType());
+                            selectedPowerUp1, numberOfWaveAtoms());
                 }
             }
 
@@ -452,9 +452,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     //reset the ball objects after the power up expires
                     ballObject = powerUps.resetBallState(ballObject, selectedPowerUp2, getCurrentBallType());
                     purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
-                            selectedPowerUp2, keys.PURPLE_BALL_NUMBER, getCurrentBallType());
+                            selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
                     multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                            selectedPowerUp2, numberOfWaveAtoms(), getCurrentBallType());
+                            selectedPowerUp2, numberOfWaveAtoms());
                 }
             }
         }

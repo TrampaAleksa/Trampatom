@@ -267,7 +267,7 @@ public class PowerUps {
     }
 
 
-    public Ball[] resetBallObjectArrayState(Ball[] balls, int flag, int arraySize, int currentBallType) {
+    public Ball[] resetBallObjectArrayState(Ball[] balls, int flag, int arraySize) {
 
         switch (flag) {
             // RED
