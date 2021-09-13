@@ -35,6 +35,7 @@ import com.trampatom.game.trampatom.currency.AtomPool;
 import com.trampatom.game.trampatom.currency.PowerUps;
 import com.trampatom.game.trampatom.currency.ShopHandler;
 import com.trampatom.game.trampatom.power.up.ChancePassivesAndEvents;
+import com.trampatom.game.trampatom.score.CurrentGameScore;
 import com.trampatom.game.trampatom.utils.Angles;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.GameWindow;
@@ -108,6 +109,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         BallBitmaps ballBitmaps;
         BallTypeHandler ballTypeHandler;
+        CurrentGameScore gameScore;
 
 
     // ------------------- Arrays ------------------------------------------------------- \\
@@ -123,9 +125,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             int score=0;
         //used to determine how long we will play
             int currentEnergyLevel; int energySpeedUpTicks;
-        //used for ending the game when the time ends, congratulations if new high score
-            boolean isGameOver;
-
         //used for sounds
             boolean lowEnergy = false; boolean middleEnergy = false;
 
@@ -318,7 +317,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 initiateOnCanvas();
             }
             canvas.setScore(score);
-            listenForGameOver();
             moveBalls();
             drawBalls();
             //after the timer runs out finish the game
@@ -455,33 +453,33 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void energyAndGameOverTimer(){
+        if (isGameOver()) return;
 
         //Keep reducing energy until the game is over
-        if(!isGameOver) {
-            if (currentEnergyLevel < keys.STARTING_ENERGY/2 && !middleEnergy){
-                energyProgress.getProgressDrawable().setTint(Color.YELLOW);
-               // soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
-                middleEnergy = true;
-            }
-            if (currentEnergyLevel < keys.STARTING_ENERGY/4 && !lowEnergy){
-                energyProgress.getProgressDrawable().setTint(Color.RED);
-                soundsAndEffects.play(soundsAndEffects.soundNearlyGameOverId,3);
-                lowEnergy = true;
-            }
-            //in case we exceed the maximum energy level, set it to the maximum
-            if(currentEnergyLevel >= GameTimeAndScore.MAX_BALL_CLICK_TIME)
-                currentEnergyLevel = GameTimeAndScore.MAX_BALL_CLICK_TIME;
-            //until the game is finished keep lowering the energy levels
-            currentEnergyLevel -= keys.ENERGY_DECREASE;
-            energySpeedUpTicks++;
-            if(energySpeedUpTicks%4==0 && keys.ENERGY_DECREASE <50) {
-                keys.ENERGY_DECREASE += 1;
-                energySpeedUpTicks = 0;
-            }
+        if (currentEnergyLevel < keys.STARTING_ENERGY/2 && !middleEnergy){
+            energyProgress.getProgressDrawable().setTint(Color.YELLOW);
+            // soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
+            middleEnergy = true;
+        }
+        if (currentEnergyLevel < keys.STARTING_ENERGY/4 && !lowEnergy){
+            energyProgress.getProgressDrawable().setTint(Color.RED);
+            soundsAndEffects.play(soundsAndEffects.soundNearlyGameOverId,3);
+            lowEnergy = true;
         }
 
+        //in case we exceed the maximum energy level, set it to the maximum
+        if(currentEnergyLevel >= GameTimeAndScore.MAX_BALL_CLICK_TIME)
+            currentEnergyLevel = GameTimeAndScore.MAX_BALL_CLICK_TIME;
 
+        //until the game is finished keep lowering the energy levels
+        currentEnergyLevel -= keys.ENERGY_DECREASE;
+        energySpeedUpTicks++;
+        if(energySpeedUpTicks%4==0 && keys.ENERGY_DECREASE <50) {
+            keys.ENERGY_DECREASE += 1;
+            energySpeedUpTicks = 0;
+        }
     }
+
 
     /**
      * <p>Method for the initial canvas draw. Initiate most class instances here.</p>
@@ -539,17 +537,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
 
             // ------------------------------- Ball Movement -------------------------- \\
-
-
-    /**
-     * Method that should be used to move every ball according to the type of the current ball.
-     */
-    public void listenForGameOver(){
-        if(currentEnergyLevel<=0) {
-            //after we run out of energy, end the game
-            isGameOver = true;
-        }
-    }
 
     public void moveBalls(){
         switch(getCurrentBallType())
@@ -674,7 +661,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void endGame(){
         //if an event happens that changes gameover to true, end the game
-        if (isGameOver) {
+        if (isGameOver()) {
             GameOver gameover = new GameOver(ourHolder,mCanvas);
             //plat a sound once the game is over
             soundsAndEffects.play(soundsAndEffects.soundGameOverId, 2);
@@ -1093,6 +1080,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private void reduceScore(int toReduce){
         this.score -= toReduce;
+    }
+    private boolean isGameOver() {
+        return currentEnergyLevel <= 0;
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
