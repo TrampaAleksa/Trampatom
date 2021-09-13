@@ -121,7 +121,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     // ------------------- Game Variables ----------------------------------------------- \\
 
         //used for displaying the score and setting new highScore at the end of the game
-            int score=0, previousHighScore;
+            int score=0;
         //used to determine how long we will play
             int currentEnergyLevel; int energySpeedUpTicks;
         //used for ending the game when the time ends, congratulations if new high score
@@ -291,7 +291,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     private void initHighScore() {
         highScore = new HighScore(this);
-        previousHighScore=highScore.getHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY);
         newHighScore=false;
     }
 
@@ -803,7 +802,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if(clickedABall.ballClicked(ballObject,clickedX,clickedY)) {
             //add some energy and update it in the energy text view
             currentEnergyLevel +=100;
-            score += 100;
+            addScore(100);
             //add the atom to the atom pool
             playBallClickedSound(ballObject);
             poolArray[0] = poolArray[0] + ballObject.getBallAtomValue();
@@ -820,7 +819,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if(clickedABall.ballClicked(ballObject,clickedX,clickedY)){
             //add some energy and update it in the energy text view
             currentEnergyLevel -=100;
-            score -= 100;
+            reduceScore(100);
             //add the atom to the atom pool, even if we scored negative the atom is added to the pool
             poolArray[1] = poolArray[1] + ballObject.getBallAtomValue();
             playBallClickedSound(ballObject);
@@ -829,7 +828,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         else {
             //add some energy and update it in the energy text view
             currentEnergyLevel +=100;
-            score+=100;
+            addScore(100);
             //add the atom to the atom pool
             poolArray[1] = poolArray[1] + ballObject.getBallAtomValue();
             playBallClickedSound(ballObject);
@@ -845,7 +844,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if(clickedABall.ballClicked(ballObject,clickedX,clickedY)){
             //add some energy and update it in the energy text view
             currentEnergyLevel +=400;
-            score+=400;
+            addScore(400);
             //add the atom to the atom pool
             poolArray[2] = poolArray[2] + ballObject.getBallAtomValue();
             playBallClickedSound(ballObject);
@@ -882,7 +881,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 BallHandler.yellowBallSpeedChangeActive = true;
                 //add some energy and update it in the energy text view
                 currentEnergyLevel +=500;
-                score+=500;
+                addScore(500);
                 //add the atom to the atom pool
                 poolArray[3] = poolArray[3] + ballObject.getBallAtomValue();
                 playBallClickedSound(ballObject);
@@ -957,7 +956,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 timesClickedPurple = keys.BALL_PURPLE_NO_CLICK;
                 //add some energy and update it in the energy text view
                 currentEnergyLevel +=500;
-                score +=500;
+                addScore(500);
                 getNewBall();
             }
         }
@@ -978,7 +977,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
             //gain more and more score and energy the more balls you click
             currentEnergyLevel += currentWaveBall*10;
-            score += currentWaveBall*10;
+            addScore(currentWaveBall*10);
             //adds a random atom to the pool every time we click a wave ball
             poolArray[random.nextInt(4)]+= multipleBalls[0].getBallAtomValue();
             playBallClickedSound(multipleBalls[0]);
@@ -988,7 +987,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             if(currentWaveBall == numberOfWaveAtoms()){
                 currentWaveBall = 0;
                 // to round up the gain; with *10 you gain 420 score total
-                score -=20;
+                reduceScore(20);
                 getNewBall();
             }
         }
@@ -1097,6 +1096,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private void setCurrentBallTypeBySeed() {
         ballTypeHandler.setCurrentBallTypeBySeed();
+    }
+
+    //SCORE
+    private void addScore(int toAdd){
+        this.score += toAdd;
+    }
+    private void reduceScore(int toReduce){
+        this.score -= toReduce;
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
