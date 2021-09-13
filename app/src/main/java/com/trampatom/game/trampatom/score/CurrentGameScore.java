@@ -12,10 +12,10 @@ public class CurrentGameScore {
     public void setScore(int score) {
         this.score = score;
     }
-    private void addScore(int toAdd){
+    public void addScore(int toAdd){
         this.score += toAdd;
     }
-    private void reduceScore(int toReduce){
+    public void reduceScore(int toReduce){
         this.score -= toReduce;
     }
 }

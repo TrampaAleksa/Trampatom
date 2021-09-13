@@ -194,6 +194,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         random = new Random();
         keys = new Keys();
         atomPool = new AtomPool(this);
+        gameScore = new CurrentGameScore();
         setWidth(MainActivity.getWidth());
         setHeight(MainActivity.getHeight());
 
@@ -1076,9 +1077,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     //SCORE
     private void addScore(int toAdd){
+        gameScore.addScore(toAdd);
         this.score += toAdd;
     }
     private void reduceScore(int toReduce){
+        gameScore.reduceScore(toReduce);
         this.score -= toReduce;
     }
     private boolean isGameOver() {
