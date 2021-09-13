@@ -91,7 +91,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         Keys keys;
         GameTimeAndScore gameTimeAndScore;
         CanvasGameClassic canvas;
-        HighScore highScore;
         ClickedABall clickedABall;
         BallMovement ballMovement;
         Random random;
@@ -125,7 +124,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //used to determine how long we will play
             int currentEnergyLevel; int energySpeedUpTicks;
         //used for ending the game when the time ends, congratulations if new high score
-            boolean gameover, newHighScore;
+            boolean isGameOver;
 
         //used for sounds
             boolean lowEnergy = false; boolean middleEnergy = false;
@@ -211,9 +210,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //BALL BITMAPS
         initiateBitmaps();
 
-        //HIGH SCORE
-        initHighScore();
-
         //BALL
         initBall();
     }
@@ -287,11 +283,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         ballBitmaps.setBallWidth(ballWidth);
         ballBitmaps.setBallHeight(ballHeight);
         ballBitmaps.initiateBitmaps();
-    }
-
-    private void initHighScore() {
-        highScore = new HighScore(this);
-        newHighScore=false;
     }
 
     private void initBall() {
@@ -466,7 +457,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void energyAndGameOverTimer(){
 
         //Keep reducing energy until the game is over
-        if(!gameover) {
+        if(!isGameOver) {
             if (currentEnergyLevel < keys.STARTING_ENERGY/2 && !middleEnergy){
                 energyProgress.getProgressDrawable().setTint(Color.YELLOW);
                // soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
@@ -556,7 +547,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     public void listenForGameOver(){
         if(currentEnergyLevel<=0) {
             //after we run out of energy, end the game
-            gameover = true;
+            isGameOver = true;
         }
     }
 
@@ -683,14 +674,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void endGame(){
         //if an event happens that changes gameover to true, end the game
-        if (gameover) {
+        if (isGameOver) {
             GameOver gameover = new GameOver(ourHolder,mCanvas);
             //plat a sound once the game is over
             soundsAndEffects.play(soundsAndEffects.soundGameOverId, 2);
-            // check if we got a new high score
-            newHighScore=highScore.isHighScore(HighScore.GAME_ONE_HIGH_SCORE_KEY, score);
             //display our score and if we got a new high score show a text to indicate that
-            gameover.gameOver(score, newHighScore);
+            gameover.gameOver(score, new HighScore(this));
             //add the atoms we collected during the game to the atom pool
             atomPool.addAtoms(poolArray);
             try {
