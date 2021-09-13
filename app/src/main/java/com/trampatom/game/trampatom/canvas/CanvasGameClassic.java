@@ -8,6 +8,7 @@ import android.view.SurfaceHolder;
 
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.Model.Star;
+import com.trampatom.game.trampatom.score.CurrentGameScore;
 
 /**
  * Class containing methods for working with Game 1 canvas,
@@ -19,12 +20,12 @@ public class CanvasGameClassic {
     private static final int WAVE_BALL_NUMBER = 7;
 
     int i;
-    int score;
     SurfaceHolder ourHolder;
     Canvas ourCanvas;
     Background background;
     //paint used for score
     private Paint paint;
+    private CurrentGameScore currentGameScore;
 
     /**
      * Constructor that should be used to get instance of the canvas and a background
@@ -137,9 +138,12 @@ public class CanvasGameClassic {
 
     private void drawScore(){
         //draw the current score
-        ourCanvas.drawText(Integer.toString(score), ourCanvas.getWidth()/2, 50, paint);
+        ourCanvas.drawText(Integer.toString(getScore()), ourCanvas.getWidth()/2, 50, paint);
     }
-    public void setScore(int score){
-        this.score = score;
+    public void setCurrentGameScore(CurrentGameScore gameScore){
+        this.currentGameScore = gameScore;
+    }
+    private int getScore(){
+        return currentGameScore.getScore();
     }
 }

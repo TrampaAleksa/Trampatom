@@ -121,8 +121,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // ------------------- Game Variables ----------------------------------------------- \\
 
-        //used for displaying the score and setting new highScore at the end of the game
-            int score=0;
         //used to determine how long we will play
             int currentEnergyLevel; int energySpeedUpTicks;
         //used for sounds
@@ -317,7 +315,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             if(initialDraw) {
                 initiateOnCanvas();
             }
-            canvas.setScore(score);
             moveBalls();
             drawBalls();
             //after the timer runs out finish the game
@@ -495,6 +492,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         // object instances
         stars = new Background(ourHolder, mCanvas, getWidth(), getHeight());
         canvas = new CanvasGameClassic(ourHolder,mCanvas, stars);
+        canvas.setCurrentGameScore(gameScore);
 
         powerUps = new PowerUps(energyProgress,keys,powerUp, getBaseBallWidth(), getBaseBallHeight());
 
@@ -667,7 +665,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //plat a sound once the game is over
             soundsAndEffects.play(soundsAndEffects.soundGameOverId, 2);
             //display our score and if we got a new high score show a text to indicate that
-            gameover.gameOver(score, new HighScore(this));
+            gameover.gameOver(gameScore, new HighScore(this));
             //add the atoms we collected during the game to the atom pool
             atomPool.addAtoms(poolArray);
             try {
@@ -1078,11 +1076,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     //SCORE
     private void addScore(int toAdd){
         gameScore.addScore(toAdd);
-        this.score += toAdd;
     }
     private void reduceScore(int toReduce){
         gameScore.reduceScore(toReduce);
-        this.score -= toReduce;
     }
     private boolean isGameOver() {
         return currentEnergyLevel <= 0;
