@@ -229,7 +229,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
         energyProgress.getProgressDrawable().setTint(Color.GREEN);
         gameTimeAndScore = new GameTimeAndScore(energyProgress);
-        currentEnergyLevel = keys.STARTING_ENERGY;
+        setEnergyLevel(keys.STARTING_ENERGY);
         energySpeedUpTicks = Keys.ENERGY_SPEED_UP_TICKS;
         //buttons
         bPowerUp1 = (Button) findViewById(R.id.bPowerUp1);
@@ -386,7 +386,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     isPassiveEventTriggerred = true;
                 //if we selected the power up to give an energy boost, increase our current energy level.
                 if(selectedPassive2 == Keys.FLAG_YELLOW_CHANCE_ENERGY_FILL){
-                    currentEnergyLevel = getEnergyLevel() + Keys.ENERGY_CHANCE_EVENT_BONUS;
+                    setEnergyLevel(getEnergyLevel() + Keys.ENERGY_CHANCE_EVENT_BONUS);
                 }
             }
                 ticker = Keys.TICKER_STARTING_VALUE;
@@ -467,10 +467,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //in case we exceed the maximum energy level, set it to the maximum
         if(getEnergyLevel() >= GameTimeAndScore.MAX_BALL_CLICK_TIME)
-            currentEnergyLevel = GameTimeAndScore.MAX_BALL_CLICK_TIME;
+            setEnergyLevel(GameTimeAndScore.MAX_BALL_CLICK_TIME);
 
         //until the game is finished keep lowering the energy levels
-        currentEnergyLevel -= keys.ENERGY_DECREASE;
+        reduceEnergy(keys.ENERGY_DECREASE);
         energySpeedUpTicks++;
         if(energySpeedUpTicks%4==0 && keys.ENERGY_DECREASE <50) {
             keys.ENERGY_DECREASE += 1;
@@ -499,7 +499,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         // in case we selected the power up to increase the starting energy
         if(flagTypePassive2==4 || flagTypePassive1==4) {
             //set the energy bar in a certain way depending on the passives we selected
-            currentEnergyLevel = powerUps.energyPassivePowerUp(selectedPassive2, getEnergyLevel());
+            setEnergyLevel(powerUps.energyPassivePowerUp(selectedPassive2, getEnergyLevel()));
         }
         //if we selected passive that reduces speed of energy loss, this will reduce it
         if(selectedPassive1 == Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY)
@@ -736,7 +736,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     //if the power up does something to the energy bar
                     else{
                         resettedPowerUp = false;
-                        currentEnergyLevel += powerUps.energyPowerUp(selectedPowerUp1);
+                        addEnergy(powerUps.energyPowerUp(selectedPowerUp1));
                         onCooldown = true;
                     }
                 }
@@ -755,7 +755,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     }
                     //if the power up does something to the energy bar
                     else{
-                        currentEnergyLevel += powerUps.energyPowerUp(selectedPowerUp2);
+                        addEnergy(powerUps.energyPowerUp(selectedPowerUp2));
                         usedConsumable = true;
                     }
                 }
@@ -776,7 +776,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
        // if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)) {
         if(clickedABall.ballClicked(ballObject,clickedX,clickedY)) {
             //add some energy and update it in the energy text view
-            currentEnergyLevel +=100;
+            addEnergy(100);
             addScore(100);
             //add the atom to the atom pool
             playBallClickedSound(ballObject);
@@ -793,7 +793,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //if we click the ball
         if(clickedABall.ballClicked(ballObject,clickedX,clickedY)){
             //add some energy and update it in the energy text view
-            currentEnergyLevel -=100;
+            reduceEnergy(100);
             reduceScore(100);
             //add the atom to the atom pool, even if we scored negative the atom is added to the pool
             poolArray[1] = poolArray[1] + ballObject.getBallAtomValue();
@@ -802,7 +802,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         }
         else {
             //add some energy and update it in the energy text view
-            currentEnergyLevel +=100;
+            addEnergy(100);
             addScore(100);
             //add the atom to the atom pool
             poolArray[1] = poolArray[1] + ballObject.getBallAtomValue();
@@ -818,7 +818,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void greenBall(){
         if(clickedABall.ballClicked(ballObject,clickedX,clickedY)){
             //add some energy and update it in the energy text view
-            currentEnergyLevel +=400;
+            addEnergy(400);
             addScore(400);
             //add the atom to the atom pool
             poolArray[2] = poolArray[2] + ballObject.getBallAtomValue();
@@ -855,7 +855,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             else {
                 BallHandler.yellowBallSpeedChangeActive = true;
                 //add some energy and update it in the energy text view
-                currentEnergyLevel +=500;
+                addEnergy(500);
                 addScore(500);
                 //add the atom to the atom pool
                 poolArray[3] = poolArray[3] + ballObject.getBallAtomValue();
@@ -930,7 +930,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 ballClicked[0] = ballClicked[1] = ballClicked[2] = false;
                 timesClickedPurple = keys.BALL_PURPLE_NO_CLICK;
                 //add some energy and update it in the energy text view
-                currentEnergyLevel +=500;
+                addEnergy(500);
                 addScore(500);
                 getNewBall();
             }
@@ -951,7 +951,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if(clickedABall.ballClicked(multipleBalls[currentWaveBall], clickedX, clickedY)){
 
             //gain more and more score and energy the more balls you click
-            currentEnergyLevel += currentWaveBall*10;
+            addEnergy(currentWaveBall*10);
             addScore(currentWaveBall*10);
             //adds a random atom to the pool every time we click a wave ball
             poolArray[random.nextInt(4)]+= multipleBalls[0].getBallAtomValue();
@@ -1090,6 +1090,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private int getEnergyLevel() {
         return currentEnergyLevel;
+    }
+    private void addEnergy(int toAdd){
+        currentEnergyLevel += toAdd;
+    }
+    private void reduceEnergy(int toRemove){
+        currentEnergyLevel -= toRemove;
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
