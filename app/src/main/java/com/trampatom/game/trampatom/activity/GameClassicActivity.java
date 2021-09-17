@@ -308,7 +308,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
 
             //constantly update the energy bar to display remaining energy
-            gameTimeAndScore.updateEnergyBar(currentEnergyLevel);
+            gameTimeAndScore.updateEnergyBar(getEnergyLevel());
             //start the game time
             timedActions();
             //The initial draw
@@ -386,7 +386,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     isPassiveEventTriggerred = true;
                 //if we selected the power up to give an energy boost, increase our current energy level.
                 if(selectedPassive2 == Keys.FLAG_YELLOW_CHANCE_ENERGY_FILL){
-                    currentEnergyLevel = currentEnergyLevel + Keys.ENERGY_CHANCE_EVENT_BONUS;
+                    currentEnergyLevel = getEnergyLevel() + Keys.ENERGY_CHANCE_EVENT_BONUS;
                 }
             }
                 ticker = Keys.TICKER_STARTING_VALUE;
@@ -454,19 +454,19 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if (isGameOver()) return;
 
         //Keep reducing energy until the game is over
-        if (currentEnergyLevel < keys.STARTING_ENERGY/2 && !middleEnergy){
+        if (getEnergyLevel() < keys.STARTING_ENERGY/2 && !middleEnergy){
             energyProgress.getProgressDrawable().setTint(Color.YELLOW);
             // soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
             middleEnergy = true;
         }
-        if (currentEnergyLevel < keys.STARTING_ENERGY/4 && !lowEnergy){
+        if (getEnergyLevel() < keys.STARTING_ENERGY/4 && !lowEnergy){
             energyProgress.getProgressDrawable().setTint(Color.RED);
             soundsAndEffects.play(soundsAndEffects.soundNearlyGameOverId,3);
             lowEnergy = true;
         }
 
         //in case we exceed the maximum energy level, set it to the maximum
-        if(currentEnergyLevel >= GameTimeAndScore.MAX_BALL_CLICK_TIME)
+        if(getEnergyLevel() >= GameTimeAndScore.MAX_BALL_CLICK_TIME)
             currentEnergyLevel = GameTimeAndScore.MAX_BALL_CLICK_TIME;
 
         //until the game is finished keep lowering the energy levels
@@ -499,11 +499,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         // in case we selected the power up to increase the starting energy
         if(flagTypePassive2==4 || flagTypePassive1==4) {
             //set the energy bar in a certain way depending on the passives we selected
-            currentEnergyLevel = powerUps.energyPassivePowerUp(selectedPassive2, currentEnergyLevel);
+            currentEnergyLevel = powerUps.energyPassivePowerUp(selectedPassive2, getEnergyLevel());
         }
         //if we selected passive that reduces speed of energy loss, this will reduce it
         if(selectedPassive1 == Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY)
-            keys.ENERGY_DECREASE -= powerUps.energyPassivePowerUp(selectedPassive1, currentEnergyLevel);
+            keys.ENERGY_DECREASE -= powerUps.energyPassivePowerUp(selectedPassive1, getEnergyLevel());
 
 
         //get every ball object when starting a game
@@ -1081,7 +1081,15 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         gameScore.reduceScore(toReduce);
     }
     private boolean isGameOver() {
-        return currentEnergyLevel <= 0;
+        return getEnergyLevel() <= 0;
+    }
+
+    //ENERGY
+    private void setEnergyLevel(int energyLevel){
+        currentEnergyLevel = energyLevel;
+    }
+    private int getEnergyLevel() {
+        return currentEnergyLevel;
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
