@@ -125,9 +125,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //used to determine how long we will play
             int energySpeedUpTicks;
-        //used for sounds
-            boolean lowEnergy = false; boolean middleEnergy = false;
-
 
     // -------------------------------- Power Up and Shop ---------------------------------- \\
 
@@ -461,17 +458,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if (isGameOver()) return;
 
         //Keep reducing energy until the game is over
-        int startingEnergy = getGameEnergy().getStartingEnergy();
-
-        if (getEnergyLevel() < startingEnergy /2 && !middleEnergy){
+        if (getGameEnergy().triggeredMiddleEnergy()){
             energyProgress.getProgressDrawable().setTint(Color.YELLOW);
-            // soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
-            middleEnergy = true;
         }
-        if (getEnergyLevel() < startingEnergy /4 && !lowEnergy){
+        if (getGameEnergy().triggeredLowEnergy()){
             energyProgress.getProgressDrawable().setTint(Color.RED);
             soundsAndEffects.play(soundsAndEffects.soundNearlyGameOverId,3);
-            lowEnergy = true;
         }
 
         //in case we exceed the maximum energy level, set it to the maximum
