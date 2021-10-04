@@ -472,6 +472,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //until the game is finished keep lowering the energy levels
         reduceEnergy(keys.ENERGY_DECREASE);
+
         energySpeedUpTicks++;
         if(energySpeedUpTicks%4==0 && keys.ENERGY_DECREASE <50) {
             keys.ENERGY_DECREASE += 1;
