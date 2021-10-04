@@ -74,9 +74,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // ------------------- Ball type variables ------------------------------------------ \\
 
-        //used for yellow ball;
-                int timesClicked;
-                boolean changedSize=false;
         //used for purple ball
             //initially there is only one purple ball
                 int ballPurpleNumber =1;
@@ -118,8 +115,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         Ball[] multipleBalls = {null,null,null,null,null,null,null};
         Ball[] purpleBallObjects = {null, null, null};
-    //array for moving the ball
-            int i;
 
 
     // -------------------------------- Power Up and Shop ---------------------------------- \\
@@ -244,7 +239,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //load the power ups we selected in the shop from a file
         ShopHandler shopHandler = new ShopHandler(this);
         powerUpPool = shopHandler.loadSelectedPowerUps();
-        for(i=0; i<4; i++){
+        for(int i=0; i<4; i++){
             powerUp[i] = powerUpPool.get(i);
         }
         //set the selected power ups id-s to be used to determine what they do
@@ -283,8 +278,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
     private void initBall() {
-        //sets the required times to click a yellow ball and its speed
-        timesClicked=0;
         // sets only one purple ball to be displayed initially
         timesClickedPurple=keys.BALL_PURPLE_NO_CLICK;
 
@@ -508,10 +501,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             multipleBalls = ballHandler.getFirstBallObjectArray(numberOfWaveAtoms());
 
         //the colors of purple and wave don't have to be be changed so initiate them once
-        for(i=0; i<numberOfWaveAtoms(); i++){
+        for(int i=0; i<numberOfWaveAtoms(); i++){
             multipleBalls[i].setBallColor(ballBitmaps.getWaveBall()[i]);
         }
-        for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
+        for(int i=0; i< keys.PURPLE_BALL_NUMBER; i++){
             purpleBallObjects[i].setBallColor(ballBitmaps.getPurpleBall());
         }
         getNewBall();
@@ -604,7 +597,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void movePurpleBall(){
 
         //depending on if we clicked the first purple ball we will move only one ball or all three balls
-        for(i=0; i<ballPurpleNumber; i++){
+        for(int i=0; i<ballPurpleNumber; i++){
             purpleBallObjects[i] = ballMovement.moveBall(purpleBallObjects[i]);
         }
         //draw three balls when they are clicked
@@ -851,7 +844,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 getNewBall();
                 //reset the yellow ball to its first state for later use
                 keys.TIMES_CLICKED_YELLOW=0;
-                changedSize=false;
             }
         }
     }
