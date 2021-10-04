@@ -13,9 +13,7 @@ public class Keys {
 
         //time a game lasts in milliseconds
         public int GAME_TIME = 60000;
-        // starting energy and the speed at witch the energy decreases
-        public static final int ENERGY_SPEED_UP_TICKS = 4;
-        public int ENERGY_DECREASE = 1;
+
         public int DEFAULT_BALL_SPEED = 8;
         public static final int ATOM_DROP_INITIAL_VALUE = 1;
         //balls size correction

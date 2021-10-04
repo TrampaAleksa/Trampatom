@@ -121,10 +121,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     //array for moving the ball
             int i;
 
-    // ------------------- Game Variables ----------------------------------------------- \\
-
-        //used to determine how long we will play
-            int energySpeedUpTicks;
 
     // -------------------------------- Power Up and Shop ---------------------------------- \\
 
@@ -233,7 +229,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         int startingEnergy = getGameEnergy().getStartingEnergy();
         setEnergyLevel(startingEnergy);
 
-        energySpeedUpTicks = Keys.ENERGY_SPEED_UP_TICKS;
         //buttons
         bPowerUp1 = (Button) findViewById(R.id.bPowerUp1);
         bPowerUp2 = (Button) findViewById(R.id.bPowerUp2);
@@ -457,11 +452,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void energyAndGameOverTimer(){
         if (isGameOver()) return;
 
-        //Keep reducing energy until the game is over
-        if (getGameEnergy().triggeredMiddleEnergy()){
+        CurrentGameEnergy currentGameEnergy = getGameEnergy();
+
+        if (currentGameEnergy.triggeredMiddleEnergy()){
             energyProgress.getProgressDrawable().setTint(Color.YELLOW);
         }
-        if (getGameEnergy().triggeredLowEnergy()){
+        if (currentGameEnergy.triggeredLowEnergy()){
             energyProgress.getProgressDrawable().setTint(Color.RED);
             soundsAndEffects.play(soundsAndEffects.soundNearlyGameOverId,3);
         }
@@ -471,13 +467,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             setEnergyLevel(GameTimeAndScore.MAX_BALL_CLICK_TIME);
 
         //until the game is finished keep lowering the energy levels
-        reduceEnergy(keys.ENERGY_DECREASE);
-
-        energySpeedUpTicks++;
-        if(energySpeedUpTicks%4==0 && keys.ENERGY_DECREASE <50) {
-            keys.ENERGY_DECREASE += 1;
-            energySpeedUpTicks = 0;
-        }
+        reduceEnergy(currentGameEnergy.getEnergyDecrease());
+        currentGameEnergy.updateEnergy();
     }
 
 
@@ -505,8 +496,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         }
         //if we selected passive that reduces speed of energy loss, this will reduce it
         if(selectedPassive1 == Keys.FLAG_PURPLE_SLOWER_ENERGY_DECAY)
-            keys.ENERGY_DECREASE -= powerUps.energyPassivePowerUp(selectedPassive1, getEnergyLevel());
-
+            gameEnergy.reduceEnergyDecrease(powerUps.energyPassivePowerUp(selectedPassive1, getEnergyLevel()));
 
         //get every ball object when starting a game
             ballHandler = new BallHandler(keys, getBaseBallWidth(), getBaseBallHeight());
