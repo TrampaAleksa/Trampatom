@@ -25,8 +25,7 @@ public class CurrentGameEnergy {
         return currentEnergyLevel;
     }
     public void setCurrentEnergyLevel(int currentEnergyLevel) {
-        this.currentEnergyLevel = currentEnergyLevel;
-        capCurrentEnergyLevel();
+        this.currentEnergyLevel = Math.min(currentEnergyLevel, STARTING_ENERGY);
     }
     public void addEnergy(int toAdd){
         currentEnergyLevel += toAdd;
