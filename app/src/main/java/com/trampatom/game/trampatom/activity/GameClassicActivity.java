@@ -462,10 +462,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             soundsAndEffects.play(soundsAndEffects.soundNearlyGameOverId,3);
         }
 
-        //in case we exceed the maximum energy level, set it to the maximum
-        if(getEnergyLevel() >= GameTimeAndScore.MAX_BALL_CLICK_TIME)
-            setEnergyLevel(GameTimeAndScore.MAX_BALL_CLICK_TIME);
-
         //until the game is finished keep lowering the energy levels
         reduceEnergy(currentGameEnergy.getEnergyDecrease());
         currentGameEnergy.updateEnergy();

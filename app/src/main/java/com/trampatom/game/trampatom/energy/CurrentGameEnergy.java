@@ -1,5 +1,7 @@
 package com.trampatom.game.trampatom.energy;
 
+import com.trampatom.game.trampatom.utils.GameTimeAndScore;
+
 public class CurrentGameEnergy {
 
     private static final int STARTING_ENERGY = 5000;
@@ -24,13 +26,20 @@ public class CurrentGameEnergy {
     }
     public void setCurrentEnergyLevel(int currentEnergyLevel) {
         this.currentEnergyLevel = currentEnergyLevel;
+        capCurrentEnergyLevel();
     }
     public void addEnergy(int toAdd){
         currentEnergyLevel += toAdd;
+        capCurrentEnergyLevel();
     }
     public void reduceEnergy(int toReduce){
         currentEnergyLevel -= toReduce;
     }
+    private void capCurrentEnergyLevel() {
+        if (currentEnergyLevel >= STARTING_ENERGY)
+            setCurrentEnergyLevel(STARTING_ENERGY);
+    }
+
 
     public int getStartingEnergy(){
         return STARTING_ENERGY;
