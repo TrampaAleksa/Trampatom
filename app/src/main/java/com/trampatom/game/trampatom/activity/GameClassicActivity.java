@@ -63,9 +63,6 @@ import static java.lang.Thread.sleep;
  */
 public class GameClassicActivity extends AppCompatActivity implements Runnable, View.OnTouchListener, View.OnClickListener{
 
-    public static final int HEIGHT_SCALE = 11;
-
-
     // ------------------- General Ball Variables --------------------------------------- \\
 
         //coordinates of the currently drawn ball, coordinates where we clicked
@@ -83,7 +80,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 boolean[] ballClicked = {false,false,false};
         //used for wave ball
                 int currentWaveBall = 0;
-
 
     // ------------------- Classes ------------------------------------------------------ \\
 
@@ -110,12 +106,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         CurrentGameScore gameScore;
         CurrentGameEnergy gameEnergy;
 
-
     // ------------------- Arrays ------------------------------------------------------- \\
 
         Ball[] multipleBalls = {null,null,null,null,null,null,null};
         Ball[] purpleBallObjects = {null, null, null};
-
 
     // -------------------------------- Power Up and Shop ---------------------------------- \\
 
@@ -136,14 +130,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //determines if we have reset the power up. used to prevent zero cooldown on power up.
         boolean resettedPowerUp = false;
             // the duration of every coolDown, timer used to help determine when the coolDown expired
-            int coolDown, coolDownTimer=0, powerUpDuration, consumable, consumableCountDownTimer=0;
+            int coolDown, coolDownTimer=0, consumable, consumableCountDownTimer=0;
         //For passive event chance power ups
-            //chance of the passive event from happening; ticker used for the timer to prevent events happening too often
-            int passivePowerUpEventChance, ticker;
-            //used to activate an event if a passive event was triggered
-            boolean isPassiveEventTriggerred= false;
-
-
+            // ticker used for the timer to prevent events happening too often
+            int ticker;
 
     // ------------------- Surface View ------------------------------------------------- \\
 
@@ -155,7 +145,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             boolean isRunning=true;
         //used for drawing the first ball , used to start the timer once
             boolean initialDraw, startedTimer;
-
 
     // ---------------------------------------------------------------------------------- \\
 
@@ -253,11 +242,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         flagTypePassive1 = passivesManager.checkCurrentFlagType(selectedPassive1);
         flagTypePassive2 = passivesManager.checkCurrentFlagType(selectedPassive2);
 
-        powerUpDuration = keys.POWER_UP_DURATION;
-
         chancePassivesAndEvents = new ChancePassivesAndEvents(powerUp[2]);
-        //get the chance for an event bound to the selected power up to happen.
-        passivePowerUpEventChance = chancePassivesAndEvents.getPassivePowerUpEventChance();
     }
 
     /**
@@ -268,7 +253,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void initiateBitmaps(){
 
         int ballWidth, ballHeight;
-        ballHeight = ballWidth = passivesManager.setNewBallSizeFromPassives(getHeight()/ HEIGHT_SCALE, selectedPassive1,
+
+        int heightScale = 11;
+        ballHeight = ballWidth = passivesManager.setNewBallSizeFromPassives(getHeight()/ heightScale, selectedPassive1,
                 selectedPassive2,powerUp[2].getCurrentLevel(), powerUp[3].getCurrentLevel());
 
         this.ballBitmaps = new BallBitmaps(this);
@@ -373,12 +360,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         ticker ++;
             if(ticker == Keys.TICKS_BEFORE_EVENT_TRIGGER_CHANCE){
                 //once we tick enough times get a random number and if its lower than our chance for the event trigger the event
-            if( (random.nextInt(Keys.MAX_CHANCE_FOR_EVENT)) < passivePowerUpEventChance){
-                //used for triggering the chance event; for later development
-                    isPassiveEventTriggerred = true;
-                //if we selected the power up to give an energy boost, increase our current energy level.
-                if(selectedPassive2 == Keys.FLAG_YELLOW_CHANCE_ENERGY_FILL){
-                    addEnergy(Keys.ENERGY_CHANCE_EVENT_BONUS);
+                if( (random.nextInt(Keys.MAX_CHANCE_FOR_EVENT)) < chancePassivesAndEvents.getPassivePowerUpEventChance()){
+
+                    //if we selected the power up to give an energy boost, increase our current energy level.
+                    if(selectedPassive2 == Keys.FLAG_YELLOW_CHANCE_ENERGY_FILL){
+                        addEnergy(Keys.ENERGY_CHANCE_EVENT_BONUS);
                 }
             }
                 ticker = Keys.TICKER_STARTING_VALUE;
@@ -399,7 +385,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 onCooldown = false;
                 coolDownTimer = 0;
             }
-            if(coolDown-powerUpDuration <  (coolDownTimer)/1000 && !resettedPowerUp){
+            if(coolDown-keys.POWER_UP_DURATION <  (coolDownTimer)/1000 && !resettedPowerUp){
 
                 resettedPowerUp = true;
                 //if the power up is ball related, reset the balls
