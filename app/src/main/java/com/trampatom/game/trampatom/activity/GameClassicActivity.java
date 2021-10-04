@@ -34,6 +34,7 @@ import com.trampatom.game.trampatom.canvas.GameOver;
 import com.trampatom.game.trampatom.currency.AtomPool;
 import com.trampatom.game.trampatom.currency.PowerUps;
 import com.trampatom.game.trampatom.currency.ShopHandler;
+import com.trampatom.game.trampatom.energy.CurrentGameEnergy;
 import com.trampatom.game.trampatom.power.up.ChancePassivesAndEvents;
 import com.trampatom.game.trampatom.score.CurrentGameScore;
 import com.trampatom.game.trampatom.utils.Angles;
@@ -110,6 +111,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         BallBitmaps ballBitmaps;
         BallTypeHandler ballTypeHandler;
         CurrentGameScore gameScore;
+        CurrentGameEnergy gameEnergy;
 
 
     // ------------------- Arrays ------------------------------------------------------- \\
@@ -122,7 +124,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     // ------------------- Game Variables ----------------------------------------------- \\
 
         //used to determine how long we will play
-            int currentEnergyLevel; int energySpeedUpTicks;
+            int energySpeedUpTicks;
         //used for sounds
             boolean lowEnergy = false; boolean middleEnergy = false;
 
@@ -228,8 +230,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         // progress bar
         energyProgress = (ProgressBar) findViewById(R.id.pbEnergy) ;
         energyProgress.getProgressDrawable().setTint(Color.GREEN);
+
         gameTimeAndScore = new GameTimeAndScore(energyProgress);
-        setEnergyLevel(keys.STARTING_ENERGY);
+        gameEnergy = getGameEnergy();
+        int startingEnergy = getGameEnergy().getStartingEnergy();
+        setEnergyLevel(startingEnergy);
+
         energySpeedUpTicks = Keys.ENERGY_SPEED_UP_TICKS;
         //buttons
         bPowerUp1 = (Button) findViewById(R.id.bPowerUp1);
@@ -239,6 +245,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         coolDown = keys.POWER_UP_COOLDOWN;
         consumable = keys.POWER_UP_COOLDOWN;
     }
+
 
     private void initPowerUps() {
         ticker = Keys.TICKER_STARTING_VALUE;
@@ -386,7 +393,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     isPassiveEventTriggerred = true;
                 //if we selected the power up to give an energy boost, increase our current energy level.
                 if(selectedPassive2 == Keys.FLAG_YELLOW_CHANCE_ENERGY_FILL){
-                    setEnergyLevel(getEnergyLevel() + Keys.ENERGY_CHANCE_EVENT_BONUS);
+                    addEnergy(Keys.ENERGY_CHANCE_EVENT_BONUS);
                 }
             }
                 ticker = Keys.TICKER_STARTING_VALUE;
@@ -454,12 +461,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if (isGameOver()) return;
 
         //Keep reducing energy until the game is over
-        if (getEnergyLevel() < keys.STARTING_ENERGY/2 && !middleEnergy){
+        int startingEnergy = getGameEnergy().getStartingEnergy();
+
+        if (getEnergyLevel() < startingEnergy /2 && !middleEnergy){
             energyProgress.getProgressDrawable().setTint(Color.YELLOW);
             // soundPool.play(soundsAndEffects.soundNearlyGameOverId,1,1,3,0,1);
             middleEnergy = true;
         }
-        if (getEnergyLevel() < keys.STARTING_ENERGY/4 && !lowEnergy){
+        if (getEnergyLevel() < startingEnergy /4 && !lowEnergy){
             energyProgress.getProgressDrawable().setTint(Color.RED);
             soundsAndEffects.play(soundsAndEffects.soundNearlyGameOverId,3);
             lowEnergy = true;
@@ -1085,17 +1094,22 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
     //ENERGY
+    private CurrentGameEnergy getGameEnergy() {
+        if (gameEnergy==null)
+            gameEnergy = new CurrentGameEnergy();
+        return gameEnergy;
+    }
     private void setEnergyLevel(int energyLevel){
-        currentEnergyLevel = energyLevel;
+        getGameEnergy().setCurrentEnergyLevel(energyLevel);
     }
     private int getEnergyLevel() {
-        return currentEnergyLevel;
+        return getGameEnergy().getCurrentEnergyLevel();
     }
     private void addEnergy(int toAdd){
-        currentEnergyLevel += toAdd;
+        getGameEnergy().addEnergy(toAdd);
     }
-    private void reduceEnergy(int toRemove){
-        currentEnergyLevel -= toRemove;
+    private void reduceEnergy(int toReduce){
+        getGameEnergy().reduceEnergy(toReduce);
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
