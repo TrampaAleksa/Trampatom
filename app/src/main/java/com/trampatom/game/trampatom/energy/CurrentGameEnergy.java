@@ -1,7 +1,5 @@
 package com.trampatom.game.trampatom.energy;
 
-import com.trampatom.game.trampatom.utils.GameTimeAndScore;
-
 public class CurrentGameEnergy {
 
     private static final int STARTING_ENERGY = 5000;
