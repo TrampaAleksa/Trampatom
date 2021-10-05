@@ -37,10 +37,6 @@ public class PowerUps {
     RandomBallVariables randomBallVariables;
 
 
-    Ball[] purpleBalls = {null, null, null};
-    Ball[] waveBalls = {null, null, null, null, null, null, null};
-
-
     /**
      * Since this class manipulates the progress bar in some cases we should pass the progress bar, and keys
      * for accessing flags of every power up.
@@ -56,17 +52,7 @@ public class PowerUps {
 
         this.progressBar = progressBar;
         this.keys = keys;
-
-        //initialize the ball arrays here to be used in methods
-        for (i = 0; i < keys.PURPLE_BALL_NUMBER; i++) {
-            purpleBalls[i] = new Ball();
-        }
-        for (i = 0; i < keys.WAVE_BALL_NUMBER; i++) {
-            waveBalls[i] = new Ball();
-        }
     }
-
-
 
 
     // ---------------------------------------- ACTIVE BALL RELATED ------------------------------- \\
