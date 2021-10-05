@@ -380,7 +380,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         updateCooldown();
 
         if(isPowerUpExpired()){
-            resettedPowerUp = true;
             onPowerUpExpired();
         }
     }
@@ -681,12 +680,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                     purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
                     multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp1, numberOfWaveAtoms());
                     //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
-                    resettedPowerUp = false;
                     activateCooldown();
                 }
                 //if the power up does something to the energy bar
                 else{
-                    resettedPowerUp = false;
                     addEnergy(powerUps.energyPowerUp(selectedPowerUp1));
                     activateCooldown();
                 }
@@ -1073,6 +1070,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         coolDownTimer = 0;
     }
     private void activateCooldown() {
+        resettedPowerUp = false;
         onCooldown = true;
     }
     private void initCooldown() {
@@ -1083,6 +1081,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         return coolDown - keys.POWER_UP_DURATION < (coolDownTimer) / 1000 && !resettedPowerUp;
     }
     private void onPowerUpExpired() {
+        resettedPowerUp = true;
+
         if (flagTypePowerUp1 != Keys.FLAG_BALL_POWER_UP)
             return;
         //if the power up is ball related, reset the balls after the power up expires
