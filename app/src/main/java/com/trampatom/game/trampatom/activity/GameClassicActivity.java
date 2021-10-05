@@ -328,7 +328,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                             //int totalTimerTime = (int) keys.GAME_TIME/1000;
 
                             //COOLDOWN POWER UP
-                            cooldownPowerUpTimer();
+                            updatePowerUpCooldown();
 
                             //CONSUMABLE POWER UP DURATION
                             consumablePowerUpTimer();
@@ -372,20 +372,10 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
 
     }
-    private void cooldownPowerUpTimer(){
+    private void updatePowerUpCooldown(){
         PowerUpCooldownHandler cooldownHandler = getPowerUpCooldownHandler();
-
-        if (!cooldownHandler.isOnCooldown())
-            return;
-
-        cooldownHandler.updateCooldown();
-
-        if(cooldownHandler.isPowerUpExpired()){
-            cooldownHandler.powerUpExpired(this);
-        }
+        cooldownHandler.tryUpdatingCooldown();
     }
-
-
 
     private void consumablePowerUpTimer(){
 
@@ -1065,7 +1055,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 selectedPowerUp1, numberOfWaveAtoms());
     }
     private PowerUpCooldownHandler getPowerUpCooldownHandler(){
-        if (powerUpCooldownHandler == null) powerUpCooldownHandler = new PowerUpCooldownHandler();
+        if (powerUpCooldownHandler == null) powerUpCooldownHandler = new PowerUpCooldownHandler(this);
         return powerUpCooldownHandler;
     }
 
