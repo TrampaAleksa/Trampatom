@@ -373,36 +373,19 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     }
     private void cooldownPowerUpTimer(){
-        if(onCooldown ){
+        if (!onCooldown)
+            return;
 
-            if(coolDown >  (coolDownTimer)/1000){
-                // has to increment equally to the millis interval of ticks
-                coolDownTimer += 100;
+        updateCooldown();
 
-            }
-            else {
-
-                onCooldown = false;
-                coolDownTimer = 0;
-            }
-            if(coolDown-keys.POWER_UP_DURATION <  (coolDownTimer)/1000 && !resettedPowerUp){
-
-                resettedPowerUp = true;
-                //if the power up is ball related, reset the balls
-                // , if its not, there is no need to reset the balls
-                if(flagTypePowerUp1 == Keys.FLAG_BALL_POWER_UP) {
-                    //reset the ball objects after the power up expires
-                    ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, getCurrentBallType());
-                    purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
-                            selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
-                    multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                            selectedPowerUp1, numberOfWaveAtoms());
-                }
-            }
-
+        boolean powerUpExpired = coolDown - keys.POWER_UP_DURATION < (coolDownTimer) / 1000 && !resettedPowerUp;
+        if(powerUpExpired){
+            resettedPowerUp = true;
+            resetBallObjectsPowerUpExpired();
         }
-
     }
+
+
     private void consumablePowerUpTimer(){
 
         //if the power up is ball related, reset the balls
@@ -1067,6 +1050,29 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private void reduceEnergy(int toReduce){
         getGameEnergy().reduceEnergy(toReduce);
+    }
+
+    // POWER UP COOLDOWN
+
+    private void updateCooldown() {
+        if(coolDown > (coolDownTimer)/1000){
+            // has to increment equally to the millis interval of ticks
+            coolDownTimer += 100;
+        }
+        else {
+            onCooldown = false;
+            coolDownTimer = 0;
+        }
+    }
+    private void resetBallObjectsPowerUpExpired() {
+        if (flagTypePowerUp1 != Keys.FLAG_BALL_POWER_UP)
+            return;
+        //if the power up is ball related, reset the balls after the power up expires
+        ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, getCurrentBallType());
+        purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
+                selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
+        multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
+                selectedPowerUp1, numberOfWaveAtoms());
     }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
