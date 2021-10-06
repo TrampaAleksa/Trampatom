@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.trampatom.game.trampatom.Model.Ball;
+import com.trampatom.game.trampatom.ball.AtomId;
 import com.trampatom.game.trampatom.utils.Keys;
+
+import java.util.Random;
 
 /**
  * Important class that should contain all the methods used for handling in-game currency -> atoms
@@ -22,6 +26,10 @@ public class AtomPool {
     Keys keys;
     Context context;
     SharedPreferences preferences;
+
+    int[] poolArray = {0,0,0,0,0};
+    private final Random random;
+
     /**
      * public constructor that should be used for inserting a context for using Shared Preferences
      * to get the amount of currency we have
@@ -32,6 +40,7 @@ public class AtomPool {
         keys = new Keys();
         //get a preferences manager only once
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        random = new Random();
     }
 
     /**
@@ -79,6 +88,36 @@ public class AtomPool {
             case Keys.CATEGORY_PURPLE: return  preferences.getInt(keys.KEY_PURPLE_CURRENCY, 0);
             default: return  preferences.getInt(keys.KEY_BLUE_CURRENCY, 0);
         }
+    }
+
+    /**
+     * Adds the specified atom to the pool depending on the type of the Ball passed in.
+     * @param ballObject determines how much atoms and what atoms to add
+     */
+    public void addAtom(Ball ballObject){
+        AtomId type = ballObject.getBallType();
+        int shopAtomIndex = 0;
+        switch(type){
+            case BALL_BLUE:
+                shopAtomIndex = 0;
+                break;
+            case BALL_RED:
+                shopAtomIndex = 1;
+                break;
+            case BALL_GREEN:
+                shopAtomIndex = 2;
+                break;
+            case BALL_YELLOW:
+                shopAtomIndex = 3;
+                break;
+            case BALL_PURPLE:
+                shopAtomIndex = 4;
+                break;
+            case BALL_WAVE:
+               shopAtomIndex = random.nextInt(4);
+               break;
+        }
+        poolArray[shopAtomIndex] +=  ballObject.getBallAtomValue();
     }
 
     /**
