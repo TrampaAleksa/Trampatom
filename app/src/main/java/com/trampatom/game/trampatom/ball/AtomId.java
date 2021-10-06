@@ -1,6 +1,6 @@
 package com.trampatom.game.trampatom.ball;
 
-public enum AtomId {
+public enum AtomId { //todo - encapsulate
 
     //RED - don't click on the atom ;
     //BLUE - click on the atom

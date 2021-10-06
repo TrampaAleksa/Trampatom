@@ -2,6 +2,8 @@ package com.trampatom.game.trampatom.Model;
 
 import android.graphics.Bitmap;
 
+import com.trampatom.game.trampatom.ball.AtomId;
+
 /**
  * Class containing getters and setters for a lot of ball related stuff.
  * x,y ball coordinates.
@@ -11,14 +13,10 @@ import android.graphics.Bitmap;
  * ballSpeed 
  */
 public class Ball {
-    public Ball(){
-
-    }
-
 
     private int x;
     private int y;
-    private int ballType;
+    private AtomId ballType;
     private int moveX;
     private int moveY;
     private int ballHeight;
@@ -76,8 +74,6 @@ public class Ball {
     public void setActiveChangesSpeed(boolean activeChangesSpeed) {
         this.activeChangesSpeed = activeChangesSpeed;
     }
-
-    private int soundId;
 
     public int getBallSpeed() {
         return ballSpeed;
@@ -148,11 +144,11 @@ public class Ball {
         this.y = y;
     }
 
-    public int getBallType() {
+    public AtomId getBallType() {
         return ballType;
     }
 
-    public void setBallType(int ballType) {
+    public void setBallType(AtomId ballType) {
         this.ballType = ballType;
     }
 
