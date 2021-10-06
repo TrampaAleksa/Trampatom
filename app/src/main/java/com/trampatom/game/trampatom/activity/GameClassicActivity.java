@@ -920,46 +920,30 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if(!isSameTypeBallPowerUpActive())
         ballTypeHandler.setRandomBallTypeSeed();
         setCurrentBallTypeBySeed();
-        setBallObjectByType();
+        setBallObjectByType(getCurrentBallType());
     }
-
-
 
 
     /**
      * helper method used to load the right bitmap into the ball based on its type.
      * <p>IMPORTANT: every ball NEEDS to have its speed and color specified or it will not move or be drawn</p>
      */
-    private void setBallObjectByType(){
-        // BLUE BALL
-        if(getCurrentBallType() == BALL_RED){
-            ballObject = ballHandler.getNewBallObject(ballObject, getCurrentBallType());
+    private void setBallObjectByType(AtomId currentBallType){
+
+        // SINGLE BALL
+        boolean isSingleBall = currentBallType == BALL_RED || currentBallType == BALL_BLUE || currentBallType == BALL_YELLOW || currentBallType == BALL_GREEN;
+        if(isSingleBall){
+            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
         }
 
-        // RED BALL
-        if(getCurrentBallType() == BALL_BLUE){
-
-            ballObject = ballHandler.getNewBallObject(ballObject, getCurrentBallType());
+        // PURPLE BALLS
+        if(currentBallType == BALL_PURPLE){
+            purpleBallObjects = ballHandler.getNewBallObjectArray(keys.PURPLE_BALL_NUMBER,purpleBallObjects, currentBallType);
         }
 
-        // YELLOW BALL
-        if(getCurrentBallType() == BALL_YELLOW){
-            ballObject = ballHandler.getNewBallObject(ballObject, getCurrentBallType());
-        }
-
-        // GREEN BALL
-        if(getCurrentBallType() == BALL_GREEN){
-            ballObject = ballHandler.getNewBallObject(ballObject, getCurrentBallType());
-        }
-
-        // PURPLE BALL
-        if(getCurrentBallType() == BALL_PURPLE){
-            purpleBallObjects = ballHandler.getNewBallObjectArray(keys.PURPLE_BALL_NUMBER,purpleBallObjects, getCurrentBallType());
-        }
-
-        //WAVE BALL
-        if(getCurrentBallType() == BALL_WAVE){
-            multipleBalls = ballHandler.getNewBallObjectArray(numberOfWaveAtoms(),multipleBalls, getCurrentBallType());
+        //WAVE BALLS
+        if(currentBallType == BALL_WAVE){
+            multipleBalls = ballHandler.getNewBallObjectArray(numberOfWaveAtoms(),multipleBalls, currentBallType);
             currentWaveBall = 0;
         }
     }

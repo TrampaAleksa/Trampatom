@@ -28,20 +28,20 @@ public class BallHandler {
     public static boolean yellowBallSpeedChangeActive;
 
     int i;
-    int x,y,ballType;
+    int x,y;
     double angle;
     int ballSpeed, yellowBallSpeed, greenBallSpeed;
     int ballWidth, ballHeight;
     Keys keys;
     Ball mBall;
     ChancePassivesAndEvents chancePassivesAndEvents;
-    private Random random;
     private int eventTriggerChance;
 
     Ball[] purpleBalls = {null,null,null};
     Ball[] waveBalls = {null,null,null,null,null,null,null};
 
-    private RandomBallVariables randomBallVariables;
+    private final Random random;
+    private final RandomBallVariables randomBallVariables;
 
     /**
      * Constructor for BallHandler. We should pass in an instance of RandomBallVariables and keys.
@@ -84,20 +84,7 @@ public class BallHandler {
 
     /**
      * Since we will manipulate with ball types during the game, we have to pass every bitmap so that we can set it inside the handler
-     * Theese bitmaps will later be used to change the balls sizes and colors depending on a power up or type of the ball
-     */
-    public void parseBallBitmaps(Bitmap redBall, Bitmap blueBall, Bitmap greenBall, Bitmap yellowBall, Bitmap purpleBall, Bitmap[] waveBall){
-        this.redBall = redBall;
-        this.blueBall = blueBall;
-        this.greenBall = greenBall;
-        this.yellowBall = yellowBall;
-        this.purpleBall = purpleBall;
-        this.waveBall = waveBall;
-    }
-
-    /**
-     * Since we will manipulate with ball types during the game, we have to pass every bitmap so that we can set it inside the handler
-     * Theese bitmaps will later be used to change the balls sizes and colors depending on a power up or type of the ball
+     * These bitmaps will later be used to change the balls sizes and colors depending on a power up or type of the ball
      */
     public void parseBallBitmaps(BallBitmaps ballBitmaps){
         this.redBall = ballBitmaps.getRedBall();
@@ -189,6 +176,7 @@ public class BallHandler {
     public Ball getNewBallObject(Ball ball, AtomId currentBallType){
 
         ball.setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
+        ball.setBallType(currentBallType);
 
         // random chance for triggering the event. if it is triggered do this block of code
         if( random.nextInt(Keys.MAX_CHANCE_FOR_EVENT) < eventTriggerChance){
@@ -337,7 +325,7 @@ public class BallHandler {
 
         for(int i=0; i<arraySize; i++){
             balls[i].setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
-
+            balls[i].setBallType(currentBallType);
             // random chance for triggering the event. if it is triggered do this block of code
             if( random.nextInt(Keys.MAX_CHANCE_FOR_EVENT) < eventTriggerChance){
 
