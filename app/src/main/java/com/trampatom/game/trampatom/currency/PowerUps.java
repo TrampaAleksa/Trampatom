@@ -6,6 +6,7 @@ import android.widget.ProgressBar;
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.activity.GameClassicActivity;
+import com.trampatom.game.trampatom.ball.AtomId;
 import com.trampatom.game.trampatom.ball.BallHandler;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.Keys;
@@ -207,7 +208,7 @@ public class PowerUps {
      *                   </p>
      * @return a ball object that has the same angle and coordinates but its attributes are reset to its initial state;
      */
-    public Ball resetBallState(Ball ballObject, int flag, int currentBallType) {
+    public Ball resetBallState(Ball ballObject, int flag, AtomId currentBallType) {
 
 
         switch (flag) {
@@ -340,7 +341,7 @@ public class PowerUps {
      * @param ball            the ball to set the speed to
      * @return a ball object with the appropriate speed
      */
-    private Ball setBallSpeedByType(int currentBallType, Ball ball) {
+    private Ball setBallSpeedByType(AtomId currentBallType, Ball ball) {
 
         switch (currentBallType) {
 

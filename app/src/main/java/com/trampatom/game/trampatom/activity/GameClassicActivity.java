@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.R;
+import com.trampatom.game.trampatom.ball.AtomId;
 import com.trampatom.game.trampatom.ball.BallBitmaps;
 import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.BallHandler;
@@ -1005,7 +1006,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
     // BALL TYPE
-    private int getCurrentBallType() {
+    private AtomId getCurrentBallType() {
         return ballTypeHandler.getCurrentType();
     }
     private void setCurrentBallTypeBySeed() {

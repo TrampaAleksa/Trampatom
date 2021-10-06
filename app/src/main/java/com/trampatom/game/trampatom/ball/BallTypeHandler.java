@@ -18,7 +18,7 @@ public class BallTypeHandler {
     public int TYPE_BALL_PURPLE_CHANCE = 18;
     public int TYPE_BALL_WAVE_CHANCE = 21;
 
-    private int currentType;
+    private AtomId currentType;
     private int ballTypeSeed = 4;
 
     public BallTypeHandler(){
@@ -56,10 +56,10 @@ public class BallTypeHandler {
         return seed;
     }
 
-    public int getCurrentType() {
+    public AtomId getCurrentType() {
         return currentType;
     }
-    public void setCurrentType(int currentType) {
+    public void setCurrentType(AtomId currentType) {
         this.currentType = currentType;
     }
 }

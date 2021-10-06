@@ -186,7 +186,7 @@ public class BallHandler {
 
      * @return a ball object with new coordinates and angle
      */
-    public Ball getNewBallObject(Ball ball, int currentBallType){
+    public Ball getNewBallObject(Ball ball, AtomId currentBallType){
 
         ball.setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
 
@@ -332,7 +332,7 @@ public class BallHandler {
      * @param currentBallType used to determine power up behavior and setting of ball type
      * @return
      */
-    public Ball[] getNewBallObjectArray(int arraySize, Ball[] balls, int currentBallType) {
+    public Ball[] getNewBallObjectArray(int arraySize, Ball[] balls, AtomId currentBallType) {
 
 
         for(int i=0; i<arraySize; i++){
@@ -471,7 +471,7 @@ public class BallHandler {
      * @param balls the object that needs to be reset
      * @return a ball object that has the same angle and coordinates but its attributes are reset to its initial state;
      */
-    public Ball[] resetBallArrayState(Ball[] balls, int arraySize, int currentBallType){
+    public Ball[] resetBallArrayState(Ball[] balls, int arraySize, AtomId currentBallType){
 
 
         if(arraySize == keys.PURPLE_BALL_NUMBER){
@@ -535,7 +535,7 @@ public class BallHandler {
      * @param ball the ball to set the speed to
      * @return a ball object with the appropriate speed
      */
-    private Ball setBallSpeedByType(int currentBallType, Ball ball){
+    private Ball setBallSpeedByType(AtomId currentBallType, Ball ball){
 
         switch(currentBallType){
 
@@ -552,7 +552,7 @@ public class BallHandler {
         return ball;
     }
 
-    private Ball setBallColorByType(int currentBallType, Ball ball){
+    private Ball setBallColorByType(AtomId currentBallType, Ball ball){
 
         if(currentBallType == BALL_RED){
             ball.setBallColor(redBall);
@@ -583,7 +583,7 @@ public class BallHandler {
 
     }
 
-    private Ball[] setBallArrayColorByType (int currentBallType, Ball[] balls){
+    private Ball[] setBallArrayColorByType (AtomId currentBallType, Ball[] balls){
 
         // PURPLE BALL
         if(currentBallType == BALL_PURPLE){
