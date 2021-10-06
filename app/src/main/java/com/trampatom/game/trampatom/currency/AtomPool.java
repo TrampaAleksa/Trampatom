@@ -41,6 +41,7 @@ public class AtomPool {
         //get a preferences manager only once
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         random = new Random();
+        poolArray = getAtoms();
     }
 
     /**
@@ -52,11 +53,11 @@ public class AtomPool {
 
         //get the number of every atom we had from a shared Preference
         int [] array = {
-                preferences.getInt(keys.KEY_BLUE_CURRENCY, 0),
-                preferences.getInt(keys.KEY_RED_CURRENCY, 0),
-                preferences.getInt(keys.KEY_GREEN_CURRENCY,0),
-                preferences.getInt(keys.KEY_YELLOW_CURRENCY, 0),
-                preferences.getInt(keys.KEY_PURPLE_CURRENCY, 0)
+                preferences.getInt(Keys.KEY_BLUE_CURRENCY, 0),
+                preferences.getInt(Keys.KEY_RED_CURRENCY, 0),
+                preferences.getInt(Keys.KEY_GREEN_CURRENCY,0),
+                preferences.getInt(Keys.KEY_YELLOW_CURRENCY, 0),
+                preferences.getInt(Keys.KEY_PURPLE_CURRENCY, 0)
         };
 
         return array;
@@ -82,11 +83,11 @@ public class AtomPool {
      */
     public int getSingleAtomValue(int category){
         switch (category){
-            case Keys.CATEGORY_RED: return preferences.getInt(keys.KEY_RED_CURRENCY, 0);
-            case Keys.CATEGORY_GREEN: return preferences.getInt(keys.KEY_GREEN_CURRENCY, 0);
-            case Keys.CATEGORY_YELLOW: return preferences.getInt(keys.KEY_YELLOW_CURRENCY, 0);
-            case Keys.CATEGORY_PURPLE: return  preferences.getInt(keys.KEY_PURPLE_CURRENCY, 0);
-            default: return  preferences.getInt(keys.KEY_BLUE_CURRENCY, 0);
+            case Keys.CATEGORY_RED: return preferences.getInt(Keys.KEY_RED_CURRENCY, 0);
+            case Keys.CATEGORY_GREEN: return preferences.getInt(Keys.KEY_GREEN_CURRENCY, 0);
+            case Keys.CATEGORY_YELLOW: return preferences.getInt(Keys.KEY_YELLOW_CURRENCY, 0);
+            case Keys.CATEGORY_PURPLE: return  preferences.getInt(Keys.KEY_PURPLE_CURRENCY, 0);
+            default: return  preferences.getInt(Keys.KEY_BLUE_CURRENCY, 0);
         }
     }
 
@@ -120,23 +121,13 @@ public class AtomPool {
         poolArray[shopAtomIndex] +=  ballObject.getBallAtomValue();
     }
 
-    /**
-     * Important method that should be called at the end of every game to add every collected atom into
-     * the currency pool/ total atom count to be used later
-     * @param addArray in mid game an array is filled with every atom type we clicked.
-     *                 indexes: 0 - blue ; 1 - red ; 2 - green ; 3 - yellow ; 4 - purple
-     */
-    public void addAtoms( int[] addArray){
-        //Current pool that we have so that we add our additional atoms to the existing pool
-        int[] atomPool = {0,0,0,0,0};
-        atomPool = getAtoms();
-
+    public void saveAtoms(){
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(keys.KEY_BLUE_CURRENCY, addArray[0]+atomPool[0]);
-        editor.putInt(keys.KEY_RED_CURRENCY, addArray[1]+atomPool[1]);
-        editor.putInt(keys.KEY_GREEN_CURRENCY, addArray[2]+atomPool[2]);
-        editor.putInt(keys.KEY_YELLOW_CURRENCY, addArray[3]+atomPool[3]);
-        editor.putInt(keys.KEY_PURPLE_CURRENCY, addArray[4]+atomPool[4]);
+        editor.putInt(Keys.KEY_BLUE_CURRENCY, poolArray[Keys.CATEGORY_BLUE]);
+        editor.putInt(Keys.KEY_RED_CURRENCY, poolArray[Keys.CATEGORY_RED]);
+        editor.putInt(Keys.KEY_GREEN_CURRENCY, poolArray[Keys.CATEGORY_GREEN]);
+        editor.putInt(Keys.KEY_YELLOW_CURRENCY, poolArray[Keys.CATEGORY_YELLOW]);
+        editor.putInt(Keys.KEY_PURPLE_CURRENCY, poolArray[Keys.CATEGORY_PURPLE]);
         editor.apply();
     }
 
@@ -148,15 +139,13 @@ public class AtomPool {
     public void updateAtoms(int[] atomArray){
 
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(keys.KEY_BLUE_CURRENCY, atomArray[Keys.CATEGORY_BLUE]);
-        editor.putInt(keys.KEY_RED_CURRENCY, atomArray[Keys.CATEGORY_RED]);
-        editor.putInt(keys.KEY_GREEN_CURRENCY, atomArray[Keys.CATEGORY_GREEN]);
-        editor.putInt(keys.KEY_YELLOW_CURRENCY, atomArray[Keys.CATEGORY_YELLOW]);
-        editor.putInt(keys.KEY_PURPLE_CURRENCY, atomArray[Keys.CATEGORY_PURPLE]);
+        editor.putInt(Keys.KEY_BLUE_CURRENCY, atomArray[Keys.CATEGORY_BLUE]);
+        editor.putInt(Keys.KEY_RED_CURRENCY, atomArray[Keys.CATEGORY_RED]);
+        editor.putInt(Keys.KEY_GREEN_CURRENCY, atomArray[Keys.CATEGORY_GREEN]);
+        editor.putInt(Keys.KEY_YELLOW_CURRENCY, atomArray[Keys.CATEGORY_YELLOW]);
+        editor.putInt(Keys.KEY_PURPLE_CURRENCY, atomArray[Keys.CATEGORY_PURPLE]);
         editor.apply();
     }
-
-
 
 
     /**
@@ -208,14 +197,4 @@ public class AtomPool {
         return atomPool;
     }
 
-
-    /**
-     * Method that should be used to retrieve an array of categories to be used to handle the shop better
-     * @return indexes/ category : 0 - RED ; 1 - GREEN ; 2 - YELLOW ; 3 - PURPLE
-     */
-    public int[] getCategories(){
-
-        int[] categories = {keys.CATEGORY_RED, keys.CATEGORY_GREEN, keys.CATEGORY_YELLOW, keys.CATEGORY_PURPLE};
-        return categories;
-    }
 }

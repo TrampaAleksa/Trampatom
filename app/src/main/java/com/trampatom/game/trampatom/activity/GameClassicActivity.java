@@ -117,9 +117,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // -------------------------------- Power Up and Shop ---------------------------------- \\
 
-        //For adding atoms to the Atom pool at end of game
-            //contains 5 elements, blue, red, green, yellow and purple atoms to be filled during game
-            int[] poolArray = {0,0,0,0,0};
         //For activating the power ups. One button has a cooldown the other one is a "one time use only"
             Button bPowerUp1, bPowerUp2;
         //determines what power up and what passive effect we choose and does a certain action based on that
@@ -609,7 +606,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //display our score and if we got a new high score show a text to indicate that
             gameover.gameOver(gameScore, new HighScore(this));
             //add the atoms we collected during the game to the atom pool
-            atomPool.addAtoms(poolArray);
+            atomPool.saveAtoms();
             try {
                 //delay before finishing the game
                 sleep(3000);
@@ -655,53 +652,13 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
 
-
     @Override
     public void onClick(View v) {
-
-        switch(v.getId()){
-
-            case R.id.bPowerUp1:
-                PowerUpCooldownHandler cooldownHandler = getPowerUpCooldownHandler();
-                //if the power up isn't in coolDown, activate it
-                if (cooldownHandler.isOnCooldown())
-                    break;
-
-                // if the power up does something to the ball
-                if(flagTypePowerUp1 == Keys.FLAG_BALL_POWER_UP) {
-                    ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, selectedPowerUp1);
-                    purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
-                    multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp1, numberOfWaveAtoms());
-                    //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
-                    cooldownHandler.activateCooldown();
-                }
-                //if the power up does something to the energy bar
-                else{
-                    addEnergy(powerUps.energyPowerUp(selectedPowerUp1));
-                    cooldownHandler.activateCooldown();
-                }
-                break;
-            case R.id.bPowerUp2:
-
-                if(!usedConsumable) {
-                    //DO SOMETHING
-                    // if the power up does something to the ball
-                    if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP) {
-                        ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, selectedPowerUp2);
-                        purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
-                        multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp2, numberOfWaveAtoms());
-                        timeConsumable = true;
-                        usedConsumable = true;
-                    }
-                    //if the power up does something to the energy bar
-                    else{
-                        addEnergy(powerUps.energyPowerUp(selectedPowerUp2));
-                        usedConsumable = true;
-                    }
-                }
-                break;
+        if (v.getId() == R.id.bPowerUp1)
+            triggerPowerUp1();
+        if (v.getId() == R.id.bPowerUp2)
+            triggerPowerUp2();
         }
-    }
 
 
 
@@ -721,10 +678,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             addScore(100);
             //add the atom to the atom pool
             playBallClickedSound(ballObject);
-            poolArray[0] = poolArray[0] + ballObject.getBallAtomValue();
+            addAtomToPool(ballObject);
             getNewBall();
         }
     }
+
 
     /**
      *<p> Method for handling red ball actions.</p>
@@ -737,7 +695,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             reduceEnergy(100);
             reduceScore(100);
             //add the atom to the atom pool, even if we scored negative the atom is added to the pool
-            poolArray[1] = poolArray[1] + ballObject.getBallAtomValue();
+            addAtomToPool(ballObject);
             playBallClickedSound(ballObject);
             getNewBall();
         }
@@ -746,7 +704,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             addEnergy(100);
             addScore(100);
             //add the atom to the atom pool
-            poolArray[1] = poolArray[1] + ballObject.getBallAtomValue();
+            addAtomToPool(ballObject);
             playBallClickedSound(ballObject);
             getNewBall();
         }
@@ -762,7 +720,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             addEnergy(400);
             addScore(400);
             //add the atom to the atom pool
-            poolArray[2] = poolArray[2] + ballObject.getBallAtomValue();
+            addAtomToPool(ballObject);
             playBallClickedSound(ballObject);
             getNewBall();
         }
@@ -799,7 +757,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 addEnergy(500);
                 addScore(500);
                 //add the atom to the atom pool
-                poolArray[3] = poolArray[3] + ballObject.getBallAtomValue();
+                addAtomToPool(ballObject);
                 playBallClickedSound(ballObject);
                 getNewBall();
                 //reset the yellow ball to its first state for later use
@@ -833,7 +791,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 purpleBallObjects[2].setX(purpleBallObjects[0].getX());
                 purpleBallObjects[2].setY(purpleBallObjects[0].getY());
                 //add the atom to the atom pool
-                poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
+                addAtomToPool(purpleBallObjects[0]);
                 playBallClickedSound(purpleBallObjects[0]);
             }
         }
@@ -843,14 +801,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 //don't draw this ball
                 ballClicked[0]=true;
                 //add the atom to the atom pool
-                poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
+                addAtomToPool(purpleBallObjects[0]);
                 playBallClickedSound(purpleBallObjects[0]);
             }
             if(clickedABall.ballClicked(purpleBallObjects[1], clickedX, clickedY)){
                 //don't draw this ball
                 ballClicked[1]=true;
                 //add the atom to the atom pool
-                poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
+                addAtomToPool(purpleBallObjects[1]);
                 playBallClickedSound(purpleBallObjects[1]);
             }
             if(clickedABall.ballClicked(purpleBallObjects[2], clickedX, clickedY)){
@@ -859,7 +817,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 ballClicked[2]=true;
 
                 //add the atom to the atom pool
-                poolArray[4] = poolArray[4] + ballObject.getBallAtomValue();
+                addAtomToPool(purpleBallObjects[2]);
                 playBallClickedSound(purpleBallObjects[2]);
             }
             //if we clicked all three, score and get a new ball
@@ -894,7 +852,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             addEnergy(currentWaveBall*10);
             addScore(currentWaveBall*10);
             //adds a random atom to the pool every time we click a wave ball
-            poolArray[random.nextInt(4)]+= multipleBalls[0].getBallAtomValue();
+            addAtomToPool(multipleBalls[0]);
             playBallClickedSound(multipleBalls[0]);
             // next ball should be clicked
             currentWaveBall ++;
@@ -1043,6 +1001,60 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         if (powerUpCooldownHandler == null) powerUpCooldownHandler = new PowerUpCooldownHandler(this);
         return powerUpCooldownHandler;
     }
+
+    // ATOM POOL AND SHOP
+
+    private void addAtomToPool(Ball ballObject) {
+        atomPool.addAtom(ballObject);
+    }
+
+    // POWER UPS
+
+    private void triggerPowerUp1() {
+        PowerUpCooldownHandler cooldownHandler = getPowerUpCooldownHandler();
+
+        if (cooldownHandler.isOnCooldown())
+            return;
+
+        if(flagTypePowerUp1 == Keys.FLAG_BALL_POWER_UP)
+            triggerBallPowerUp(cooldownHandler);
+        else
+            triggerEnergyPowerUp(cooldownHandler);
+    }
+
+    private void triggerEnergyPowerUp(PowerUpCooldownHandler cooldownHandler) {
+        addEnergy(powerUps.energyPowerUp(selectedPowerUp1));
+        cooldownHandler.activateCooldown();
+    }
+    private void triggerBallPowerUp(PowerUpCooldownHandler cooldownHandler) {
+        ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, selectedPowerUp1);
+        purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
+        multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp1, numberOfWaveAtoms());
+        //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
+        cooldownHandler.activateCooldown();
+    }
+    private void triggerPowerUp2() {
+        if(!usedConsumable) {
+            if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP)
+                triggerConsumableBallPowerUp();
+            else
+                triggerConsumableEnergyPowerUp();
+        }
+    }
+
+    private void triggerConsumableEnergyPowerUp() {
+        addEnergy(powerUps.energyPowerUp(selectedPowerUp2));
+        usedConsumable = true;
+    }
+
+    private void triggerConsumableBallPowerUp() {
+        ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, selectedPowerUp2);
+        purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
+        multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp2, numberOfWaveAtoms());
+        timeConsumable = true;
+        usedConsumable = true;
+    }
+
 
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
