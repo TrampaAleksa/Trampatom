@@ -37,6 +37,7 @@ import com.trampatom.game.trampatom.currency.PowerUps;
 import com.trampatom.game.trampatom.currency.ShopHandler;
 import com.trampatom.game.trampatom.energy.CurrentGameEnergy;
 import com.trampatom.game.trampatom.power.up.ChancePassivesAndEvents;
+import com.trampatom.game.trampatom.power.up.ConsumablePowerUpCooldownHandler;
 import com.trampatom.game.trampatom.power.up.IPowerUpExpiredEvent;
 import com.trampatom.game.trampatom.power.up.PowerUpCooldownHandler;
 import com.trampatom.game.trampatom.score.CurrentGameScore;
@@ -109,6 +110,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         CurrentGameScore gameScore;
         CurrentGameEnergy gameEnergy;
         PowerUpCooldownHandler powerUpCooldownHandler;
+        ConsumablePowerUpCooldownHandler consumableCooldownHandler;
 
     // ------------------- Arrays ------------------------------------------------------- \\
 
@@ -982,6 +984,16 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private PowerUpCooldownHandler getPowerUpCooldownHandler(){
         if (powerUpCooldownHandler == null) powerUpCooldownHandler = new PowerUpCooldownHandler(this);
         return powerUpCooldownHandler;
+    }
+    private ConsumablePowerUpCooldownHandler getConsumableCooldownHandler(){
+        if (consumableCooldownHandler == null)
+            consumableCooldownHandler = new ConsumablePowerUpCooldownHandler(new IPowerUpExpiredEvent() {
+            @Override
+            public void onPowerUpExpired() {
+                onConsumablePowerUpExpired();
+            }
+        });
+        return consumableCooldownHandler;
     }
 
     // ATOM POOL AND SHOP
