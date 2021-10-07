@@ -65,7 +65,7 @@ import static java.lang.Thread.sleep;
  * Class used to run the Classic game mode. It uses energy that you get from balls to keep the game running.
  * Whenever changing any ball's properties, probablly change code in: move method, draw method, new ball method
  */
-public class GameClassicActivity extends AppCompatActivity implements Runnable, View.OnTouchListener, View.OnClickListener, IPowerUpExpiredEvent {
+public class GameClassicActivity extends AppCompatActivity implements Runnable, View.OnTouchListener, View.OnClickListener{
 
     // ------------------- General Ball Variables --------------------------------------- \\
 
