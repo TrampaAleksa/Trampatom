@@ -76,12 +76,12 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     // ------------------- Ball type variables ------------------------------------------ \\
 
         //used for purple ball
-            //initially there is only one purple ball
-                int ballPurpleNumber =1;
+
             //used for either drawing only one ball or multiple balls
                 int timesClickedPurple=0;
             //used to determine how many and what ball to draw on screen
                 boolean[] ballClicked = {false,false,false};
+
         //used for wave ball
                 int currentWaveBall = 0;
 
@@ -532,21 +532,19 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * <p>If one of the three balls is clicked it should disappear</p>
      */
     private void movePurpleBall(){
-
         //depending on if we clicked the first purple ball we will move only one ball or all three balls
-        for(int i=0; i<ballPurpleNumber; i++){
-            purpleBallObjects[i] = ballMovement.moveBall(purpleBallObjects[i]);
-        }
-        //draw three balls when they are clicked
-        if(getTimesClickedPurple() == keys.BALL_PURPLE_ONE_CLICK) {
-                //the above for loop will now move three set of coordinates instead of just one
-                    ballPurpleNumber = Keys.PURPLE_BALL_NUMBER;
+        if (getTimesClickedPurple() == keys.BALL_PURPLE_NO_CLICK)
+                ballMovement.moveBall(purpleBallObjects[0]);
+        else
+            moveEveryPurpleBall();
+    }
 
-            //remove the balls that were clicked from the screen and stop moving them
-            for (int i = 0; i < purpleBallObjects.length; i++) {
-                if (ballClicked[i])
-                    purpleBallObjects[i].setX(-purpleBallObjects[i].getBallWidth());
-            }
+    private void moveEveryPurpleBall() {
+        for(int i = 0; i< purpleBallObjects.length; i++){
+            ballMovement.moveBall(purpleBallObjects[i]);
+
+            if (ballClicked[i])
+                purpleBallObjects[i].setX(-purpleBallObjects[i].getBallWidth());
         }
     }
 
@@ -1075,7 +1073,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
     private void purpleFinished() {
-        ballPurpleNumber = keys.BALL_PURPLE_NO_CLICK;
         //reset to starting state
         ballClicked[0] = ballClicked[1] = ballClicked[2] = false;
         resetPurpleBallsState();
