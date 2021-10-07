@@ -661,9 +661,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         }
     }
 
-    private Ball getBallObject() {
-        return ballObject;
-    }
 
 
     /**
@@ -765,48 +762,34 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         if (timesClickedPurple == keys.BALL_PURPLE_NO_CLICK) {
             //if we clicked on the first/ original ball
-            if (clickedABall.ballClicked(purpleBallObjects[0], clickedX, clickedY)) {
+            Ball initialPurpleBall = purpleBallObjects[0];
+
+            if (clickedABall.ballClicked(initialPurpleBall, clickedX, clickedY)) {
                 //used to determine how many balls to draw
                 timesClickedPurple = keys.BALL_PURPLE_ONE_CLICK;
-                //get new angles and set every ball to start moving from the sae spot
-                purpleBallObjects[0].setAngle(getRandomAngle());
-                purpleBallObjects[1].setAngle(getRandomAngle());
-                purpleBallObjects[2].setAngle(getRandomAngle());
-                //set th balls to start splitting from the clicked ball
-                purpleBallObjects[1].setX(purpleBallObjects[0].getX());
-                purpleBallObjects[1].setY(purpleBallObjects[0].getY());
-                purpleBallObjects[2].setX(purpleBallObjects[0].getX());
-                purpleBallObjects[2].setY(purpleBallObjects[0].getY());
-                //add the atom to the atom pool
-                addAtomToPool(purpleBallObjects[0]);
-                playBallClickedSound(purpleBallObjects[0]);
+                //get new angles and set every ball to start moving from the same spot
+                for (Ball purpleBallObject : purpleBallObjects) {
+                    purpleBallObject.setAngle(getRandomAngle());
+                    purpleBallObject.setX(initialPurpleBall.getX());
+                    purpleBallObject.setY(initialPurpleBall.getY());
+                }
+
+                addAtomToPool(initialPurpleBall);
+                playBallClickedSound(initialPurpleBall);
             }
         }
         //if we clicked on one of the split balls remove them from the screen
         else  {
-            if(clickedABall.ballClicked(purpleBallObjects[0], clickedX, clickedY)){
-                //don't draw this ball
-                ballClicked[0]=true;
-                //add the atom to the atom pool
-                addAtomToPool(purpleBallObjects[0]);
-                playBallClickedSound(purpleBallObjects[0]);
+            for(int i=0; i<purpleBallObjects.length; i++){
+                if(clickedABall.ballClicked(purpleBallObjects[i], clickedX, clickedY)){
+                    //don't draw this ball
+                    ballClicked[i]=true;
+                    //add the atom to the atom pool
+                    addAtomToPool(purpleBallObjects[i]);
+                    playBallClickedSound(purpleBallObjects[i]);
+                }
             }
-            if(clickedABall.ballClicked(purpleBallObjects[1], clickedX, clickedY)){
-                //don't draw this ball
-                ballClicked[1]=true;
-                //add the atom to the atom pool
-                addAtomToPool(purpleBallObjects[1]);
-                playBallClickedSound(purpleBallObjects[1]);
-            }
-            if(clickedABall.ballClicked(purpleBallObjects[2], clickedX, clickedY)){
 
-                //don't draw this ball
-                ballClicked[2]=true;
-
-                //add the atom to the atom pool
-                addAtomToPool(purpleBallObjects[2]);
-                playBallClickedSound(purpleBallObjects[2]);
-            }
             //if we clicked all three, score and get a new ball
             if(ballClicked[0] && ballClicked[1] && ballClicked[2]){
 
@@ -820,7 +803,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 getNewBall();
             }
         }
-        }
+    }
 
 
     /**
@@ -1074,6 +1057,13 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
         multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp2, numberOfWaveAtoms());
         cooldownHandler.activateConsumableCooldown(true);
+    }
+
+
+    // BALL OBJECTS
+
+    private Ball getBallObject() {
+        return ballObject;
     }
 
 
