@@ -376,7 +376,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
     private void updateConsumablePowerUpCooldown(){
-        tryUpdatingConsumableCooldown();
+            tryUpdatingConsumableCooldown();
     }
 
 
@@ -1016,57 +1016,74 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
         cooldownHandler.activateCooldown();
     }
+
+
     private void triggerPowerUp2() {
-        if(!usedConsumable) {
-            if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP)
-                triggerConsumableBallPowerUp();
-            else
-                triggerConsumableEnergyPowerUp();
-        }
+        if (isUsedConsumable())
+            return;
+
+        if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP)
+            triggerConsumableBallPowerUp();
+        else
+            triggerConsumableEnergyPowerUp();
     }
 
     private void triggerConsumableEnergyPowerUp() {
         addEnergy(powerUps.energyPowerUp(selectedPowerUp2));
-        usedConsumable = true;
+        activateConsumableCooldown(false);
     }
 
     private void triggerConsumableBallPowerUp() {
         ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, selectedPowerUp2);
         purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
         multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp2, numberOfWaveAtoms());
-        isConsumableActive = true;
-        usedConsumable = true;
+        activateConsumableCooldown(true);
     }
 
     // Timer Related
-    private void tryUpdatingConsumableCooldown() {
-        if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP){
-            if(isConsumableActive) {
 
+    private void tryUpdatingConsumableCooldown() {
+            if(isConsumableActive) {
                 boolean consumableNotExpired = consumableDuration > (consumableCountDownTimer) / 1000;
                 if (consumableNotExpired) {
                     // has to increment equally to the millis interval of ticks
                     consumableCountDownTimer += 100;
                     return;
                 }
-                //reset the ball objects after the power up expires
-                consumablePowerUpExpired();
+
+                deactivateConsumableCooldown();
+                onConsumablePowerUpExpired();
             }
         }
-    }
 
-    private void consumablePowerUpExpired() {
+    /**
+     * Some Consumable Power Ups have an "instant" activation that does not have a duration
+     * which means there is no need to set 'isConsumableActive' to true since its not a Power Up that 'Stays Active'.
+      * @param consumableHasDuration determines if we should start a cooldown for how long the Power Up stays Activated.
+     */
+    private void activateConsumableCooldown(boolean consumableHasDuration) {
+        isConsumableActive = consumableHasDuration;
+        usedConsumable = true;
+    }
+    private void deactivateConsumableCooldown() {
         isConsumableActive = false;
         consumableCountDownTimer = 0;
-
-        ballObject = powerUps.resetBallState(ballObject, selectedPowerUp2, getCurrentBallType());
-        purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
-                selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
-        multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                selectedPowerUp2, numberOfWaveAtoms());
     }
     private void initConsumableDuration() {
         consumableDuration = keys.POWER_UP_COOLDOWN;
+    }
+
+    private void onConsumablePowerUpExpired() {
+        if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP) {
+            ballObject = powerUps.resetBallState(ballObject, selectedPowerUp2, getCurrentBallType());
+            purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
+                    selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
+            multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
+                    selectedPowerUp2, numberOfWaveAtoms());
+        }
+    }
+    private boolean isUsedConsumable(){
+        return usedConsumable;
     }
 
 
