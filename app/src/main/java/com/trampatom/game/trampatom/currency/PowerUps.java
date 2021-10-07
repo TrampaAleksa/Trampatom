@@ -5,15 +5,10 @@ import android.widget.ProgressBar;
 
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.Model.PowerUpPool;
-import com.trampatom.game.trampatom.activity.GameClassicActivity;
 import com.trampatom.game.trampatom.ball.AtomId;
-import com.trampatom.game.trampatom.ball.BallHandler;
 import com.trampatom.game.trampatom.utils.GameTimeAndScore;
 import com.trampatom.game.trampatom.utils.Keys;
 import com.trampatom.game.trampatom.utils.RandomBallVariables;
-
-import static com.trampatom.game.trampatom.ball.AtomId.BALL_GREEN;
-import static com.trampatom.game.trampatom.ball.AtomId.BALL_YELLOW;
 
 /**
  * Important class that should contain all the methods for working with passive and active power Ups.
@@ -208,19 +203,16 @@ public class PowerUps {
      *                   </p>
      * @return a ball object that has the same angle and coordinates but its attributes are reset to its initial state;
      */
-    public Ball resetBallState(Ball ballObject, int flag, AtomId currentBallType) {
-
+    public Ball resetBallState(Ball ballObject, int flag) {
 
         switch (flag) {
             // RED
             case Keys.FLAG_RED_FREEZE_BALLS:
-                ballObject = setBallSpeedByType(currentBallType, ballObject);
+                setBallSpeedByType(ballObject);
                 ballObject.setActiveChangesSpeed(false);
                 return ballObject;
 
-
             case Keys.FLAG_RED_SELECTIVE_TYPE:
-
 
                 break;
             case Keys.FLAG_RED_GRAVITY_PULL:
@@ -337,11 +329,11 @@ public class PowerUps {
     /**
      * Method used to set different default speeds for yellow, green and other balls
      *
-     * @param currentBallType determines what speed to set
      * @param ball            the ball to set the speed to
      * @return a ball object with the appropriate speed
      */
-    private Ball setBallSpeedByType(AtomId currentBallType, Ball ball) {
+    private Ball setBallSpeedByType(Ball ball) {
+        AtomId currentBallType = ball.getBallType();
 
         switch (currentBallType) {
 

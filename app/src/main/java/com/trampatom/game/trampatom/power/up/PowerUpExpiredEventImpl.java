@@ -40,7 +40,7 @@ public class PowerUpExpiredEventImpl implements IPowerUpExpiredEvent{
         if (flagTypePowerUp1 != Keys.FLAG_BALL_POWER_UP)
             return;
         //if the power up is ball related, reset the balls after the power up expires
-        ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, ballObject.getBallType());
+        ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1);
         purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
                 selectedPowerUp1, Keys.PURPLE_BALL_NUMBER);
         multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,

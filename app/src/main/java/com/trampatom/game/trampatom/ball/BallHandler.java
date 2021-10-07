@@ -60,7 +60,7 @@ public class BallHandler {
 
         //initialize the ball arrays here , because we need to create the ball
         // objects initially for the first create
-        for(i=0; i< keys.PURPLE_BALL_NUMBER; i++){
+        for(i=0; i< Keys.PURPLE_BALL_NUMBER; i++){
             purpleBalls[i] = new Ball();
         }
         for(i=0; i< numberOfWaveAtoms(); i++){
@@ -204,7 +204,7 @@ public class BallHandler {
         // If the speed of the new ball should be changed, check what type the ball is and set the
         //adequate speed for that ball type
         if(!ball.isActiveChangesSpeed()){
-            ball = setBallSpeedByType(currentBallType, ball);
+            setBallSpeedByType(currentBallType, ball);
         }
         //in case a power up is active that slows the ball down, to prevent a bug set the initial speed
         else if (currentBallType == BALL_YELLOW && yellowBallSpeedChangeActive ){
@@ -216,12 +216,12 @@ public class BallHandler {
         if(!ball.isActiveChangesSize()){
             ball.setBallWidth(ballWidth);
             ball.setBallHeight(ballHeight);
-            ball = setBallColorByType(currentBallType, ball);
+            setBallColorByType(currentBallType, ball);
         }
         else{
             ball.setBallWidth(ballWidth+keys.POWER_UP_BALL_SIZE_INCREASE);
             ball.setBallHeight(ballHeight+keys.POWER_UP_BALL_SIZE_INCREASE);
-            ball = setBallColorByType(currentBallType, ball);
+            setBallColorByType(currentBallType, ball);
            /* ball.setBallColor(Bitmap.createScaledBitmap(ball.getBallColor(),
                     ball.getBallWidth(),ball.getBallHeight(),false));*/
         }
@@ -254,7 +254,7 @@ public class BallHandler {
 
 
             //if its a purple ball array
-            if (arraySize == keys.PURPLE_BALL_NUMBER) {
+            if (arraySize == Keys.PURPLE_BALL_NUMBER) {
                 //if its purple we only need to set the first ball and set the other two to not be displayed
                 x= randomBallVariables.randomX();
                 y = randomBallVariables.randomY();
@@ -355,7 +355,7 @@ public class BallHandler {
         }
 
         //if its a purple ball array
-        if (arraySize == keys.PURPLE_BALL_NUMBER) {
+        if (arraySize == Keys.PURPLE_BALL_NUMBER) {
 
             //if its purple we only need to set the first ball, and set the other two to not be displayed
             x= randomBallVariables.randomX();
@@ -396,7 +396,7 @@ public class BallHandler {
                 if(!balls[i].isActiveChangesSize()){
                     balls[i].setBallWidth(ballWidth);
                     balls[i].setBallHeight(ballHeight);
-                    balls = setBallArrayColorByType(currentBallType, balls);
+                    setBallArrayColorByType(currentBallType, balls);
                 }
                 else{
                     balls[i] = setBallColorByType(currentBallType, balls[i]);
@@ -415,7 +415,7 @@ public class BallHandler {
             // If the speed of the new ball should be changed, check what type the ball is and set the
             //adequate speed for that ball type
             if(balls[0].isActiveChangesSize())
-            balls = setWaveSpeed(balls);
+            setWaveSpeed(balls);
             for(int i=1; i< arraySize; i++) {
 
 
@@ -437,7 +437,7 @@ public class BallHandler {
                 if(!balls[i].isActiveChangesSize()){
                     balls[i].setBallWidth(ballWidth);
                     balls[i].setBallHeight(ballHeight);
-                    balls = setBallArrayColorByType(currentBallType, balls);
+                    setBallArrayColorByType(currentBallType, balls);
                 }
                 else{
                     balls[i] = setBallColorByType(currentBallType, balls[i]);
@@ -575,7 +575,7 @@ public class BallHandler {
 
         // PURPLE BALL
         if(currentBallType == BALL_PURPLE){
-            for(i=0; i<keys.PURPLE_BALL_NUMBER; i++) {
+            for(i=0; i< Keys.PURPLE_BALL_NUMBER; i++) {
                 balls[i].setBallColor(purpleBall);
             }
         }

@@ -432,14 +432,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //get the ball objects for the first time with the default attributes
             ballObject = ballHandler.getFirstBallObject();
-            purpleBallObjects = ballHandler.getFirstBallObjectArray(keys.PURPLE_BALL_NUMBER);
+            purpleBallObjects = ballHandler.getFirstBallObjectArray(Keys.PURPLE_BALL_NUMBER);
             multipleBalls = ballHandler.getFirstBallObjectArray(numberOfWaveAtoms());
 
         //the colors of purple and wave don't have to be be changed so initiate them once
         for(int i=0; i<numberOfWaveAtoms(); i++){
             multipleBalls[i].setBallColor(ballBitmaps.getWaveBall()[i]);
         }
-        for(int i=0; i< keys.PURPLE_BALL_NUMBER; i++){
+        for(int i = 0; i< Keys.PURPLE_BALL_NUMBER; i++){
             purpleBallObjects[i].setBallColor(ballBitmaps.getPurpleBall());
         }
         getNewBall();
@@ -477,6 +477,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         }
     }
     public void drawBalls(){
+        Ball ballObject = getBallObject();
         switch(getCurrentBallType())
         {
             case BALL_BLUE:
@@ -505,7 +506,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * It uses a ball object and then changes its coordinates depending on the ball's speed
      */
     private void moveBall() {
-        ballObject = ballMovement.moveBall(ballObject);
+        ballMovement.moveBall(getBallObject());
     }
     /**
      * <p>Method for moving yellow balls.</p>
@@ -514,14 +515,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * </p>
      */
     private void moveYellowBall(){
-        ballObject = ballMovement.moveBall(ballObject);
+        ballMovement.moveBall(getBallObject());
     }
     /**
      * <p>Method for moving green ball by changing its x and y coordinates.</p>
      * Green ball moves faster than the other balls
      */
     private void moveGreenBall(){
-        ballObject = ballMovement.moveGreenBall(ballObject);
+        ballMovement.moveGreenBall(getBallObject());
     }
     /**
      * <p>Method for moving purple balls by changing every pair of x and y coordinates at the same time.</p>
@@ -647,17 +648,21 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * Blue ball is classic, we get score by touching it. Gives us energy
      */
     private void blueBall(){
+        Ball ball = getBallObject();
         //if we clicked the ball should gain score
-       // if(clickedABall.ballClicked(ballObject.getX(),ballObject.getY(),clickedX,clickedY)) {
-        if(clickedABall.ballClicked(ballObject,clickedX,clickedY)) {
+        if(clickedABall.ballClicked(ball,clickedX,clickedY)) {
             //add some energy and update it in the energy text view
             addEnergy(100);
             addScore(100);
             //add the atom to the atom pool
-            playBallClickedSound(ballObject);
-            addAtomToPool(ballObject);
+            playBallClickedSound(ball);
+            addAtomToPool(ball);
             getNewBall();
         }
+    }
+
+    private Ball getBallObject() {
+        return ballObject;
     }
 
 
@@ -666,14 +671,15 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * The red ball should reduce score if we touch it, and increase score if we don't touch it. Gives us energy
      */
     private void redBall(){
+        Ball ball = getBallObject();
         //if we click the ball
-        if(clickedABall.ballClicked(ballObject,clickedX,clickedY)){
+        if(clickedABall.ballClicked(ball,clickedX,clickedY)){
             //add some energy and update it in the energy text view
             reduceEnergy(100);
             reduceScore(100);
             //add the atom to the atom pool, even if we scored negative the atom is added to the pool
-            addAtomToPool(ballObject);
-            playBallClickedSound(ballObject);
+            addAtomToPool(ball);
+            playBallClickedSound(ball);
             getNewBall();
         }
         else {
@@ -681,8 +687,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             addEnergy(100);
             addScore(100);
             //add the atom to the atom pool
-            addAtomToPool(ballObject);
-            playBallClickedSound(ballObject);
+            addAtomToPool(ball);
+            playBallClickedSound(ball);
             getNewBall();
         }
     }
@@ -692,13 +698,15 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      * The green ball should simply give us score when clicked, gives more score than blue ball and energy
      */
     private void greenBall(){
-        if(clickedABall.ballClicked(ballObject,clickedX,clickedY)){
+        Ball ball = getBallObject();
+
+        if(clickedABall.ballClicked(ball,clickedX,clickedY)){
             //add some energy and update it in the energy text view
             addEnergy(400);
             addScore(400);
             //add the atom to the atom pool
-            addAtomToPool(ballObject);
-            playBallClickedSound(ballObject);
+            addAtomToPool(ball);
+            playBallClickedSound(ball);
             getNewBall();
         }
     }
@@ -711,21 +719,23 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void yellowBall(){
 
+        Ball ball = getBallObject();
+
         //every time the ball is clicked decrease its size and increase speed
-        if(clickedABall.ballClicked(ballObject,clickedX,clickedY)) {
+        if(clickedABall.ballClicked(ball,clickedX,clickedY)) {
             if (keys.TIMES_CLICKED_YELLOW < keys.BALL_YELLOW_REQUIRED_CLICKS) {
                 keys.TIMES_CLICKED_YELLOW++;
                 //every time we click it, reduce its size and increase its speed
-                ballObject.setBallWidth(ballObject.getBallWidth() - (ballObject.getBallWidth()/keys.BALL_YELLOW_SIZE_DECREASE));
-                ballObject.setBallHeight(ballObject.getBallHeight() - (ballObject.getBallWidth()/keys.BALL_YELLOW_SIZE_DECREASE));
-                ballObject.setBallColor(Bitmap.createScaledBitmap(ballObject.getBallColor(), ballObject.getBallWidth(), ballObject.getBallHeight(), true));
+                ball.setBallWidth(ball.getBallWidth() - (ball.getBallWidth()/keys.BALL_YELLOW_SIZE_DECREASE));
+                ball.setBallHeight(ball.getBallHeight() - (ball.getBallWidth()/keys.BALL_YELLOW_SIZE_DECREASE));
+                ball.setBallColor(Bitmap.createScaledBitmap(ball.getBallColor(), ball.getBallWidth(), ball.getBallHeight(), true));
                //yellow balls speed should change if we haven't activated a power up
-                if(!ballObject.isActiveChangesSpeed())
-                ballObject.setBallSpeed(ballObject.getBallSpeed()+keys.BALL_YELLOW_SPEED_INCREASE);
+                if(!ball.isActiveChangesSpeed())
+                    ball.setBallSpeed(ball.getBallSpeed()+keys.BALL_YELLOW_SPEED_INCREASE);
                 else if(selectedPowerUp1 == Keys.FLAG_GREEN_SLOW_DOWN_BALLS){
                     //if we have activated a power up, but it slows ball's down, increase the speed
                         BallHandler.yellowBallSpeedChangeActive = true;
-                        ballObject.setBallSpeed(ballObject.getBallSpeed()+keys.BALL_YELLOW_SPEED_INCREASE);
+                    ball.setBallSpeed(ball.getBallSpeed()+keys.BALL_YELLOW_SPEED_INCREASE);
                 }
             }
             else {
@@ -734,8 +744,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 addEnergy(500);
                 addScore(500);
                 //add the atom to the atom pool
-                addAtomToPool(ballObject);
-                playBallClickedSound(ballObject);
+                addAtomToPool(ball);
+                playBallClickedSound(ball);
                 getNewBall();
                 //reset the yellow ball to its first state for later use
                 keys.TIMES_CLICKED_YELLOW=0;
@@ -868,7 +878,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         // SINGLE BALL
         boolean isSingleBall = currentBallType == BALL_RED || currentBallType == BALL_BLUE || currentBallType == BALL_YELLOW || currentBallType == BALL_GREEN;
         if(isSingleBall){
-            ballObject = ballHandler.getNewBallObject(ballObject, currentBallType);
+            ballObject = ballHandler.getNewBallObject(getBallObject(), currentBallType);
         }
 
         // PURPLE BALLS
@@ -900,7 +910,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
     private boolean isSameTypeBallPowerUpActive() {
-        return ballObject.isActiveChangesType() && purpleBallObjects[0].isActiveChangesType()&& multipleBalls[0].isActiveChangesType();
+        return getBallObject().isActiveChangesType() && purpleBallObjects[0].isActiveChangesType()&& multipleBalls[0].isActiveChangesType();
     }
 
     // WIDTH AND HEIGHT
@@ -977,17 +987,17 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             powerUpCooldownHandler = new PowerUpCooldownHandler(new IPowerUpExpiredEvent() {
                 @Override
                 public void onPowerUpExpired() {
-                    onPowerUpExpired();
+                    powerUpExpired();
                 }
             });
         }
         return powerUpCooldownHandler;
     }
-    public void onPowerUpExpired() {
+    public void powerUpExpired() {
         if (flagTypePowerUp1 != Keys.FLAG_BALL_POWER_UP)
             return;
         //if the power up is ball related, reset the balls after the power up expires
-        ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, getCurrentBallType());
+        powerUps.resetBallState(getBallObject(), selectedPowerUp1);
         purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
                 selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
         multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
@@ -1006,7 +1016,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private void onConsumablePowerUpExpired() {
         if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP) {
-            ballObject = powerUps.resetBallState(ballObject, selectedPowerUp2, getCurrentBallType());
+            powerUps.resetBallState(getBallObject(), selectedPowerUp2);
             purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
                     selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
             multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
@@ -1034,7 +1044,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         cooldownHandler.activateCooldown();
     }
     private void triggerBallPowerUp(PowerUpCooldownHandler cooldownHandler) {
-        ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, selectedPowerUp1);
+        powerUps.activateBallObjectConsumablePowerUp(getBallObject(), selectedPowerUp1);
         purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
         multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp1, numberOfWaveAtoms());
         //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
@@ -1060,7 +1070,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         cooldownHandler.activateConsumableCooldown(false);
     }
     private void triggerConsumableBallPowerUp(ConsumablePowerUpCooldownHandler cooldownHandler) {
-        ballObject = powerUps.activateBallObjectConsumablePowerUp(ballObject, selectedPowerUp2);
+        powerUps.activateBallObjectConsumablePowerUp(getBallObject(), selectedPowerUp2);
         purpleBallObjects = powerUps.activateBallObjectArrayConsumablePowerUp(purpleBallObjects, selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
         multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp2, numberOfWaveAtoms());
         cooldownHandler.activateConsumableCooldown(true);
