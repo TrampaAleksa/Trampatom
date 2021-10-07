@@ -970,7 +970,52 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     // POWER UPS
 
-        // Power Up 1
+        // Cooldown:
+
+    private PowerUpCooldownHandler getPowerUpCooldownHandler(){
+        if (powerUpCooldownHandler == null) {
+            powerUpCooldownHandler = new PowerUpCooldownHandler(new IPowerUpExpiredEvent() {
+                @Override
+                public void onPowerUpExpired() {
+                    onPowerUpExpired();
+                }
+            });
+        }
+        return powerUpCooldownHandler;
+    }
+    public void onPowerUpExpired() {
+        if (flagTypePowerUp1 != Keys.FLAG_BALL_POWER_UP)
+            return;
+        //if the power up is ball related, reset the balls after the power up expires
+        ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, getCurrentBallType());
+        purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
+                selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
+        multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
+                selectedPowerUp1, numberOfWaveAtoms());
+    }
+
+    private ConsumablePowerUpCooldownHandler getConsumableCooldownHandler(){
+        if (consumableCooldownHandler == null)
+            consumableCooldownHandler = new ConsumablePowerUpCooldownHandler(new IPowerUpExpiredEvent() {
+                @Override
+                public void onPowerUpExpired() {
+                    onConsumablePowerUpExpired();
+                }
+            });
+        return consumableCooldownHandler;
+    }
+    private void onConsumablePowerUpExpired() {
+        if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP) {
+            ballObject = powerUps.resetBallState(ballObject, selectedPowerUp2, getCurrentBallType());
+            purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
+                    selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
+            multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
+                    selectedPowerUp2, numberOfWaveAtoms());
+        }
+    }
+
+
+        // Power Up 1 trigger
 
     private void triggerPowerUp1() {
         PowerUpCooldownHandler cooldownHandler = getPowerUpCooldownHandler();
@@ -996,24 +1041,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         cooldownHandler.activateCooldown();
     }
 
-    private PowerUpCooldownHandler getPowerUpCooldownHandler(){
-        if (powerUpCooldownHandler == null) {
-            powerUpCooldownHandler = new PowerUpCooldownHandler(this);
-        }
-        return powerUpCooldownHandler;
-    }
-    public void onPowerUpExpired() {
-        if (flagTypePowerUp1 != Keys.FLAG_BALL_POWER_UP)
-            return;
-        //if the power up is ball related, reset the balls after the power up expires
-        ballObject = powerUps.resetBallState(ballObject, selectedPowerUp1, getCurrentBallType());
-        purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
-                selectedPowerUp1, keys.PURPLE_BALL_NUMBER);
-        multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                selectedPowerUp1, numberOfWaveAtoms());
-    }
-
-        // Power Up 2
+        // Power Up 2 trigger
 
     private void triggerPowerUp2() {
         ConsumablePowerUpCooldownHandler cooldownHandler = getConsumableCooldownHandler();
@@ -1038,25 +1066,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         cooldownHandler.activateConsumableCooldown(true);
     }
 
-    private ConsumablePowerUpCooldownHandler getConsumableCooldownHandler(){
-        if (consumableCooldownHandler == null)
-            consumableCooldownHandler = new ConsumablePowerUpCooldownHandler(new IPowerUpExpiredEvent() {
-                @Override
-                public void onPowerUpExpired() {
-                    onConsumablePowerUpExpired();
-                }
-            });
-        return consumableCooldownHandler;
-    }
-    private void onConsumablePowerUpExpired() {
-        if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP) {
-            ballObject = powerUps.resetBallState(ballObject, selectedPowerUp2, getCurrentBallType());
-            purpleBallObjects = powerUps.resetBallObjectArrayState(purpleBallObjects,
-                    selectedPowerUp2, keys.PURPLE_BALL_NUMBER);
-            multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                    selectedPowerUp2, numberOfWaveAtoms());
-        }
-    }
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
     public void pause()
