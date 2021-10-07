@@ -74,7 +74,7 @@ public class Keys {
 
 
                 //number of purple ball's
-                public int PURPLE_BALL_NUMBER = 3;
+                public static int PURPLE_BALL_NUMBER = 3;
                 //drawing
                 public int BALL_PURPLE_NO_CLICK = 1;
                 public int BALL_PURPLE_ONE_CLICK = 2;

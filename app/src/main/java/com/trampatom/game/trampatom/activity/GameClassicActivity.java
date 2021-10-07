@@ -997,7 +997,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
     private PowerUpCooldownHandler getPowerUpCooldownHandler(){
-        if (powerUpCooldownHandler == null) powerUpCooldownHandler = new PowerUpCooldownHandler(this);
+        if (powerUpCooldownHandler == null) {
+            powerUpCooldownHandler = new PowerUpCooldownHandler(this);
+        }
         return powerUpCooldownHandler;
     }
     public void onPowerUpExpired() {
