@@ -759,50 +759,69 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      *  Score after we clicked all three balls and gain energy.
      */
     private void purpleBall() {
+        if (timesClickedPurple == keys.BALL_PURPLE_NO_CLICK)
+            initialPurpleBall();
+        else
+            multiplePurpleBalls();
+    }
 
-        if (timesClickedPurple == keys.BALL_PURPLE_NO_CLICK) {
-            //if we clicked on the first/ original ball
-            Ball initialPurpleBall = purpleBallObjects[0];
+    private void initialPurpleBall() {
+        //if we clicked on the first/ original ball
+        Ball initialPurpleBall = purpleBallObjects[0];
+        boolean isInitialPurpleClicked = clickedABall.ballClicked(initialPurpleBall, clickedX, clickedY);
 
-            if (clickedABall.ballClicked(initialPurpleBall, clickedX, clickedY)) {
-                //used to determine how many balls to draw
-                timesClickedPurple = keys.BALL_PURPLE_ONE_CLICK;
-                //get new angles and set every ball to start moving from the same spot
-                for (Ball purpleBallObject : purpleBallObjects) {
-                    purpleBallObject.setAngle(getRandomAngle());
-                    purpleBallObject.setX(initialPurpleBall.getX());
-                    purpleBallObject.setY(initialPurpleBall.getY());
-                }
+        if (!isInitialPurpleClicked)
+            return;
 
-                addAtomToPool(initialPurpleBall);
-                playBallClickedSound(initialPurpleBall);
-            }
+        purpleBallInitialClick(initialPurpleBall);
+    }
+
+    private void purpleBallInitialClick(Ball initialPurpleBall) {
+        //used to determine how many balls to draw
+        timesClickedPurple = keys.BALL_PURPLE_ONE_CLICK;
+        //get new angles and set every ball to start moving from the same spot
+        for (Ball purpleBallObject : purpleBallObjects) {
+            purpleBallObject.setAngle(getRandomAngle());
+            purpleBallObject.setX(initialPurpleBall.getX());
+            purpleBallObject.setY(initialPurpleBall.getY());
         }
+
+        addAtomToPool(initialPurpleBall);
+        playBallClickedSound(initialPurpleBall);
+    }
+
+    private void multiplePurpleBalls() {
         //if we clicked on one of the split balls remove them from the screen
-        else  {
-            for(int i=0; i<purpleBallObjects.length; i++){
-                if(clickedABall.ballClicked(purpleBallObjects[i], clickedX, clickedY)){
-                    //don't draw this ball
-                    ballClicked[i]=true;
-                    //add the atom to the atom pool
-                    addAtomToPool(purpleBallObjects[i]);
-                    playBallClickedSound(purpleBallObjects[i]);
-                }
-            }
-
-            //if we clicked all three, score and get a new ball
-            if(ballClicked[0] && ballClicked[1] && ballClicked[2]){
-
-                ballPurpleNumber = keys.BALL_PURPLE_NO_CLICK;
-                //reset to starting state
-                ballClicked[0] = ballClicked[1] = ballClicked[2] = false;
-                timesClickedPurple = keys.BALL_PURPLE_NO_CLICK;
-                //add some energy and update it in the energy text view
-                addEnergy(500);
-                addScore(500);
-                getNewBall();
-            }
+        for(int i=0; i<purpleBallObjects.length; i++){
+            multiplePurpleBallClicked(i);
         }
+
+        //if we clicked all three, score and get a new ball
+        boolean allBallsClicked = ballClicked[0] && ballClicked[1] && ballClicked[2];
+        if(allBallsClicked){
+            purpleFinished();
+        }
+    }
+
+    private void multiplePurpleBallClicked(int ballNumber) {
+        if(clickedABall.ballClicked(purpleBallObjects[ballNumber], clickedX, clickedY)){
+            //don't draw this ball
+            ballClicked[ballNumber]=true;
+            //add the atom to the atom pool
+            addAtomToPool(purpleBallObjects[ballNumber]);
+            playBallClickedSound(purpleBallObjects[ballNumber]);
+        }
+    }
+
+    private void purpleFinished() {
+        ballPurpleNumber = keys.BALL_PURPLE_NO_CLICK;
+        //reset to starting state
+        ballClicked[0] = ballClicked[1] = ballClicked[2] = false;
+        timesClickedPurple = keys.BALL_PURPLE_NO_CLICK;
+        //add some energy and update it in the energy text view
+        addEnergy(500);
+        addScore(500);
+        getNewBall();
     }
 
 
