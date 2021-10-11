@@ -29,6 +29,9 @@ import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.BallHandler;
 import com.trampatom.game.trampatom.ball.BallTypeHandler;
 import com.trampatom.game.trampatom.ball.ClickedABall;
+import com.trampatom.game.trampatom.ball.controller.IBallClickedEvent;
+import com.trampatom.game.trampatom.ball.controller.IBallFinishedEvent;
+import com.trampatom.game.trampatom.ball.controller.PurpleBall;
 import com.trampatom.game.trampatom.canvas.Background;
 import com.trampatom.game.trampatom.canvas.CanvasGameClassic;
 import com.trampatom.game.trampatom.canvas.GameOver;
@@ -111,6 +114,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         CurrentGameEnergy gameEnergy;
         PowerUpCooldownHandler powerUpCooldownHandler;
         ConsumablePowerUpCooldownHandler consumableCooldownHandler;
+        PurpleBall purpleBallHandler;
 
     // ------------------- Arrays ------------------------------------------------------- \\
 
@@ -445,7 +449,23 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         }
         getNewBall();
 
+        purpleBallHandler = new PurpleBall(
+                new IBallFinishedEvent() {
+                    @Override
+                    public void onBallFinished() {
+                        onPurpleFinishedEvent();
+                    }
+                },
+                new IBallClickedEvent() {
+                    @Override
+                    public void onBallClicked() {
+                        addAtomToPool(purpleBallObjects[0]);
+                        playBallClickedSound(purpleBallObjects[0]);
+                    }
+                }
+        );
         clickedABall = new ClickedABall(getBaseBallWidth(), getBaseBallHeight());
+        purpleBallHandler.setClickedABall(clickedABall);
         ballMovement = new BallMovement(getWidth(), getHeight());
         initialDraw = false;
 
@@ -1081,11 +1101,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         getBallClickedArray()[0] = getBallClickedArray()[1] = getBallClickedArray()[2] = false;
         resetPurpleBallsState();
         //add some energy and update it in the energy text view
+        onPurpleFinishedEvent();
+    }
+
+    private void onPurpleFinishedEvent() {
         addEnergy(500);
         addScore(500);
         getNewBall();
     }
-
 
 
     private void resetPurpleBallsState() {
