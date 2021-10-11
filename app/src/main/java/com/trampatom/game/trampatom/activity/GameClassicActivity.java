@@ -494,12 +494,16 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 canvas.draw(ballObject);
                 break;
             case BALL_PURPLE:
-                canvas.drawPurple(purpleBallObjects, getTimesClickedPurple(), ballClicked);
+                canvas.drawPurple(purpleBallObjects, getTimesClickedPurple(), getBallClickedArray());
                 break;
             case BALL_WAVE:
                 canvas.drawWave(multipleBalls, currentWaveBall);
                 break;
         }
+    }
+
+    private boolean[] getBallClickedArray() {
+        return ballClicked;
     }
 
     /**
@@ -543,7 +547,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         for(int i = 0; i< purpleBallObjects.length; i++){
             ballMovement.moveBall(purpleBallObjects[i]);
 
-            if (ballClicked[i])
+            if (getBallClickedArray()[i])
                 purpleBallObjects[i].setX(-purpleBallObjects[i].getBallWidth());
         }
     }
@@ -1056,7 +1060,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         }
 
         //if we clicked all three, score and get a new ball
-        boolean allBallsClicked = ballClicked[0] && ballClicked[1] && ballClicked[2];
+        boolean allBallsClicked = getBallClickedArray()[0] && getBallClickedArray()[1] && getBallClickedArray()[2];
         if(allBallsClicked){
             purpleFinished();
         }
@@ -1065,7 +1069,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void multiplePurpleBallClicked(int ballNumber) {
         if(clickedABall.ballClicked(purpleBallObjects[ballNumber], clickedX, clickedY)){
             //don't draw this ball
-            ballClicked[ballNumber]=true;
+            getBallClickedArray()[ballNumber]=true;
             //add the atom to the atom pool
             addAtomToPool(purpleBallObjects[ballNumber]);
             playBallClickedSound(purpleBallObjects[ballNumber]);
@@ -1074,7 +1078,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     private void purpleFinished() {
         //reset to starting state
-        ballClicked[0] = ballClicked[1] = ballClicked[2] = false;
+        getBallClickedArray()[0] = getBallClickedArray()[1] = getBallClickedArray()[2] = false;
         resetPurpleBallsState();
         //add some energy and update it in the energy text view
         addEnergy(500);

@@ -29,9 +29,7 @@ public class Keys {
     // -------------------------------------- Power Ups ------------------------------------ \\
 
     public static final int NUMBER_OF_SELECTED_POWER_UPS =4;
-        // default coolDown of the power up that has a coolDown in seconds
-        public int POWER_UP_COOLDOWN = 5;
-        public int POWER_UP_DURATION = 2;
+
     //used to determine energy increase with those power ups
         public static final int POWER_UPS_ENERGY_INCREASE_BASE_VALUE = 100;
         //determines how much will the balls size be increased if we use the active power up
@@ -57,21 +55,9 @@ public class Keys {
 
 
 
-
-
     // ----------------------------------------- Ball Types ------------------------------------------ \\
 
-
-        //used for determining what ball will be drawn
-        public int TYPE_BALL_RED_CHANCE = 2;
-        public int TYPE_BALL_BLUE_CHANCE = 10;
-        public int TYPE_BALL_YELLOW_CHANCE = 13;
-        public int TYPE_BALL_GREEN_CHANCE = 15;
-        public int TYPE_BALL_PURPLE_CHANCE = 18;
-        public int TYPE_BALL_WAVE_CHANCE = 21;
-
             // ------------------------------- Purple balls --------------------------------- \\
-
 
                 //number of purple ball's
                 public static int PURPLE_BALL_NUMBER = 3;
