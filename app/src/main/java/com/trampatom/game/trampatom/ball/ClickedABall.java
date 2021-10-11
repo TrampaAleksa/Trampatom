@@ -48,6 +48,19 @@ public class ClickedABall {
                 && clickedY >  ball.getY() && clickedY < ( ball.getY() + ball.getBallHeight());
     }
 
+    private int clickedX, clickedY;
+
+    public boolean ballClicked(Ball ball){
+        return clickedX > ball.getX() && clickedX < ( ball.getX() + ball.getBallWidth())
+                && clickedY >  ball.getY() && clickedY < ( ball.getY() + ball.getBallHeight());
+    }
+    public void setClickedX(int clickedX) {
+        this.clickedX = clickedX;
+    }
+    public void setClickedY(int clickedY) {
+        this.clickedY = clickedY;
+    }
+
     /**
      * Method used to determine if any red mBall has been clicked
      * @param x x coordinate of the mBall

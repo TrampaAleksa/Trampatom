@@ -623,6 +623,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             //get coordinates where we touched
             clickedX = (int) event.getX();
             clickedY = (int) event.getY();
+            clickedABall.setClickedX(clickedX);
+            clickedABall.setClickedY(clickedY);
+
             setCurrentBallTypeBySeed();
             //if we click on the ball do something depending on the ball type
                 if(getCurrentBallType() == BALL_RED){

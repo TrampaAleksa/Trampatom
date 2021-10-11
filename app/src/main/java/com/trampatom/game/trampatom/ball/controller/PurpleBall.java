@@ -2,6 +2,7 @@ package com.trampatom.game.trampatom.ball.controller;
 
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.ball.ClickedABall;
+import com.trampatom.game.trampatom.utils.Angles;
 
 public class PurpleBall {
 
@@ -33,7 +34,7 @@ public class PurpleBall {
     private void initialPurpleBall(Ball[] purpleBallObjects) {
         //if we clicked on the first/ original ball
         Ball initialPurpleBall = purpleBallObjects[0];
-        boolean isInitialPurpleClicked = clickedABall.ballClicked(initialPurpleBall, clickedX, clickedY);
+        boolean isInitialPurpleClicked = clickedABall.ballClicked(initialPurpleBall);
 
         if (!isInitialPurpleClicked)
             return;
@@ -46,7 +47,7 @@ public class PurpleBall {
         timesClickedPurple = BALL_PURPLE_ONE_CLICK;
         //get new angles and set every ball to start moving from the same spot
         for (Ball purpleBallObject : purpleBallObjects) {
-            purpleBallObject.setAngle(getRandomAngle());
+            purpleBallObject.setAngle(Angles.randomAngle());
             purpleBallObject.setX(initialPurpleBall.getX());
             purpleBallObject.setY(initialPurpleBall.getY());
         }
@@ -56,7 +57,7 @@ public class PurpleBall {
     private void multiplePurpleBalls(Ball[] purpleBallObjects) {
         //if we clicked on one of the split balls remove them from the screen
         for(int i=0; i<purpleBallObjects.length; i++){
-            multiplePurpleBallClicked(i);
+            multiplePurpleBallClicked(i, purpleBallObjects);
         }
 
         //if we clicked all three, score and get a new ball
@@ -67,7 +68,7 @@ public class PurpleBall {
     }
 
     private void multiplePurpleBallClicked(int ballNumber, Ball[] purpleBallObjects) {
-        if(clickedABall.ballClicked(purpleBallObjects[ballNumber], clickedX, clickedY)){
+        if(clickedABall.ballClicked(purpleBallObjects[ballNumber])){
             //don't draw this ball
             ballClicked[ballNumber]=true;
             //add the atom to the atom pool
