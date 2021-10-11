@@ -22,6 +22,7 @@ public class PurpleBall {
     public PurpleBall(IBallFinishedEvent purpleFinishedEvent, IBallClickedEvent purpleBallClickedEvent) {
         this.purpleFinishedEvent = purpleFinishedEvent;
         this.purpleBallClickedEvent = purpleBallClickedEvent;
+        resetToStartingState();
     }
 
     public void handlePurpleBall(Ball[] purpleBallObjects){

@@ -8,6 +8,7 @@ import android.view.SurfaceHolder;
 
 import com.trampatom.game.trampatom.Model.Ball;
 import com.trampatom.game.trampatom.Model.Star;
+import com.trampatom.game.trampatom.ball.controller.PurpleBall;
 import com.trampatom.game.trampatom.score.CurrentGameScore;
 
 /**
@@ -69,10 +70,13 @@ public class CanvasGameClassic {
     /**
      * Method used for drawing purple balls based on an ball object array containing every balls info
      * @param purpleBalls the ball objects that we are drawing
-     * @param timesClicked used to determine how many purple balls to draw
      * @return always false
      */
-    public boolean drawPurple(Ball[] purpleBalls, int timesClicked, boolean[] ballClicked){
+    public boolean drawPurple(Ball[] purpleBalls, PurpleBall purpleBallHandler){
+
+        int timesClicked = purpleBallHandler.getTimesClickedPurple();
+        boolean[] ballClicked = purpleBallHandler.getBallClickedArray();
+
         if(timesClicked == BALL_PURPLE_NO_CLICK) {
             ourCanvas = ourHolder.lockCanvas();
             drawBackground();
