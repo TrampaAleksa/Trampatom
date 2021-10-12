@@ -829,20 +829,20 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         // SINGLE BALL
         boolean isSingleBall = currentBallType == BALL_RED || currentBallType == BALL_BLUE || currentBallType == BALL_YELLOW || currentBallType == BALL_GREEN;
         if(isSingleBall){
-            ballObject = ballHandler.getNewBallObject(getBallObject(), currentBallType);
+            ballHandler.getNewBallObject(getBallObject(), currentBallType);
         }
 
         // PURPLE BALLS
         if(currentBallType == BALL_PURPLE){
-            setPurpleBallObjects(ballHandler.getNewBallObjectArray(
+            ballHandler.getNewBallObjectArray(
                     Keys.PURPLE_BALL_NUMBER,
                     getPurpleBallObjects(),
-                    currentBallType));
+                    currentBallType);
         }
 
         //WAVE BALLS
         if(currentBallType == BALL_WAVE){
-            setMultipleBalls(ballHandler.getNewBallObjectArray(numberOfWaveAtoms(), getMultipleBalls(), currentBallType));
+            ballHandler.getNewBallObjectArray(numberOfWaveAtoms(), getMultipleBalls(), currentBallType);
             currentWaveBall = 0;
         }
     }
@@ -952,16 +952,16 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             return;
         //if the power up is ball related, reset the balls after the power up expires
         powerUps.resetBallState(getBallObject(), selectedPowerUp1);
-        setPurpleBallObjects(
+
                 powerUps.resetBallObjectArrayState(getPurpleBallObjects(),
                 selectedPowerUp1,
                 Keys.PURPLE_BALL_NUMBER
-        ));
-        setMultipleBalls(
+        );
+
                 powerUps.resetBallObjectArrayState(getMultipleBalls(),
                 selectedPowerUp1,
                 numberOfWaveAtoms()
-        ));
+        );
     }
 
     private ConsumablePowerUpCooldownHandler getConsumableCooldownHandler(){
@@ -977,11 +977,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void onConsumablePowerUpExpired() {
         if(flagTypePowerUp2 == Keys.FLAG_BALL_POWER_UP) {
             powerUps.resetBallState(getBallObject(), selectedPowerUp2);
-            setPurpleBallObjects(powerUps.resetBallObjectArrayState(getPurpleBallObjects(),
-                    selectedPowerUp2, Keys.PURPLE_BALL_NUMBER));
+           powerUps.resetBallObjectArrayState(getPurpleBallObjects(),
+                    selectedPowerUp2, Keys.PURPLE_BALL_NUMBER);
 
-            setMultipleBalls(powerUps.resetBallObjectArrayState(getMultipleBalls(),
-                    selectedPowerUp2, numberOfWaveAtoms()));
+            powerUps.resetBallObjectArrayState(getMultipleBalls(),
+                    selectedPowerUp2, numberOfWaveAtoms());
         }
     }
 
@@ -1006,8 +1006,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private void triggerBallPowerUp(PowerUpCooldownHandler cooldownHandler) {
         powerUps.activateBallObjectConsumablePowerUp(getBallObject(), selectedPowerUp1);
-        setPurpleBallObjects(powerUps.activateBallObjectArrayConsumablePowerUp(getPurpleBallObjects(), selectedPowerUp1, Keys.PURPLE_BALL_NUMBER));
-        setMultipleBalls(powerUps.activateBallObjectArrayConsumablePowerUp(getMultipleBalls(), selectedPowerUp1, numberOfWaveAtoms()));
+        powerUps.activateBallObjectArrayConsumablePowerUp(getPurpleBallObjects(), selectedPowerUp1, Keys.PURPLE_BALL_NUMBER);
+        powerUps.activateBallObjectArrayConsumablePowerUp(getMultipleBalls(), selectedPowerUp1, numberOfWaveAtoms());
         //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
         cooldownHandler.activateCooldown();
     }
@@ -1032,8 +1032,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
     private void triggerConsumableBallPowerUp(ConsumablePowerUpCooldownHandler cooldownHandler) {
         powerUps.activateBallObjectConsumablePowerUp(getBallObject(), selectedPowerUp2);
-        setPurpleBallObjects(powerUps.activateBallObjectArrayConsumablePowerUp(getPurpleBallObjects(), selectedPowerUp2, Keys.PURPLE_BALL_NUMBER));
-        setMultipleBalls(powerUps.activateBallObjectArrayConsumablePowerUp(getMultipleBalls(), selectedPowerUp2, numberOfWaveAtoms()));
+        powerUps.activateBallObjectArrayConsumablePowerUp(getPurpleBallObjects(), selectedPowerUp2, Keys.PURPLE_BALL_NUMBER);
+        powerUps.activateBallObjectArrayConsumablePowerUp(getMultipleBalls(), selectedPowerUp2, numberOfWaveAtoms());
         cooldownHandler.activateConsumableCooldown(true);
     }
 
