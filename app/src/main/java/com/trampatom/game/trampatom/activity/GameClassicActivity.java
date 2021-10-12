@@ -429,11 +429,11 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //get the ball objects for the first time with the default attributes
             ballObject = ballHandler.getFirstBallObject();
             setPurpleBallObjects(ballHandler.getFirstBallObjectArray(Keys.PURPLE_BALL_NUMBER));
-            multipleBalls = ballHandler.getFirstBallObjectArray(numberOfWaveAtoms());
+            setMultipleBalls(ballHandler.getFirstBallObjectArray(numberOfWaveAtoms()));
 
         //the colors of purple and wave don't have to be be changed so initiate them once
         for(int i=0; i<numberOfWaveAtoms(); i++){
-            multipleBalls[i].setBallColor(ballBitmaps.getWaveBall()[i]);
+            getMultipleBalls()[i].setBallColor(ballBitmaps.getWaveBall()[i]);
         }
         for(int i = 0; i< Keys.PURPLE_BALL_NUMBER; i++){
             getPurpleBallObjects()[i].setBallColor(ballBitmaps.getPurpleBall());
@@ -462,9 +462,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     }
 
-    private Ball[] getPurpleBallObjects() {
-        return purpleBallObjects;
-    }
 
 
     // ------------------------------- Ball Movement -------------------------- \\
@@ -512,7 +509,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 canvas.drawPurple(getPurpleBallObjects(), purpleBallHandler);
                 break;
             case BALL_WAVE:
-                canvas.drawWave(multipleBalls, currentWaveBall);
+                canvas.drawWave(getMultipleBalls(), currentWaveBall);
                 break;
         }
     }
@@ -573,7 +570,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //current wave ball is the ball we should click, move every next ball after the current ball
         //every ball before the current ball will not be moved or drawn
         for(int i = currentWaveBall; i< numberOfWaveAtoms(); i++){
-            multipleBalls[i] = ballMovement.moveWave(multipleBalls[i]);
+            getMultipleBalls()[i] = ballMovement.moveWave(getMultipleBalls()[i]);
         }
     }
 
@@ -787,14 +784,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void waveBall(){
         //if we click the correct ball in the sequence remove it and get score
-        if(clickedABall.ballClicked(multipleBalls[currentWaveBall], clickedX, clickedY)){
+        if(clickedABall.ballClicked(getMultipleBalls()[currentWaveBall], clickedX, clickedY)){
 
             //gain more and more score and energy the more balls you click
             addEnergy(currentWaveBall*10);
             addScore(currentWaveBall*10);
             //adds a random atom to the pool every time we click a wave ball
-            addAtomToPool(multipleBalls[0]);
-            playBallClickedSound(multipleBalls[0]);
+            addAtomToPool(getMultipleBalls()[0]);
+            playBallClickedSound(getMultipleBalls()[0]);
             // next ball should be clicked
             currentWaveBall ++;
 
@@ -845,7 +842,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
         //WAVE BALLS
         if(currentBallType == BALL_WAVE){
-            multipleBalls = ballHandler.getNewBallObjectArray(numberOfWaveAtoms(),multipleBalls, currentBallType);
+            setMultipleBalls(ballHandler.getNewBallObjectArray(numberOfWaveAtoms(), getMultipleBalls(), currentBallType));
             currentWaveBall = 0;
         }
     }
@@ -867,7 +864,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     }
 
     private boolean isSameTypeBallPowerUpActive() {
-        return getBallObject().isActiveChangesType() && getPurpleBallObjects()[0].isActiveChangesType()&& multipleBalls[0].isActiveChangesType();
+        return getBallObject().isActiveChangesType() && getPurpleBallObjects()[0].isActiveChangesType()&& getMultipleBalls()[0].isActiveChangesType();
     }
 
     // WIDTH AND HEIGHT
@@ -955,11 +952,16 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             return;
         //if the power up is ball related, reset the balls after the power up expires
         powerUps.resetBallState(getBallObject(), selectedPowerUp1);
-        setPurpleBallObjects(powerUps.resetBallObjectArrayState(getPurpleBallObjects(),
-                selectedPowerUp1, Keys.PURPLE_BALL_NUMBER));
-
-        multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                selectedPowerUp1, numberOfWaveAtoms());
+        setPurpleBallObjects(
+                powerUps.resetBallObjectArrayState(getPurpleBallObjects(),
+                selectedPowerUp1,
+                Keys.PURPLE_BALL_NUMBER
+        ));
+        setMultipleBalls(
+                powerUps.resetBallObjectArrayState(getMultipleBalls(),
+                selectedPowerUp1,
+                numberOfWaveAtoms()
+        ));
     }
 
     private ConsumablePowerUpCooldownHandler getConsumableCooldownHandler(){
@@ -978,8 +980,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             setPurpleBallObjects(powerUps.resetBallObjectArrayState(getPurpleBallObjects(),
                     selectedPowerUp2, Keys.PURPLE_BALL_NUMBER));
 
-            multipleBalls = powerUps.resetBallObjectArrayState(multipleBalls,
-                    selectedPowerUp2, numberOfWaveAtoms());
+            setMultipleBalls(powerUps.resetBallObjectArrayState(getMultipleBalls(),
+                    selectedPowerUp2, numberOfWaveAtoms()));
         }
     }
 
@@ -1005,7 +1007,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void triggerBallPowerUp(PowerUpCooldownHandler cooldownHandler) {
         powerUps.activateBallObjectConsumablePowerUp(getBallObject(), selectedPowerUp1);
         setPurpleBallObjects(powerUps.activateBallObjectArrayConsumablePowerUp(getPurpleBallObjects(), selectedPowerUp1, Keys.PURPLE_BALL_NUMBER));
-        multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp1, numberOfWaveAtoms());
+        setMultipleBalls(powerUps.activateBallObjectArrayConsumablePowerUp(getMultipleBalls(), selectedPowerUp1, numberOfWaveAtoms()));
         //put the power up on coolDown, MANAGED IN TIMED ACTIONS METHOD
         cooldownHandler.activateCooldown();
     }
@@ -1031,16 +1033,29 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void triggerConsumableBallPowerUp(ConsumablePowerUpCooldownHandler cooldownHandler) {
         powerUps.activateBallObjectConsumablePowerUp(getBallObject(), selectedPowerUp2);
         setPurpleBallObjects(powerUps.activateBallObjectArrayConsumablePowerUp(getPurpleBallObjects(), selectedPowerUp2, Keys.PURPLE_BALL_NUMBER));
-        multipleBalls = powerUps.activateBallObjectArrayConsumablePowerUp(multipleBalls, selectedPowerUp2, numberOfWaveAtoms());
+        setMultipleBalls(powerUps.activateBallObjectArrayConsumablePowerUp(getMultipleBalls(), selectedPowerUp2, numberOfWaveAtoms()));
         cooldownHandler.activateConsumableCooldown(true);
     }
+
+
 
     // BALL OBJECTS
 
     private Ball getBallObject() {
         return ballObject;
     }
-
+    private Ball[] getPurpleBallObjects() {
+        return purpleBallObjects;
+    }
+    private void setPurpleBallObjects(Ball[] purpleBallObjects){
+        this.purpleBallObjects = purpleBallObjects;
+    }
+    private Ball[] getMultipleBalls() {
+        return multipleBalls;
+    }
+    public void setMultipleBalls(Ball[] multipleBalls) {
+        this.multipleBalls = multipleBalls;
+    }
     //PURPLE BALL
 
     private void onPurpleFinishedEvent() {
@@ -1049,9 +1064,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         getNewBall();
     }
 
-    private void setPurpleBallObjects(Ball[] purpleBallObjects){
-        this.purpleBallObjects = purpleBallObjects;
-    }
+
+
 
 
     // ----------------------------------- Handling Threads and Music -------------------- \\
