@@ -412,7 +412,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             ballHandler.setDefaultValuesUponPassives(selectedPassive1,selectedPassive2);
 
         //get the ball objects for the first time with the default attributes
-            getBallHolder().setBallObject(ballHandler.getFirstBallObject());
+            setBallObject(ballHandler.getFirstBallObject());
             setPurpleBallObjects(ballHandler.getFirstBallObjectArray(Keys.PURPLE_BALL_NUMBER));
             setMultipleBalls(ballHandler.getFirstBallObjectArray(numberOfWaveAtoms()));
 
@@ -1028,6 +1028,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
 
     private Ball getBallObject() {
         return getBallHolder().getBallObject();
+    }
+    private void setBallObject(Ball ballObject){
+        getBallHolder().setBallObject(ballObject);
     }
     private Ball[] getPurpleBallObjects() {
         return getBallHolder().getPurpleBallObjects();
