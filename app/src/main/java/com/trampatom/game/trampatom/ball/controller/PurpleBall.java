@@ -1,6 +1,9 @@
 package com.trampatom.game.trampatom.ball.controller;
 
+import android.util.Log;
+
 import com.trampatom.game.trampatom.Model.Ball;
+import com.trampatom.game.trampatom.ball.BallObjectsHolder;
 import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.utils.Angles;
 
@@ -18,14 +21,22 @@ public class PurpleBall {
 
     IBallFinishedEvent purpleFinishedEvent;
     IBallClickedEvent purpleBallClickedEvent;
+    BallObjectsHolder ballHolder;
 
-    public PurpleBall(IBallFinishedEvent purpleFinishedEvent, IBallClickedEvent purpleBallClickedEvent) {
+    public PurpleBall(IBallFinishedEvent purpleFinishedEvent, IBallClickedEvent purpleBallClickedEvent, BallObjectsHolder ballHolder) {
         this.purpleFinishedEvent = purpleFinishedEvent;
         this.purpleBallClickedEvent = purpleBallClickedEvent;
+        this.ballHolder = ballHolder;
         resetToStartingState();
     }
 
-    public void handlePurpleBall(Ball[] purpleBallObjects){
+    public void handlePurpleBall(){
+        if (ballHolder == null) {
+            Log.d("Ball" , "Holder not initialized, purple ball won't update");
+            return;
+        }
+        Ball[] purpleBallObjects = ballHolder.getPurpleBallObjects();
+
         if (getTimesClickedPurple() ==BALL_PURPLE_NO_CLICK)
             initialPurpleBall(purpleBallObjects);
         else

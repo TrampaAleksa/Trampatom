@@ -438,7 +438,8 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                         addAtomToPool(getPurpleBallObjects()[0]);
                         playBallClickedSound(getPurpleBallObjects()[0]);
                     }
-                }
+                },
+                getBallHolder()
         );
         clickedABall = new ClickedABall(getBaseBallWidth(), getBaseBallHeight());
         purpleBallHandler.setClickedABall(clickedABall);
@@ -751,7 +752,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      *  Score after we clicked all three balls and gain energy.
      */
     private void purpleBall() {
-        purpleBallHandler.handlePurpleBall(getPurpleBallObjects());
+        purpleBallHandler.handlePurpleBall();
     }
 
 
