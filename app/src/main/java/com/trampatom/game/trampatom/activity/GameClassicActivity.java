@@ -27,6 +27,7 @@ import com.trampatom.game.trampatom.ball.AtomId;
 import com.trampatom.game.trampatom.ball.BallBitmaps;
 import com.trampatom.game.trampatom.ball.BallMovement;
 import com.trampatom.game.trampatom.ball.BallHandler;
+import com.trampatom.game.trampatom.ball.BallObjectsHolder;
 import com.trampatom.game.trampatom.ball.BallTypeHandler;
 import com.trampatom.game.trampatom.ball.ClickedABall;
 import com.trampatom.game.trampatom.ball.controller.IBallClickedEvent;
@@ -91,7 +92,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         Random random;
         Background stars;
         AtomPool atomPool;
-        Ball ballObject;
         BallHandler ballHandler;
         SoundsAndEffects soundsAndEffects;
         PowerUps powerUps;
@@ -108,11 +108,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         PowerUpCooldownHandler powerUpCooldownHandler;
         ConsumablePowerUpCooldownHandler consumableCooldownHandler;
         PurpleBall purpleBallHandler;
-
-    // ------------------- Arrays ------------------------------------------------------- \\
-
-        Ball[] multipleBalls = {null,null,null,null,null,null,null};
-        Ball[] purpleBallObjects = {null, null, null};
+        BallObjectsHolder ballHolder;
 
     // -------------------------------- Power Up and Shop ---------------------------------- \\
 
@@ -427,7 +423,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
             ballHandler.setDefaultValuesUponPassives(selectedPassive1,selectedPassive2);
 
         //get the ball objects for the first time with the default attributes
-            ballObject = ballHandler.getFirstBallObject();
+            getBallHolder().setBallObject(ballHandler.getFirstBallObject());
             setPurpleBallObjects(ballHandler.getFirstBallObjectArray(Keys.PURPLE_BALL_NUMBER));
             setMultipleBalls(ballHandler.getFirstBallObjectArray(numberOfWaveAtoms()));
 
@@ -784,14 +780,16 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
      */
     private void waveBall(){
         //if we click the correct ball in the sequence remove it and get score
-        if(clickedABall.ballClicked(getMultipleBalls()[currentWaveBall], clickedX, clickedY)){
+        Ball[] multipleBalls = getMultipleBalls();
+
+        if(clickedABall.ballClicked(multipleBalls[currentWaveBall], clickedX, clickedY)){
 
             //gain more and more score and energy the more balls you click
             addEnergy(currentWaveBall*10);
             addScore(currentWaveBall*10);
             //adds a random atom to the pool every time we click a wave ball
-            addAtomToPool(getMultipleBalls()[0]);
-            playBallClickedSound(getMultipleBalls()[0]);
+            addAtomToPool(multipleBalls[0]);
+            playBallClickedSound(multipleBalls[0]);
             // next ball should be clicked
             currentWaveBall ++;
 
@@ -1042,20 +1040,25 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     // BALL OBJECTS
 
     private Ball getBallObject() {
-        return ballObject;
+        return getBallHolder().getBallObject();
     }
     private Ball[] getPurpleBallObjects() {
-        return purpleBallObjects;
+        return getBallHolder().getPurpleBallObjects();
     }
     private void setPurpleBallObjects(Ball[] purpleBallObjects){
-        this.purpleBallObjects = purpleBallObjects;
+        getBallHolder().setPurpleBallObjects(purpleBallObjects);
     }
     private Ball[] getMultipleBalls() {
-        return multipleBalls;
+        return getBallHolder().getMultipleBalls();
     }
     public void setMultipleBalls(Ball[] multipleBalls) {
-        this.multipleBalls = multipleBalls;
+        getBallHolder().setMultipleBalls(multipleBalls);
     }
+    private BallObjectsHolder getBallHolder(){
+        if (ballHolder == null) ballHolder = new BallObjectsHolder();
+        return ballHolder;
+    }
+
     //PURPLE BALL
 
     private void onPurpleFinishedEvent() {
@@ -1063,8 +1066,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         addScore(500);
         getNewBall();
     }
-
-
 
 
 
