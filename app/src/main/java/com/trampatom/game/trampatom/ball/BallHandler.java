@@ -40,7 +40,6 @@ public class BallHandler {
     Ball[] purpleBalls = {null,null,null};
     Ball[] waveBalls = {null,null,null,null,null,null,null};
 
-    private final Random random;
     private final RandomBallVariables randomBallVariables;
 
     /**
@@ -52,7 +51,6 @@ public class BallHandler {
         this.keys = keys;
         this.ballWidth = ballWidth;
         this.ballHeight = ballHeight;
-        random = new Random();
         mBall = new Ball();
         ballSpeed = keys.DEFAULT_BALL_SPEED;
         yellowBallSpeed = keys.BALL_YELLOW_INITIAL_SPEED;
@@ -179,13 +177,10 @@ public class BallHandler {
         ball.setBallType(currentBallType);
 
         // random chance for triggering the event. if it is triggered do this block of code
-        if( random.nextInt(Keys.MAX_CHANCE_FOR_EVENT) < eventTriggerChance){
+        if (chancePassivesAndEvents.shouldTriggerPassivePowerUp(eventTriggerChance)){
 
-            if(chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_ATOM_DROP_BONUS){
-
+            if(chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_ATOM_DROP_BONUS)
                     ball.setBallAtomValue(ball.getBallAtomValue()+ Keys.ATOM_DROP_VALUE_INCREASE);
-
-            }
         }
 
         //in case we selected the active that sets the next few balls the same type, reduce the countdown.
@@ -323,21 +318,17 @@ public class BallHandler {
     public Ball[] getNewBallObjectArray(int arraySize, Ball[] balls, AtomId currentBallType) {
 
 
-        for(int i=0; i<arraySize; i++){
+        for(int i=0; i<arraySize; i++) {
             balls[i].setBallAtomValue(Keys.ATOM_DROP_INITIAL_VALUE);
             balls[i].setBallType(currentBallType);
-            // random chance for triggering the event. if it is triggered do this block of code
-            if( random.nextInt(Keys.MAX_CHANCE_FOR_EVENT) < eventTriggerChance){
 
-                if(chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_ATOM_DROP_BONUS){
+            if (chancePassivesAndEvents.shouldTriggerPassivePowerUp(eventTriggerChance)) {
 
-                    balls[i].setBallAtomValue(balls[i].getBallAtomValue()+ Keys.ATOM_DROP_VALUE_INCREASE);
+                if (chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_ATOM_DROP_BONUS)
+                    balls[i].setBallAtomValue(balls[i].getBallAtomValue() + Keys.ATOM_DROP_VALUE_INCREASE);
 
-                }
-                else if(chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_LIMITING_SQUARE){
-
-                }
-
+                else if (chancePassivesAndEvents.getSelectedPassivePowerUpFlag() == Keys.FLAG_YELLOW_CHANCE_LIMITING_SQUARE)
+                    ;
             }
         }
 

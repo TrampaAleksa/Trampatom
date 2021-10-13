@@ -3,6 +3,8 @@ package com.trampatom.game.trampatom.power.up;
 import com.trampatom.game.trampatom.Model.PowerUpPool;
 import com.trampatom.game.trampatom.utils.Keys;
 
+import java.util.Random;
+
 /**
  * Class containing methods for setting chances of certain random events based on selected passive power up
  * and containing certain random events that can occur in the game.
@@ -14,6 +16,7 @@ public class ChancePassivesAndEvents {
         PowerUpPool selectedPassivePowerUp;
         int selectedPowerUpChance;
     private static final int CHANCE_ATOM_DROP_BONUS_MODIFIER= 5;
+    private Random random;
 
 
     /**
@@ -24,10 +27,9 @@ public class ChancePassivesAndEvents {
      * @param selectedPassivePowerUp required to set the chance of the event based on what power up we selected.
      */
     public ChancePassivesAndEvents(PowerUpPool selectedPassivePowerUp){
-
         this.selectedPassivePowerUp = selectedPassivePowerUp;
         calculateChanceOfPowerUpEvent();
-
+        random = new Random();
     }
 
     /**
@@ -72,4 +74,7 @@ public class ChancePassivesAndEvents {
         return selectedPassivePowerUp.getId();
     }
 
+    public boolean shouldTriggerPassivePowerUp(int eventTriggerChance){
+        return random.nextInt(Keys.MAX_CHANCE_FOR_EVENT) < eventTriggerChance;
+    }
 }

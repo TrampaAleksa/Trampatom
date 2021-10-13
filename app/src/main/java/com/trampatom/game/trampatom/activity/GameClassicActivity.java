@@ -71,12 +71,6 @@ import static java.lang.Thread.sleep;
  */
 public class GameClassicActivity extends AppCompatActivity implements Runnable, View.OnTouchListener, View.OnClickListener{
 
-    // ------------------- General Ball Variables --------------------------------------- \\
-
-        //coordinates of the currently drawn ball, coordinates where we clicked
-                int  clickedX;
-                int  clickedY;
-
     // ------------------- Ball type variables ------------------------------------------ \\
 
         //used for wave ball
@@ -89,7 +83,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         CanvasGameClassic canvas;
         ClickedABall clickedABall;
         BallMovement ballMovement;
-        Random random;
         Background stars;
         AtomPool atomPool;
         BallHandler ballHandler;
@@ -157,7 +150,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void init() {
         passivesManager = new PassivesManager();
-        random = new Random();
         keys = new Keys();
         atomPool = new AtomPool(this);
         gameScore = new CurrentGameScore();
@@ -345,17 +337,14 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         ticker ++;
             if(ticker == Keys.TICKS_BEFORE_EVENT_TRIGGER_CHANCE){
                 //once we tick enough times get a random number and if its lower than our chance for the event trigger the event
-                if( (random.nextInt(Keys.MAX_CHANCE_FOR_EVENT)) < chancePassivesAndEvents.getPassivePowerUpEventChance()){
-
+                if(chancePassivesAndEvents.shouldTriggerPassivePowerUp(chancePassivesAndEvents.getPassivePowerUpEventChance())){
                     //if we selected the power up to give an energy boost, increase our current energy level.
                     if(selectedPassive2 == Keys.FLAG_YELLOW_CHANCE_ENERGY_FILL){
                         addEnergy(Keys.ENERGY_CHANCE_EVENT_BONUS);
+                    }
                 }
-            }
                 ticker = Keys.TICKER_STARTING_VALUE;
             }
-
-
     }
     private void updatePowerUpCooldown(){
         PowerUpCooldownHandler cooldownHandler = getPowerUpCooldownHandler();
@@ -604,11 +593,9 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            //get coordinates where we touched
-            clickedX = (int) event.getX();
-            clickedY = (int) event.getY();
-            clickedABall.setClickedX(clickedX);
-            clickedABall.setClickedY(clickedY);
+
+            clickedABall.setClickedX((int) event.getX());
+            clickedABall.setClickedY((int) event.getY());
 
             setCurrentBallTypeBySeed();
             //if we click on the ball do something depending on the ball type
@@ -630,7 +617,6 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
                 if(getCurrentBallType() == BALL_WAVE){
                     waveBall();
                 }
-//            ballTypeHandler.setCurrentType(getCurrentBallType());
         }
         return false;
     }
@@ -656,7 +642,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void blueBall(){
         Ball ball = getBallObject();
         //if we clicked the ball should gain score
-        if(clickedABall.ballClicked(ball,clickedX,clickedY)) {
+        if(clickedABall.ballClicked(ball)) {
             //add some energy and update it in the energy text view
             addEnergy(100);
             addScore(100);
@@ -676,7 +662,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void redBall(){
         Ball ball = getBallObject();
         //if we click the ball
-        if(clickedABall.ballClicked(ball,clickedX,clickedY)){
+        if(clickedABall.ballClicked(ball)){
             //add some energy and update it in the energy text view
             reduceEnergy(100);
             reduceScore(100);
@@ -703,7 +689,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
     private void greenBall(){
         Ball ball = getBallObject();
 
-        if(clickedABall.ballClicked(ball,clickedX,clickedY)){
+        if(clickedABall.ballClicked(ball)){
             //add some energy and update it in the energy text view
             addEnergy(400);
             addScore(400);
@@ -725,7 +711,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         Ball ball = getBallObject();
 
         //every time the ball is clicked decrease its size and increase speed
-        if(clickedABall.ballClicked(ball,clickedX,clickedY)) {
+        if(clickedABall.ballClicked(ball)) {
             if (keys.TIMES_CLICKED_YELLOW < keys.BALL_YELLOW_REQUIRED_CLICKS) {
                 keys.TIMES_CLICKED_YELLOW++;
                 //every time we click it, reduce its size and increase its speed
@@ -782,7 +768,7 @@ public class GameClassicActivity extends AppCompatActivity implements Runnable, 
         //if we click the correct ball in the sequence remove it and get score
         Ball[] multipleBalls = getMultipleBalls();
 
-        if(clickedABall.ballClicked(multipleBalls[currentWaveBall], clickedX, clickedY)){
+        if(clickedABall.ballClicked(multipleBalls[currentWaveBall])){
 
             //gain more and more score and energy the more balls you click
             addEnergy(currentWaveBall*10);
